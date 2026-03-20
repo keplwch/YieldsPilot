@@ -26,3 +26,6 @@ artifacts/
 typechain-types/
 
 .pids/
+
+# Claude Code local settings (personal, not for team)
+.claude/settings.local.json
