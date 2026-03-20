@@ -1,71 +1,123 @@
-# lido.skill.md — Lido Protocol Guide for AI Agents
+# lido.skill.md — Lido Protocol Mental Model for AI Agents
 
-## What is stETH?
+Read this before calling any Lido MCP tool. It will save you from common mistakes.
 
-stETH (staked ETH) is a **rebasing token** from Lido. When you stake ETH with Lido, you receive stETH 1:1. Your stETH balance **grows daily** as staking rewards are distributed — no claiming needed.
+## What is Lido?
 
-**Key insight for agents:** The balance in your wallet literally increases every day. If you hold 10 stETH today, tomorrow you might hold 10.001 stETH. This is how YieldPilot's treasury works — the principal stays fixed, and the balance growth IS the yield.
+Lido is a liquid staking protocol for Ethereum. You deposit ETH, receive stETH, and earn ~3-5% APR from Ethereum's proof-of-stake consensus rewards — without running your own validator.
 
-## stETH vs wstETH
+## stETH: The Rebasing Token
+
+stETH is Lido's core token. It **rebases daily** — your wallet balance literally increases every ~24 hours as the oracle reports new validator rewards.
+
+```
+Day 1: You hold 10.000000 stETH
+Day 2: Oracle reports +0.009% daily reward
+Day 2: You now hold 10.000900 stETH (no transaction needed)
+```
+
+**Key concepts:**
+- 1 stETH ≈ 1 ETH (there can be a small discount/premium on secondary markets)
+- Your stETH balance grows automatically — no claiming required
+- Under the hood, you own "shares" of the total pool; rebasing adjusts your balance based on share value
+- The `sharesOf(address)` value never changes; only the ETH-per-share rate changes
+
+## wstETH: The Non-Rebasing Wrapper
+
+wstETH wraps stETH into a non-rebasing form. The balance stays fixed, but each wstETH becomes worth more stETH over time.
 
 | Property | stETH | wstETH |
 |----------|-------|--------|
-| Balance changes? | Yes (rebases daily) | No (fixed balance) |
-| Value changes? | Stays ~1:1 with ETH | Increases vs stETH over time |
-| Better for | Holding, tracking rewards | DeFi (Uniswap, Aave, etc.) |
-| Wrapping | Base form | Wrapped version of stETH |
+| Balance changes? | Yes (daily rebase) | No (fixed) |
+| Value changes? | Stays ~1 ETH | Increases vs stETH |
+| Use in DeFi? | Problematic (rebasing confuses protocols) | Safe (non-rebasing) |
+| Tax events? | Each rebase may be taxable | Only on wrap/unwrap |
 
 **When to use which:**
-- **stETH** for treasury principal tracking (rebasing = visible yield)
-- **wstETH** for DeFi integrations (non-rebasing = no accounting issues)
+- **stETH** for simple holding, visible daily rewards, human-facing dashboards
+- **wstETH** for DeFi (Uniswap, Aave, Morpho, Pendle), cross-chain bridging, or anywhere that expects a standard ERC-20
+
+## The Withdrawal Queue
+
+Unstaking is NOT instant. Lido uses a Withdrawal Queue:
+
+1. You request withdrawal → receive an ERC-721 NFT (your claim ticket)
+2. Wait 1-5 days for finalization (depends on Ethereum's exit queue)
+3. Once finalized, claim your ETH by burning the NFT
+
+**Constraints:**
+- Minimum withdrawal: 100 wei of stETH
+- Maximum per request: 1,000 stETH
+- For larger amounts, split into multiple requests
+- You must approve the Withdrawal Queue to spend your stETH first
+
+## Governance (LDO Token)
+
+Lido DAO uses Aragon for governance:
+- **LDO** is the governance token
+- You can **delegate** your voting power to another address (the LDO stays in your wallet)
+- You can **vote** directly on proposals (yea/nay)
+- Votes have a snapshot block — you need LDO balance at that block to vote
+- Voting contract: `0x2e59A20f205bB85a89C53f1936454680651E618e` (mainnet)
 
 ## Safe Patterns for Agents
 
-### DO:
-- Always use `dry_run: true` before any write operation
-- Check `availableYield()` before spending — never assume
-- Respect the daily spend limit (`maxDailySpendBps`)
-- Wrap stETH → wstETH before sending to DeFi protocols
-- Monitor the stETH/ETH exchange rate for depegging risk
-- Log every action with reason strings for onchain auditability
+### ALWAYS DO:
+- Use `dry_run: true` before ANY write operation to preview the outcome
+- Check balances before transacting — never assume
+- Use `lido_position_summary` to understand the full picture before acting
+- Wrap stETH → wstETH before interacting with DeFi protocols
+- Monitor the stETH/ETH exchange rate for depegging (historically stays within 0.5%)
+- Use exact approval amounts, never unlimited (`type(uint256).max`)
 
-### DON'T:
-- Never try to spend more than `availableYield()` returns
-- Never approve unlimited allowances — use exact amounts
-- Don't assume 1 stETH = 1 ETH (there can be a discount)
-- Don't unstake for small amounts (gas > value)
-- Don't make rapid successive transactions (batch if possible)
+### NEVER DO:
+- Don't unstake small amounts — gas cost may exceed the withdrawal value
+- Don't assume 1 stETH = exactly 1 ETH (check the exchange rate)
+- Don't make rapid successive staking transactions (batch if possible)
+- Don't send stETH to contracts that don't handle rebasing tokens
+- Don't forget the withdrawal queue delay — it's NOT instant like a DEX swap
 
-## Rebasing Explained
+## Exchange Rate & Shares
 
-Every ~24 hours, Lido's oracle reports new validator rewards. The stETH contract then adjusts ALL holder balances proportionally.
+The share exchange rate is how Lido tracks rewards:
 
 ```
-Before rebase: You hold 10.000000 stETH
-Oracle reports: +0.01% daily reward
-After rebase:  You hold 10.001000 stETH
+Your ETH value = your_shares × (total_pooled_ETH / total_shares)
 ```
 
-This is invisible — no transaction occurs. Your balance just changes. This is why the YieldPilot treasury compares current `balanceOf(treasury)` against the stored `principal` to calculate yield.
+When validators earn rewards, `total_pooled_ETH` increases but `total_shares` stays the same → each share is worth more → your stETH balance increases.
 
-## Current APR
+The current rate is viewable via `lido_rewards` tool. Historically the rate only goes up (barring slashing events).
 
-Lido staking APR fluctuates between ~3-5% annually. Check real-time:
-- https://lido.fi/ethereum — official dashboard
-- `getProtocolStats()` in the Lido MCP for programmatic access
+## Contract Addresses (Ethereum Mainnet)
+
+| Contract | Address |
+|----------|---------|
+| stETH | `0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84` |
+| wstETH | `0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0` |
+| Withdrawal Queue | `0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1` |
+| LDO Token | `0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32` |
+| Aragon Voting | `0x2e59A20f205bB85a89C53f1936454680651E618e` |
 
 ## MCP Tools Available
 
-This project includes a full Lido MCP server with these tools:
+| Tool | Type | Description |
+|------|------|-------------|
+| `lido_stake` | Write | Stake ETH → stETH |
+| `lido_unstake` | Write | Request withdrawal via queue |
+| `lido_wrap` | Write | stETH → wstETH |
+| `lido_unwrap` | Write | wstETH → stETH |
+| `lido_balances` | Read | ETH/stETH/wstETH/shares for any address |
+| `lido_rewards` | Read | Protocol stats, exchange rate, queue status |
+| `lido_withdrawal_status` | Read | Check pending withdrawal request status |
+| `lido_delegate_vote` | Write | LDO governance: delegate, vote, or list proposals |
+| `lido_position_summary` | Read | Full position analysis with estimated rewards |
 
-1. `lido_stake` — Stake ETH → stETH
-2. `lido_unstake` — Request withdrawal (1-5 day queue)
-3. `lido_wrap` — stETH → wstETH
-4. `lido_unwrap` — wstETH → stETH
-5. `lido_balances` — Query all balances + treasury state
-6. `lido_rewards` — Protocol stats and APR
-7. `lido_spend_yield` — Agent spends available yield
-8. `lido_vault_health` — Treasury health check
-9. `lido_delegate_vote` — Governance delegation
+All write tools support `dry_run: true`. Use it.
 
-All write operations support `dry_run: true` for safe preview.
+## Further Reading
+
+- Lido docs: https://docs.lido.fi
+- stETH integration guide: https://docs.lido.fi/guides/steth-integration-guide
+- Withdrawal queue mechanics: https://docs.lido.fi/contracts/withdrawal-queue-erc721
+- Deployed contracts: https://docs.lido.fi/deployed-contracts

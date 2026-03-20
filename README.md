@@ -130,15 +130,131 @@ npx hardhat test
 ./scripts/prod.sh stop      # Stop all services
 ```
 
-### 6. Use Lido MCP
+### 6. Use the Lido MCP Server
+
+The Lido MCP server is a **standalone** reference MCP server for the Lido staking protocol. It talks to real Lido mainnet contracts (stETH, wstETH, Withdrawal Queue, Aragon DAO) and works with Claude Desktop, Cursor, or any MCP-compatible client. You do NOT need to clone the full repo to use it.
+
+#### Option A: Quick Setup (standalone — no full repo needed)
 
 ```bash
-npm run mcp
-# Exposes 9 tools via MCP stdio transport:
-#   lido_stake, lido_unstake, lido_wrap, lido_unwrap,
-#   lido_balances, lido_rewards, lido_spend_yield,
-#   lido_vault_health, lido_delegate_vote
+# 1. Create a folder and install only what the MCP server needs
+mkdir lido-mcp && cd lido-mcp
+npm init -y
+npm install @modelcontextprotocol/sdk ethers dotenv tsx
+
+# 2. Download the two files you need from the repo
+curl -O https://raw.githubusercontent.com/keplwch/yield-pilot/main/mcp/lido-mcp-server.ts
+curl -O https://raw.githubusercontent.com/keplwch/yield-pilot/main/lido.skill.md
+
+# 3. Create a .env (optional — only needed for write operations)
+cat > .env << 'EOF'
+# Required only for write operations (stake, unstake, wrap, unwrap, vote)
+# Read-only tools (balances, rewards, position_summary) work without a key.
+LIDO_PRIVATE_KEY=0xYOUR_PRIVATE_KEY_HERE
+
+# Network: "mainnet" (default) or "holesky" (testnet)
+LIDO_NETWORK=mainnet
+
+# RPC URL (optional — defaults to a public endpoint)
+# LIDO_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY
+EOF
+
+# 4. Test it works
+npx tsx lido-mcp-server.ts
+# Should print: "Lido MCP Server running on stdio (mainnet)"
+# Press Ctrl+C to stop
 ```
+
+#### Option B: From the full repo
+
+```bash
+cd yield-pilot
+npm run mcp
+```
+
+#### Connect to Claude Desktop
+
+Add this to your Claude Desktop config file:
+
+**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "lido": {
+      "command": "npx",
+      "args": ["tsx", "/absolute/path/to/lido-mcp-server.ts"],
+      "env": {
+        "LIDO_NETWORK": "mainnet",
+        "LIDO_PRIVATE_KEY": "0xYOUR_KEY_HERE"
+      }
+    }
+  }
+}
+```
+
+> **Read-only mode**: Omit `LIDO_PRIVATE_KEY` entirely to use the server in read-only mode. Balance queries, protocol stats, and position summaries work without a wallet. Write operations (stake, wrap, vote) will return a clear error asking you to configure a key.
+
+> **⚠️ nvm users**: Claude Desktop doesn't load your shell profile, so it picks up nvm's **default** Node version — which may be too old. If you see `Unexpected token {` errors, use the absolute path to a modern Node (v18+):
+> ```json
+> "command": "/Users/YOU/.nvm/versions/node/v22.9.0/bin/npx"
+> ```
+> Find your path with: `which npx` (after running `nvm use 22` in your terminal).
+
+#### Connect to Claude Code
+
+```bash
+claude mcp add lido -- npx tsx /absolute/path/to/lido-mcp-server.ts
+```
+
+#### Connect to Cursor
+
+Add to `.cursor/mcp.json` in your project root:
+
+```json
+{
+  "mcpServers": {
+    "lido": {
+      "command": "npx",
+      "args": ["tsx", "/absolute/path/to/lido-mcp-server.ts"],
+      "env": {
+        "LIDO_NETWORK": "mainnet"
+      }
+    }
+  }
+}
+```
+
+#### Available Tools (9 total)
+
+| Tool | Type | What it does |
+|------|------|-------------|
+| `lido_stake` | Write | Stake ETH → receive stETH (rebasing) |
+| `lido_unstake` | Write | Request stETH withdrawal via Lido queue (1-5 days) |
+| `lido_wrap` | Write | Wrap stETH → wstETH (non-rebasing, DeFi-safe) |
+| `lido_unwrap` | Write | Unwrap wstETH → stETH |
+| `lido_balances` | Read | ETH/stETH/wstETH/shares for any address |
+| `lido_rewards` | Read | Protocol stats, exchange rate, withdrawal queue status |
+| `lido_withdrawal_status` | Read | Check pending withdrawal request status |
+| `lido_delegate_vote` | Write | LDO governance: delegate power, vote on proposals, list votes |
+| `lido_position_summary` | Read | Full staking position with estimated daily/annual rewards |
+
+All write tools support `dry_run: true` — always preview before executing.
+
+#### Example Conversation
+
+Once connected, you can talk to Claude naturally:
+
+> **You**: What's the current Lido staking APR and how much stETH does vitalik.eth hold?
+>
+> **Claude**: *calls lido_rewards + lido_balances* — The current exchange rate is 1.2298 stETH/share, with ~9.19M ETH pooled. Estimated APR is 3-4.5%. Vitalik holds...
+>
+> **You**: Stake 0.5 ETH for me, but show me the preview first
+>
+> **Claude**: *calls lido_stake with dry_run: true* — Here's what would happen: you'd receive ~0.407 shares (0.5 stETH). Your wallet has 2.3 ETH, so you have sufficient balance. Shall I execute?
+
+See `lido.skill.md` for the full agent mental model (rebasing mechanics, stETH vs wstETH, safe patterns).
 
 ## Safety Guardrails
 
