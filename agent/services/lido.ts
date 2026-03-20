@@ -283,21 +283,34 @@ export async function getBalances(address?: string): Promise<BalancesResult> {
 }
 
 export async function getProtocolStats(): Promise<ProtocolStats> {
-  const [totalPooled, totalShares, stEthPerWstEth] = await Promise.all([
-    stETH.getTotalPooledEther() as Promise<bigint>,
-    stETH.getTotalShares() as Promise<bigint>,
-    wstETH.stEthPerToken() as Promise<bigint>,
-  ]);
+  // These Lido-specific calls (getTotalPooledEther, getTotalShares, stEthPerToken)
+  // don't exist on MockStETH. Gracefully return defaults when using mocks.
+  try {
+    const [totalPooled, totalShares, stEthPerWstEth] = await Promise.all([
+      stETH.getTotalPooledEther() as Promise<bigint>,
+      stETH.getTotalShares() as Promise<bigint>,
+      wstETH.stEthPerToken() as Promise<bigint>,
+    ]);
 
-  return {
-    totalPooledEther: ethers.formatEther(totalPooled),
-    totalShares: ethers.formatEther(totalShares),
-    stEthPerWstEth: ethers.formatEther(stEthPerWstEth),
-    exchangeRate: (
-      Number(ethers.formatEther(totalPooled)) /
-      Number(ethers.formatEther(totalShares))
-    ).toFixed(6),
-  };
+    return {
+      totalPooledEther: ethers.formatEther(totalPooled),
+      totalShares: ethers.formatEther(totalShares),
+      stEthPerWstEth: ethers.formatEther(stEthPerWstEth),
+      exchangeRate: (
+        Number(ethers.formatEther(totalPooled)) /
+        Number(ethers.formatEther(totalShares))
+      ).toFixed(6),
+    };
+  } catch {
+    // MockStETH doesn't implement Lido-specific view functions — return sensible defaults
+    console.log("  ⚠️ Protocol stats unavailable (using MockStETH) — returning defaults");
+    return {
+      totalPooledEther: "0",
+      totalShares: "0",
+      stEthPerWstEth: "1.000000",
+      exchangeRate: "1.000000",
+    };
+  }
 }
 
 // ════════════════════════════════════════════════════════════════

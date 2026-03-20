@@ -20,7 +20,7 @@ async function main() {
   console.log(`Balance:   ${ethers.formatEther(await ethers.provider.getBalance(deployer.address))} ETH\n`);
 
   // ── Config ─────────────────────────────────────────────
-  const STETH_SEPOLIA = process.env.STETH_ADDRESS || "0x3e3FE7dBc6B4C189E7128855dD526361c49b40Af";
+  const STETH_SEPOLIA = process.env.STETH_ADDRESS || "0x6df25A1734E181AFbBD9c8A50b1D00e39D482704";
   const AGENT_ADDRESS = process.env.AGENT_WALLET || deployer.address;
   const DEFAULT_MAX_DAILY_BPS = 5000; // 50% of available yield per day
 

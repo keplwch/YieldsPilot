@@ -14,7 +14,7 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types"],
-    "types": ["node"],
+    "types": ["node", "sql.js"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,

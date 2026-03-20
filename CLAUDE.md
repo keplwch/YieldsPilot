@@ -11,7 +11,7 @@ Key architectural guarantee: the agent can only spend yield, never principal.
 ## Commands
 
 ### Package Manager
-Use **bun** for all installations.
+Use **bun** for all installations. Never use npm.
 
 ```bash
 bun install                        # Root dependencies
@@ -30,16 +30,33 @@ cd frontend && bun install         # Frontend dependencies
 
 ### Smart Contracts
 ```bash
-npm run compile                    # Hardhat compile
-npm run test                       # 25 contract tests (Hardhat + Chai)
-./scripts/deploy.sh sepolia        # Deploy to Ethereum Sepolia
-./scripts/deploy.sh all            # Deploy to all configured networks
+npx hardhat compile                # Compile Solidity contracts
+npx hardhat test                   # Run all 55 tests (Hardhat + Chai)
 ```
+
+### Deployment (deploy.sh)
+```bash
+./scripts/deploy.sh fresh          # ⭐ Deploy everything fresh (MockUSDC + MockRouter + Registry)
+./scripts/deploy.sh compile        # Compile contracts only
+./scripts/deploy.sh test           # Run all 55 contract tests
+./scripts/deploy.sh sepolia        # Deploy single Treasury to Ethereum Sepolia
+./scripts/deploy.sh registry       # Deploy multi-user Registry to Ethereum Sepolia
+./scripts/deploy.sh status         # Deploy to Status Network Sepolia (gasless bounty)
+./scripts/deploy.sh verify <addr>  # Verify contract on Etherscan
+./scripts/deploy.sh all            # Deploy to all networks (Registry + Treasury + Status)
+./scripts/deploy.sh history        # Show deployment history
+```
+
+**`deploy.sh fresh` is the recommended starting point.** It deploys MockUSDC + MockRouter + Registry in one command, configures default targets, and prints a ready-to-paste `.env` block. After running it:
+1. Paste the printed env values into `.env`
+2. Restart the agent: `bun run agent`
+3. Create a user treasury from the frontend UI
+4. The agent will use `swapYield()` with MockRouter for real atomic swaps on testnet
 
 ### API & MCP
 ```bash
-npm run api                        # Express API server → port 3001
-npm run mcp                        # Lido MCP server (9 tools)
+bun run api                        # Express API server → port 3001
+bun run mcp                        # Lido MCP server (9 tools)
 ```
 
 ### Production
@@ -57,17 +74,18 @@ npm run mcp                        # Lido MCP server (9 tools)
 
 #### `contracts/` — Solidity Smart Contracts
 The on-chain layer. Start here when touching treasury logic, principal protection, or spend limits.
-- `YieldPilotTreasury.sol` — Core single-user treasury. Look here for: principal tracking, `maxDailySpendBps`, `allowedTargets` whitelist, events (`Deposited`, `YieldSpent`, `PrincipalWithdrawn`)
-- `YieldPilotRegistry.sol` — Multi-user factory. Look here for: per-user treasury deployment, registry lookup
-- `mocks/MockStETH.sol` — Test-only stETH mock with simulated rebasing. Only relevant for `test/`
+- `YieldPilotTreasury.sol` — Core single-user treasury. Look here for: principal tracking, `maxDailySpendBps`, `allowedTargets` whitelist, `swapYield()` (atomic DEX swap — funds never leave contract), `withdrawToken()` (move swap output tokens), events (`Deposited`, `YieldSpent`, `YieldSwapped`, `PrincipalWithdrawn`)
+- `YieldPilotRegistry.sol` — Multi-user factory. Look here for: per-user treasury deployment, registry lookup, default target management
+- `mocks/MockStETH.sol` — Test-only stETH mock with simulated rebasing
+- `mocks/MockRouter.sol` — Simulates Uniswap router for testnet `swapYield()` testing. Also deploys `MockUSDC` (6 decimal ERC-20)
 
 #### `agent/` — Autonomous Agent Loop
 The AI decision engine. Start here when touching LLM calls, on-chain execution logic, or the agent cycle.
 - `index.ts` — Entry point for the autonomous loop. Contains the 4-phase cycle (DISCOVER → PLAN → EXECUTE → VERIFY), cycle interval, and per-user iteration logic
 - `services/venice.ts` — Venice AI call (private reasoning). Look here for: system prompt, decision schema, confidence/risk extraction
 - `services/bankr.ts` — Bankr multi-model gateway. Look here for: parallel risk/market/strategy calls, model selection, response merging
-- `services/uniswap.ts` — Swap execution. Look here for: quote generation, dry-run toggle, live swap with txHash
-- `services/lido.ts` — Lido staking operations. Look here for: ETH→stETH stake, withdrawal requests, wstETH wrapping, balance queries
+- `services/uniswap.ts` — Swap execution. Look here for: `buildContractSwap()` (builds calldata for treasury-level atomic swaps), `getQuote()`, `dryRun()`, `executeSwap()` (legacy agent-wallet swap)
+- `services/lido.ts` — Lido staking + treasury ops. Look here for: `swapYieldFromTreasury()` (atomic swap via contract), `spendYieldFromTreasury()`, `withdrawSwapOutput()`, `getAllUserTreasuries()`, ETH→stETH stake, balance queries
 - `services/vaultMonitor.ts` — Polling + Telegram alerts. Look here for: yield delta calculation, alert thresholds, notification format
 - `utils/logger.ts` — ERC-8004 structured logger. Look here for: `agent_log.json` schema, phase/action/txHash fields
 
@@ -98,11 +116,15 @@ Single source of truth for: LLM model names, agent loop interval, gas limits, co
 #### `scripts/` — Operational Scripts
 - `dev.sh` — Local development process manager (wraps individual service starts)
 - `prod.sh` — Docker Compose wrapper for production
-- `deploy.sh` — Hardhat deploy runner for Sepolia / all networks
-- `deploy-sepolia.ts`, `deploy-registry.ts`, `deploy-status.ts` — Individual deploy scripts called by `deploy.sh`
+- `deploy.sh` — Main deploy runner. Use `./deploy.sh fresh` for a full clean deploy
+- `deploy-fresh.ts` — Deploys MockUSDC + MockRouter + Registry in one shot (called by `deploy.sh fresh`)
+- `deploy-sepolia.ts` — Single Treasury deploy to Sepolia
+- `deploy-registry.ts` — Registry-only deploy to Sepolia
+- `deploy-mock-router.ts` — MockRouter + MockUSDC standalone deploy
+- `deploy-status.ts` — Status Network Sepolia deploy (gasless bounty)
 
 #### `test/` — Contract Tests
-Hardhat + Chai tests for all contract behaviour. 25 tests covering treasury invariants, registry, and mock stETH. Run with `npm run test`.
+Hardhat + Chai tests for all contract behaviour. **55 tests** covering treasury invariants, registry, atomic swaps (`swapYield`), slippage protection, withdrawal tokens, and mock stETH. Run with `npx hardhat test`.
 
 #### `typechain-types/` — Generated Contract ABIs
 Auto-generated by Hardhat TypeChain. **Never edit manually.** Regenerate with `npm run compile` after any `.sol` change.
@@ -119,7 +141,9 @@ Nginx config + Dockerfiles for agent, frontend, and monitor services.
 | How the agent makes decisions | `agent/index.ts` + `agent/services/venice.ts` |
 | Which LLM models are used | `config/default.ts` |
 | Treasury principal/yield logic | `contracts/YieldPilotTreasury.sol` |
-| A swap or Lido operation | `agent/services/uniswap.ts` or `agent/services/lido.ts` |
+| Atomic swap logic (swapYield) | `contracts/YieldPilotTreasury.sol` + `agent/services/lido.ts` |
+| Uniswap API / calldata building | `agent/services/uniswap.ts` |
+| A Lido staking operation | `agent/services/lido.ts` |
 | Dashboard layout or new page | `frontend/src/App.tsx` |
 | An existing UI component | `frontend/src/components/<ComponentName>.tsx` |
 | Colors, fonts, card styles | `frontend/src/index.css` |
@@ -137,12 +161,16 @@ Nginx config + Dockerfiles for agent, frontend, and monitor services.
 4-phase cycle runs every 60s per treasury:
 1. **DISCOVER** — Query treasury balances + available yield
 2. **PLAN** — Venice AI (private reasoning) + Bankr (3 LLMs: risk/market/strategy)
-3. **EXECUTE** — Swap via Uniswap, stake/unstake via Lido, or hold
+3. **EXECUTE** — Three swap modes depending on environment:
+   - **Mainnet** (`chainId=1` + `UNISWAP_API_KEY`): Uniswap Trading API → `treasury.swapYield()` (atomic)
+   - **Testnet + MockRouter** (`MOCK_ROUTER_ADDRESS` set): MockRouter calldata → `treasury.swapYield()` (atomic)
+   - **Testnet, no MockRouter**: `treasury.spendYield()` to allowed target (demo mode)
 4. **VERIFY** — Confirm on-chain state matches intent; log to `agent_log.json` (ERC-8004)
 
 ### Smart Contracts
-- `YieldPilotTreasury.sol` — Single-user treasury. Tracks `principal` (locked) and `yieldWithdrawn`. Enforces `maxDailySpendBps`.
-- `YieldPilotRegistry.sol` — Factory: each user gets their own treasury instance.
+- `YieldPilotTreasury.sol` — Single-user treasury. Tracks `principal` (locked) and `yieldWithdrawn`. Enforces `maxDailySpendBps`. `swapYield()` executes atomic DEX swaps — treasury approves router, calls it, verifies output, resets approval. Funds never leave the contract.
+- `YieldPilotRegistry.sol` — Factory: each user gets their own treasury instance. Manages default targets (Uniswap Router + MockRouter are added on deploy).
+- `mocks/MockRouter.sol` — Testnet Uniswap simulator. Pulls stETH, mints MockUSDC at configurable rate (default 2000 USDC/stETH).
 
 ---
 
@@ -155,9 +183,12 @@ AGENT_PRIVATE_KEY=          # Testnet agent wallet key
 RPC_URL=                    # Ethereum Sepolia RPC
 VENICE_API_KEY=             # Venice AI (private reasoning)
 BANKR_API_KEY=              # Bankr multi-model gateway
-UNISWAP_API_KEY=            # Uniswap Trading API
-TREASURY_CONTRACT=          # Deployed treasury address
-REGISTRY_CONTRACT=          # Deployed registry address
+UNISWAP_API_KEY=            # Uniswap Trading API (mainnet only)
+REGISTRY_CONTRACT=          # Deployed registry address (from deploy.sh fresh)
+TREASURY_CONTRACT=          # Deployed treasury address (single-user mode, optional)
+MOCK_ROUTER_ADDRESS=        # MockRouter for testnet atomic swaps (from deploy.sh fresh)
+MOCK_TOKEN_OUT_ADDRESS=     # MockUSDC output token (from deploy.sh fresh)
+STETH_ADDRESS=              # stETH contract address
 TELEGRAM_BOT_TOKEN=         # Optional: alert bot
 TELEGRAM_CHAT_ID=           # Optional: alert chat
 ```
@@ -238,5 +269,8 @@ The dashboard has a strong, deliberate aesthetic. **Do not deviate from it.**
 - **Agent log is ERC-8004 structured.** `agent_log.json` must maintain the phase/action/reasoning/txHash schema. Don't break the structure.
 - **Frontend uses demo mode fallback.** If the API is unreachable, `useApi.ts` falls back to `data/mock.ts`. `ConnectionBanner.tsx` shows a warning.
 - **Vite proxies `/api` → port 3001.** Don't hardcode API URLs in frontend components.
-- **TypeChain types are generated.** Run `npm run compile` before editing contract interaction code — `typechain-types/` must be current.
+- **TypeChain types are generated.** Run `npx hardhat compile` before editing contract interaction code — `typechain-types/` must be current.
 - **Tailwind config has custom tokens.** Always use the custom color tokens (`accent-purple`, `accent-green`, etc.) — don't inline arbitrary hex values in components.
+- **swapYield vs spendYield.** `swapYield()` is the secure atomic path — funds stay in the contract. `spendYield()` is a simple transfer. On testnet, the agent uses `swapYield()` with MockRouter if `MOCK_ROUTER_ADDRESS` is set. Without it, it falls back to `spendYield()`.
+- **Uniswap API is mainnet-only.** The Trading API doesn't support Sepolia mock tokens. On testnet, the agent builds MockRouter calldata locally instead of calling the API.
+- **deploy.sh fresh is the one-stop deploy.** Deploys MockUSDC + MockRouter + Registry, configures all targets, prints .env block. Use this when starting clean.

@@ -15,6 +15,8 @@
  *   GET /api/logs              — Agent cycle logs
  *   GET /api/status            — Agent runtime status
  *   GET /api/yield-history     — Yield over time for chart
+ *   GET /api/activity          — Structured activity history
+ *   GET /api/treasury-tokens   — Token balances for an address
  *   GET /api/health            — Health check
  */
 
@@ -90,7 +92,7 @@ const ERC20_ABI = [
 ];
 
 // Lido stETH/wstETH addresses on Sepolia
-const STETH_ADDRESS = process.env.STETH_ADDRESS || "0x3e3FE7dBc6B4C189E7128855dD526361c49b40Af";
+const STETH_ADDRESS = process.env.STETH_ADDRESS || "0x6df25A1734E181AFbBD9c8A50b1D00e39D482704";
 const WSTETH_ADDRESS = "0xB82381A3fBD3FaFA77B3a7bE693342618240067b";
 
 // ── Cache ────────────────────────────────────────────────────────
@@ -117,6 +119,93 @@ function setCache<T>(key: string, data: T): void {
 // ── Agent state files ────────────────────────────────────────────
 const AGENT_STATE_PATH = path.resolve(process.cwd(), "agent_state.json");
 const AGENT_LOG_PATH = path.resolve(process.cwd(), "agent_log.json");
+// ── SQLite Activity DB (sql.js — pure JS/WASM, cross-platform) ──
+import initSqlJs, { type Database as SqlJsDatabase } from "sql.js";
+
+const SQLITE_PATH = path.resolve(process.cwd(), "yieldpilot.db");
+let activityDb: SqlJsDatabase | null = null;
+let activityDbMtime: number = 0;
+
+/** Load / reload the DB from disk (re-reads if file changed) */
+function getActivityDb(): SqlJsDatabase | null {
+  try {
+    if (!fs.existsSync(SQLITE_PATH)) return null;
+    const stat = fs.statSync(SQLITE_PATH);
+    const mtime = stat.mtimeMs;
+
+    // Reload if file was modified (agent wrote new data)
+    if (activityDb && mtime === activityDbMtime) return activityDb;
+
+    const fileBuffer = fs.readFileSync(SQLITE_PATH);
+    if (!sqlJsReady) return null; // WASM not loaded yet
+    activityDb = new sqlJsReady.Database(fileBuffer);
+    activityDbMtime = mtime;
+    return activityDb;
+  } catch { /* DB not created yet */ }
+  return null;
+}
+
+// Initialize sql.js WASM engine eagerly
+let sqlJsReady: Awaited<ReturnType<typeof initSqlJs>> | null = null;
+initSqlJs().then((SQL) => {
+  sqlJsReady = SQL;
+  console.log("  📦 sql.js WASM engine loaded for API");
+}).catch((err) => {
+  console.error("  ⚠️ Failed to load sql.js:", err);
+});
+
+/** sql.js helper: run SELECT and return all rows as objects */
+function sqlQueryAll(d: SqlJsDatabase, sql: string, params: any[] = []): Record<string, any>[] {
+  const stmt = d.prepare(sql);
+  if (params.length > 0) stmt.bind(params);
+  const results: Record<string, any>[] = [];
+  while (stmt.step()) results.push(stmt.getAsObject());
+  stmt.free();
+  return results;
+}
+
+/** sql.js helper: run SELECT and return first row as object */
+function sqlQueryOne(d: SqlJsDatabase, sql: string, params: any[] = []): Record<string, any> | null {
+  const stmt = d.prepare(sql);
+  if (params.length > 0) stmt.bind(params);
+  let result: Record<string, any> | null = null;
+  if (stmt.step()) result = stmt.getAsObject();
+  stmt.free();
+  return result;
+}
+
+function rowToRecord(row: any): Record<string, unknown> {
+  return {
+    id: row.id,
+    cycle: row.cycle,
+    timestamp: row.timestamp,
+    user: row.user,
+    treasuryAddress: row.treasury_address,
+    action: row.action,
+    status: row.status,
+    treasuryBalance: row.treasury_balance,
+    principal: row.principal,
+    availableYield: row.available_yield,
+    dailySpendRemaining: row.daily_spend_remaining,
+    veniceAction: row.venice_action,
+    veniceReasoning: row.venice_reasoning,
+    riskLevel: row.risk_level,
+    riskScore: row.risk_score,
+    marketSentiment: row.market_sentiment,
+    finalAction: row.final_action,
+    strategyReasoning: row.strategy_reasoning,
+    swapAmount: row.swap_amount ?? undefined,
+    tokenIn: row.token_in ?? undefined,
+    tokenOut: row.token_out ?? undefined,
+    swapPath: row.swap_path ? JSON.parse(row.swap_path) : undefined,
+    txHash: row.tx_hash ?? undefined,
+    router: row.router ?? undefined,
+    expectedOutput: row.expected_output ?? undefined,
+    executionMode: row.execution_mode ?? undefined,
+    durationMs: row.duration_ms,
+    error: row.error ?? undefined,
+  };
+}
 
 function readAgentState(): Record<string, unknown> {
   try {
@@ -575,19 +664,120 @@ app.get("/api/protocol", async (_req, res) => {
 
 /**
  * GET /api/logs?limit=50
+ * Returns cycle logs — reads from SQLite (primary) with JSON fallback.
+ * The frontend's ReasoningPanel + ActivityFeed consume this.
  */
 app.get("/api/logs", (_req, res) => {
   try {
     const limit = parseInt((_req.query.limit as string) ?? "50", 10);
+
+    // Primary: SQLite activity DB
+    const d = getActivityDb();
+    if (d) {
+      const totalRow = sqlQueryOne(d, "SELECT COUNT(*) as cnt FROM activities");
+      const totalCycles = totalRow?.cnt ?? 0;
+      const rows = sqlQueryAll(d, "SELECT * FROM activities ORDER BY timestamp DESC LIMIT ?", [limit]);
+
+      // Transform SQLite rows into the LoopLog format the frontend expects
+      const cycles = rows.reverse().map((row: any) => {
+        const r = rowToRecord(row);
+        return {
+          id: r.id,
+          type: "autonomous_loop",
+          cycleNumber: r.cycle,
+          timestamp: r.timestamp,
+          status: r.status === "executed" ? "success" : r.status,
+          phases: {
+            discover: {
+              timestamp: r.timestamp,
+              phase: "discover",
+              action: "check_balances",
+              inputs: { treasuryAddress: r.treasuryAddress, user: r.user },
+              outputs: {
+                balances: {
+                  treasury: {
+                    totalBalance: r.treasuryBalance,
+                    principal: r.principal,
+                    availableYield: r.availableYield,
+                    dailySpendRemaining: r.dailySpendRemaining,
+                  },
+                },
+                protocolStats: { exchangeRate: "1.000000" },
+              },
+              status: "success",
+            },
+            plan: {
+              timestamp: r.timestamp,
+              phase: "plan",
+              action: "multi_model_reasoning",
+              inputs: {},
+              outputs: {
+                veniceDecision: r.veniceReasoning || r.veniceAction,
+                riskLevel: r.riskLevel,
+                marketSentiment: r.marketSentiment,
+                finalAction: r.finalAction,
+              },
+              reasoning: r.veniceReasoning,
+              status: "success",
+            },
+            execute: {
+              timestamp: r.timestamp,
+              phase: "execute",
+              action: r.action,
+              inputs: {
+                strategy: {
+                  action: r.finalAction,
+                  reasoning: r.strategyReasoning,
+                  swap_amount: r.swapAmount,
+                  swap_path: r.swapPath,
+                },
+              },
+              outputs: {
+                action: r.action,
+                status: r.status,
+                txHash: r.txHash ?? null,
+                router: r.router ?? null,
+                expectedOutput: r.expectedOutput ?? null,
+                error: r.error ?? null,
+              },
+              txHash: r.txHash ?? null,
+              status: r.status,
+            },
+            verify: {
+              timestamp: r.timestamp,
+              phase: "verify",
+              action: "post_execution_check",
+              inputs: {},
+              outputs: {
+                actionTaken: r.action,
+                duration: r.durationMs,
+                verified: true,
+              },
+              duration: r.durationMs,
+              status: "success",
+            },
+          },
+        };
+      });
+
+      return res.json({
+        agent: "YieldPilot",
+        totalCycles,
+        cycles,
+        source: "sqlite",
+        updatedAt: new Date().toISOString(),
+      });
+    }
+
+    // Fallback: JSON log file (for backward compat / before first cycle)
     const agentLog = readAgentLogs() as { cycles?: unknown[] };
     const cycles = agentLog.cycles ?? [];
-
-    const recent = cycles.slice(-limit);
 
     res.json({
       agent: "YieldPilot",
       totalCycles: cycles.length,
-      cycles: recent,
+      cycles: cycles.slice(-limit),
+      source: "json",
       updatedAt: new Date().toISOString(),
     });
   } catch (err: unknown) {
@@ -598,12 +788,11 @@ app.get("/api/logs", (_req, res) => {
 
 /**
  * GET /api/status
+ * Returns agent runtime status — reads from agent_state.json + SQLite for cycle count.
  */
 app.get("/api/status", (_req, res) => {
   try {
     const agentState = readAgentState();
-    const agentLog = readAgentLogs() as { cycles?: unknown[] };
-    const cycles = agentLog.cycles ?? [];
 
     const startedAt = agentState.startedAt as string | null;
     let uptimeMs = 0;
@@ -611,11 +800,22 @@ app.get("/api/status", (_req, res) => {
       uptimeMs = Date.now() - new Date(startedAt).getTime();
     }
 
-    const lastCycle = cycles.length > 0 ? cycles[cycles.length - 1] : null;
+    // Cycle count comes from agent state (resets each session, consistent with UI)
+    // Do NOT use DB row count — that accumulates across sessions and inflates in multi-user mode
+    const cycleCount = agentState.cycleCount as number ?? 0;
+    let lastCycle: Record<string, unknown> | null = null;
+
+    const d = getActivityDb();
+    if (d) {
+      const lastRow = sqlQueryOne(d, "SELECT * FROM activities ORDER BY timestamp DESC LIMIT 1");
+      if (lastRow) {
+        lastCycle = rowToRecord(lastRow);
+      }
+    }
 
     res.json({
       running: agentState.running ?? false,
-      cycleCount: agentState.cycleCount ?? cycles.length,
+      cycleCount,
       lastAction: agentState.lastAction ?? null,
       computeSpentUsd: agentState.computeSpentUsd ?? 0,
       startedAt,
@@ -640,9 +840,35 @@ app.get("/api/status", (_req, res) => {
 
 /**
  * GET /api/yield-history
+ * Returns yield over time for charts — reads from SQLite (primary) with JSON fallback.
  */
 app.get("/api/yield-history", (_req, res) => {
   try {
+    // Primary: SQLite activity DB
+    const d = getActivityDb();
+    if (d) {
+      const rows = sqlQueryAll(d, `
+        SELECT timestamp, available_yield, treasury_balance
+        FROM activities
+        WHERE available_yield IS NOT NULL
+        ORDER BY timestamp ASC
+        LIMIT 60
+      `);
+
+      const history = rows.map((row: any) => ({
+        date: row.timestamp,
+        yield: parseFloat(row.available_yield ?? "0"),
+        balance: parseFloat(row.treasury_balance ?? "0"),
+      }));
+
+      return res.json({
+        history: history.slice(-30),
+        source: "sqlite",
+        updatedAt: new Date().toISOString(),
+      });
+    }
+
+    // Fallback: JSON log file
     const agentLog = readAgentLogs() as { cycles?: Array<Record<string, unknown>> };
     const cycles = agentLog.cycles ?? [];
 
@@ -672,11 +898,150 @@ app.get("/api/yield-history", (_req, res) => {
 
     res.json({
       history: yieldHistory.slice(-30),
+      source: "json",
       updatedAt: new Date().toISOString(),
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
     res.status(500).json({ error: message, history: [] });
+  }
+});
+
+/**
+ * GET /api/activity?limit=50&offset=0&filter=all|swaps
+ * Returns structured activity history for the dashboard
+ */
+app.get("/api/activity", (_req, res) => {
+  try {
+    const limit = parseInt((_req.query.limit as string) ?? "50", 10);
+    const offset = parseInt((_req.query.offset as string) ?? "0", 10);
+    const filter = (_req.query.filter as string) ?? "all";
+
+    const d = getActivityDb();
+    if (!d) {
+      return res.json({
+        records: [],
+        total: 0,
+        stats: { totalCycles: 0, totalSwaps: 0, totalHolds: 0, totalErrors: 0, totalVolumeStETH: 0, lastUpdated: new Date().toISOString() },
+        updatedAt: new Date().toISOString(),
+      });
+    }
+
+    const whereClause = filter === "swaps" ? "WHERE action = 'swap_yield'" : "";
+
+    const totalRow = sqlQueryOne(d, `SELECT COUNT(*) as cnt FROM activities ${whereClause}`);
+    const total = totalRow?.cnt ?? 0;
+
+    const rows = sqlQueryAll(d, `SELECT * FROM activities ${whereClause} ORDER BY timestamp DESC LIMIT ? OFFSET ?`, [limit, offset]);
+    const records = rows.map(rowToRecord);
+
+    // Compute stats
+    const totalCycles = sqlQueryOne(d, "SELECT COUNT(*) as cnt FROM activities")?.cnt ?? 0;
+    const totalSwaps = sqlQueryOne(d, "SELECT COUNT(*) as cnt FROM activities WHERE action = 'swap_yield' AND status = 'executed'")?.cnt ?? 0;
+    const totalHolds = sqlQueryOne(d, "SELECT COUNT(*) as cnt FROM activities WHERE action = 'hold'")?.cnt ?? 0;
+    const totalErrors = sqlQueryOne(d, "SELECT COUNT(*) as cnt FROM activities WHERE status IN ('error', 'failed')")?.cnt ?? 0;
+    const volumeRow = sqlQueryOne(d, "SELECT COALESCE(SUM(CAST(swap_amount AS REAL)), 0) as vol FROM activities WHERE action = 'swap_yield' AND status = 'executed'");
+    const lastRow = sqlQueryOne(d, "SELECT timestamp FROM activities ORDER BY timestamp DESC LIMIT 1");
+
+    res.json({
+      records,
+      total,
+      stats: {
+        totalCycles,
+        totalSwaps,
+        totalHolds,
+        totalErrors,
+        totalVolumeStETH: volumeRow?.vol ?? 0,
+        lastUpdated: lastRow?.timestamp ?? new Date().toISOString(),
+      },
+      updatedAt: new Date().toISOString(),
+    });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("Activity read error:", message);
+    res.status(500).json({ error: message, records: [], total: 0 });
+  }
+});
+
+/**
+ * GET /api/treasury-tokens/:address
+ * Returns all known token balances for a treasury address.
+ * Checks stETH + any configured swap output tokens (e.g. MockUSDC).
+ */
+app.get("/api/treasury-tokens/:address", async (req, res) => {
+  try {
+    const addr = req.params.address;
+    if (!ethers.isAddress(addr)) {
+      return res.status(400).json({ error: "Invalid address" });
+    }
+
+    const cacheKey = `tokens_${addr}`;
+    const cached = getCached<Record<string, unknown>>(cacheKey);
+    if (cached) return res.json(cached);
+
+    // Known tokens to check
+    const tokenList: Array<{ address: string; symbol: string; decimals: number }> = [
+      { address: STETH_ADDRESS, symbol: "stETH", decimals: 18 },
+    ];
+
+    // Add MockUSDC / swap output token if configured
+    const mockTokenOut = process.env.MOCK_TOKEN_OUT_ADDRESS;
+    if (mockTokenOut && ethers.isAddress(mockTokenOut)) {
+      tokenList.push({ address: mockTokenOut, symbol: "USDC", decimals: 6 });
+    }
+
+    // Add any additional tokens from env (comma-separated: TOKEN_ADDR:SYMBOL:DECIMALS)
+    const extraTokens = process.env.TRACKED_TOKENS;
+    if (extraTokens) {
+      for (const spec of extraTokens.split(",")) {
+        const [tAddr, tSymbol, tDec] = spec.trim().split(":");
+        if (tAddr && ethers.isAddress(tAddr)) {
+          tokenList.push({ address: tAddr, symbol: tSymbol || "???", decimals: parseInt(tDec || "18") });
+        }
+      }
+    }
+
+    const tokens: Array<{ address: string; symbol: string; decimals: number; balance: string; balanceRaw: string }> = [];
+
+    await Promise.all(
+      tokenList.map(async (t) => {
+        try {
+          const contract = new ethers.Contract(t.address, ERC20_ABI, provider);
+          const bal: bigint = await contract.balanceOf(addr);
+          tokens.push({
+            address: t.address,
+            symbol: t.symbol,
+            decimals: t.decimals,
+            balance: ethers.formatUnits(bal, t.decimals),
+            balanceRaw: bal.toString(),
+          });
+        } catch {
+          tokens.push({
+            address: t.address,
+            symbol: t.symbol,
+            decimals: t.decimals,
+            balance: "0",
+            balanceRaw: "0",
+          });
+        }
+      })
+    );
+
+    // Also get native ETH balance
+    const ethBal = await provider.getBalance(addr);
+
+    const result = {
+      address: addr,
+      tokens,
+      eth: ethers.formatEther(ethBal),
+      updatedAt: new Date().toISOString(),
+    };
+
+    setCache(cacheKey, result);
+    res.json(result);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    res.status(500).json({ error: message });
   }
 });
 
@@ -714,7 +1079,9 @@ app.listen(PORT, () => {
   console.log(`     GET /api/protocol`);
   console.log(`     GET /api/logs`);
   console.log(`     GET /api/status`);
-  console.log(`     GET /api/yield-history\n`);
+  console.log(`     GET /api/yield-history`);
+  console.log(`     GET /api/activity`);
+  console.log(`     GET /api/treasury-tokens/:address\n`);
 });
 
 export default app;

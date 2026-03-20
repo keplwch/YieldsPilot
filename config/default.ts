@@ -45,9 +45,9 @@ const config: AppConfig = {
 
   // === Lido (Sepolia testnet) ===
   lido: {
-    stETH: "0x3e3FE7dBc6B4C189E7128855dD526361c49b40Af",
-    wstETH: "0xB82381A3fBD3FaFA77B3a7bE693342618240067b",
-    withdrawalQueue: "0x1583C7b3f4C3B008720E6BcE5726336b0aB25fdd",
+    stETH: process.env.STETH_ADDRESS ?? "0x6df25A1734E181AFbBD9c8A50b1D00e39D482704",
+    wstETH: process.env.WSTETH_ADDRESS ?? "0xB82381A3fBD3FaFA77B3a7bE693342618240067b",
+    withdrawalQueue: process.env.WITHDRAWAL_QUEUE_ADDRESS ?? "0x1583C7b3f4C3B008720E6BcE5726336b0aB25fdd",
   },
 
   // === Treasury Contract ===

@@ -11,7 +11,7 @@ export type SwapRecommendation = "swap_now" | "wait" | "urgent_swap";
 export type RiskRecommendation = "proceed" | "caution" | "abort";
 export type Urgency = "immediate" | "next_cycle" | "no_rush";
 export type CyclePhase = "discover" | "plan" | "execute" | "verify" | "error";
-export type CycleStatus = "success" | "error" | "no_action_needed" | "executed" | "executed_fallback" | "aborted" | "dry_run_only" | "completed";
+export type CycleStatus = "success" | "error" | "no_action_needed" | "executed" | "executed_fallback" | "executed_testnet" | "aborted" | "dry_run_only" | "dry_run_rejected" | "failed" | "completed";
 
 export interface VeniceDecision {
   analysis: string;
@@ -234,12 +234,13 @@ export interface AgentState {
 
 export interface ExecuteResult {
   action: string;
-  dryRun?: DryRunResult;
+  dryRun?: DryRunResult | LidoOperationResult;
   spend?: LidoOperationResult;
   swap?: LidoOperationResult;
   txHash?: string;
   status: CycleStatus;
   reason?: string;
+  error?: string;
   riskScore?: number;
   router?: string;
   expectedOutput?: string;

@@ -5,12 +5,15 @@ set -euo pipefail
 # ║  YieldPilot — Deploy Script                                 ║
 # ║                                                              ║
 # ║  Usage:                                                      ║
-# ║    ./deploy.sh sepolia        Deploy Treasury to ETH Sepolia ║
-# ║    ./deploy.sh status         Deploy to Status Network       ║
-# ║    ./deploy.sh verify <addr>  Verify on Etherscan            ║
-# ║    ./deploy.sh compile        Compile contracts only         ║
-# ║    ./deploy.sh test           Run contract tests             ║
-# ║    ./deploy.sh all            Deploy to all networks         ║
+# ║    ./deploy.sh fresh           ⭐ Deploy everything fresh    ║
+# ║    ./deploy.sh compile         Compile contracts only        ║
+# ║    ./deploy.sh test            Run contract tests (55)       ║
+# ║    ./deploy.sh sepolia         Deploy Treasury to Sepolia    ║
+# ║    ./deploy.sh registry        Deploy Registry to Sepolia    ║
+# ║    ./deploy.sh status          Deploy to Status Network      ║
+# ║    ./deploy.sh verify <addr>   Verify on Etherscan           ║
+# ║    ./deploy.sh all             Deploy to all networks        ║
+# ║    ./deploy.sh history         Show deployment history       ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 # ── Colors ──────────────────────────────────────────────────────
@@ -189,7 +192,7 @@ cmd_verify() {
   fi
 
   # Read constructor args from .env or use defaults
-  local steth="${STETH_ADDRESS:-0x3e3FE7dBc6B4C189E7128855dD526361c49b40Af}"
+  local steth="${STETH_ADDRESS:-0x6df25A1734E181AFbBD9c8A50b1D00e39D482704}"
   local agent="${AGENT_WALLET:-}"
   local bps="5000"
 
@@ -244,6 +247,46 @@ cmd_registry() {
   echo "  1. Copy the Registry address into your .env as REGISTRY_CONTRACT"
   echo "  2. Users approve stETH to the Registry, then call createTreasuryAndDeposit()"
   echo "  3. The agent auto-discovers and processes all registered treasuries"
+  echo ""
+}
+
+cmd_fresh() {
+  preflight
+
+  header "Fresh Full Deploy (MockUSDC + MockRouter + Registry)"
+
+  log "Deploys everything for a testnet demo with atomic swaps:"
+  log "  1. MockUSDC        — output token for swaps"
+  log "  2. MockRouter      — simulates Uniswap on testnet"
+  log "  3. Registry        — multi-user treasury factory"
+  log "  4. Configures MockRouter + Uniswap Router as default targets"
+  echo ""
+  log "After deployment, create a user treasury from the UI."
+  echo ""
+
+  # Check RPC
+  if [ -z "${RPC_URL:-}" ]; then
+    warn "RPC_URL not set — using default Alchemy demo endpoint"
+  else
+    ok "RPC URL: ${RPC_URL:0:40}..."
+  fi
+
+  # Compile first
+  log "Compiling contracts..."
+  npx hardhat compile --quiet
+
+  # Deploy everything in one script
+  echo ""
+  npx hardhat run scripts/deploy-fresh.ts --network sepolia
+
+  echo ""
+  ok "Fresh deployment complete!"
+  echo ""
+  echo -e "${CYAN}Next steps:${NC}"
+  echo "  1. Copy the printed .env values into your .env file"
+  echo "  2. Restart agent:  bun run agent"
+  echo "  3. Open frontend, connect wallet, deposit stETH"
+  echo "  4. Agent will use swapYield() with MockRouter — real atomic swaps on testnet!"
   echo ""
 }
 
@@ -305,8 +348,9 @@ cmd_help() {
   echo "Usage: ./deploy.sh <command> [args]"
   echo ""
   echo -e "${BOLD}Commands:${NC}"
+  echo "  fresh            ⭐ Deploy everything fresh (MockUSDC + MockRouter + Registry)"
   echo "  compile          Compile Solidity contracts"
-  echo "  test             Run contract tests (45 tests)"
+  echo "  test             Run contract tests (55 tests)"
   echo "  sepolia          Deploy single Treasury to Ethereum Sepolia"
   echo "  registry         Deploy multi-user Registry to Ethereum Sepolia"
   echo "  status           Deploy to Status Network Sepolia (gasless bounty)"
@@ -320,21 +364,27 @@ cmd_help() {
   echo "  RPC_URL              Ethereum Sepolia RPC endpoint"
   echo ""
   echo -e "${BOLD}Optional .env variables:${NC}"
-  echo "  STETH_ADDRESS        Sepolia stETH address (default: Lido testnet)"
-  echo "  AGENT_WALLET         Agent address (default: derived from private key)"
-  echo "  ETHERSCAN_API_KEY    For contract verification"
+  echo "  STETH_ADDRESS            Sepolia stETH address (default: Lido testnet)"
+  echo "  AGENT_WALLET             Agent address (default: derived from private key)"
+  echo "  ETHERSCAN_API_KEY        For contract verification"
+  echo "  MOCK_ROUTER_ADDRESS      MockRouter for testnet atomic swaps (set by 'fresh')"
+  echo "  MOCK_TOKEN_OUT_ADDRESS   MockUSDC output token (set by 'fresh')"
   echo ""
   echo -e "${BOLD}Examples:${NC}"
+  echo "  ./deploy.sh fresh                    # ⭐ Start here — deploys everything"
   echo "  ./deploy.sh compile                  # Just compile"
-  echo "  ./deploy.sh test                     # Run all tests"
-  echo "  ./deploy.sh sepolia                  # Deploy to Sepolia"
+  echo "  ./deploy.sh test                     # Run all 55 tests"
+  echo "  ./deploy.sh sepolia                  # Deploy single Treasury to Sepolia"
+  echo "  ./deploy.sh registry                 # Deploy multi-user Registry"
   echo "  ./deploy.sh verify 0xABC...123       # Verify on Etherscan"
-  echo "  ./deploy.sh all                      # Deploy everywhere"
+  echo "  ./deploy.sh all                      # Deploy to all networks"
+  echo "  ./deploy.sh history                  # Show past deployments"
   echo ""
 }
 
 # ── Main ────────────────────────────────────────────────────────
 case "${1:-help}" in
+  fresh)      cmd_fresh ;;
   compile)    cmd_compile ;;
   test)       cmd_test ;;
   sepolia)    cmd_sepolia ;;

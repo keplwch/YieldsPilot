@@ -28,7 +28,7 @@ async function main() {
   // If no official testnet stETH, we deploy a mock ERC20 for testing.
   // On mainnet, use: 0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84
 
-  const STETH_SEPOLIA = process.env.STETH_ADDRESS || "0x3e3FE7dBc6B4C189E7128855dD526361c49b40Af"; // Lido Sepolia stETH
+  const STETH_SEPOLIA = process.env.STETH_ADDRESS || "0x6df25A1734E181AFbBD9c8A50b1D00e39D482704"; // MockStETH (Sepolia)
   const AGENT_ADDRESS = process.env.AGENT_WALLET || deployer.address; // Agent wallet
   const MAX_DAILY_BPS = 5000; // 50% of available yield per day
 

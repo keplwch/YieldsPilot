@@ -1,12 +1,12 @@
 {
   "running": true,
-  "cycleCount": 21,
+  "cycleCount": 14,
   "totalYieldManaged": 0,
   "lastAction": "hold",
-  "computeSpentUsd": 0.21000000000000005,
-  "startedAt": "2026-03-20T06:06:21.980Z",
+  "computeSpentUsd": 0.09999999999999999,
+  "startedAt": "2026-03-20T12:04:27.297Z",
   "usersProcessed": 1,
   "treasuriesManaged": [
-    "0x45aF79347aBc6E50581E354d2aC62f00725F291f"
+    "0xB4496f8Ca43016EA4d00201A2791848d9c608ff5"
   ]
 }

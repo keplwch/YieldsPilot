@@ -217,3 +217,76 @@ export function useRegistry() {
 export function useUsers() {
   return useApi<UsersData>("/users", 15_000);
 }
+
+// ── Activity & Token Hooks ──────────────────────────────────────
+
+export interface TokenBalance {
+  address: string;
+  symbol: string;
+  decimals: number;
+  balance: string;
+  balanceRaw: string;
+}
+
+export interface TreasuryTokensData {
+  address: string;
+  tokens: TokenBalance[];
+  eth: string;
+  updatedAt: string;
+}
+
+export interface ActivityRecordData {
+  id: string;
+  cycle: number;
+  timestamp: string;
+  user: string;
+  treasuryAddress: string;
+  action: string;
+  status: string;
+  treasuryBalance: string;
+  principal: string;
+  availableYield: string;
+  dailySpendRemaining: string;
+  veniceAction: string;
+  veniceReasoning: string;
+  riskLevel: string;
+  riskScore: number;
+  marketSentiment: string;
+  finalAction: string;
+  strategyReasoning: string;
+  swapAmount?: string;
+  tokenIn?: string;
+  tokenOut?: string;
+  swapPath?: string[];
+  txHash?: string;
+  router?: string;
+  expectedOutput?: string;
+  executionMode?: string;
+  durationMs: number;
+  error?: string;
+}
+
+export interface ActivityData {
+  records: ActivityRecordData[];
+  total: number;
+  stats: {
+    totalCycles: number;
+    totalSwaps: number;
+    totalHolds: number;
+    totalErrors: number;
+    totalVolumeStETH: number;
+    lastUpdated: string;
+  };
+  updatedAt: string;
+}
+
+export function useTreasuryTokens(address: string | undefined) {
+  return useApi<TreasuryTokensData>(
+    address ? `/treasury-tokens/${address}` : "/treasury-tokens/0x0",
+    15_000
+  );
+}
+
+export function useActivity(limit: number = 50) {
+  return useApi<ActivityData>(`/activity?limit=${limit}`, 10_000);
+}

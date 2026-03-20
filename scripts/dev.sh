@@ -11,6 +11,7 @@
 # ║    ./dev.sh monitor          Vault monitor only                 ║
 # ║    ./dev.sh stop             Kill all running YieldPilot procs  ║
 # ║    ./dev.sh restart          Stop + start all                   ║
+# ║    ./dev.sh restart cleanup-logs  Stop + delete logs + start    ║
 # ║    ./dev.sh status           Show which services are running    ║
 # ║                                                                 ║
 # ║  Logs                                                           ║
@@ -480,6 +481,11 @@ case "$CMD" in
   restart)
     stop_all
     sleep 1
+    if [ "${1:-}" = "cleanup-logs" ]; then
+      log "Cleaning up agent logs..."
+      rm -f "$ROOT_DIR/agent_log.json" "$ROOT_DIR/agent_state.json"
+      ok "Deleted agent_log.json and agent_state.json"
+    fi
     start_all
     ;;
   status|ps)
@@ -536,6 +542,7 @@ case "$CMD" in
     echo "    monitor                 Start vault monitor only"
     echo "    stop                    Stop all running services"
     echo "    restart                 Stop + start all"
+    echo "    restart cleanup-logs    Stop + delete agent_log.json & agent_state.json + start"
     echo "    status                  Show which services are running"
     echo "    logs [svc]              Tail logs (all, frontend, agent, monitor)"
     echo "    install                 Install all dependencies"

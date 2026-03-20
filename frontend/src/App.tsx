@@ -8,6 +8,9 @@ import YieldChart from "./components/YieldChart";
 import ConnectionBanner from "./components/ConnectionBanner";
 import UserList from "./components/UserList";
 import DepositPanel from "./components/DepositPanel";
+import TokenPortfolio from "./components/TokenPortfolio";
+import DeploymentHistory from "./components/DeploymentHistory";
+import YieldAnalytics from "./components/YieldAnalytics";
 import { useAnimatedValue, useLiveYield } from "./hooks/useAnimatedValue";
 import {
   useTreasury,
@@ -15,6 +18,8 @@ import {
   useAgentLogs,
   useYieldHistory,
   useUsers,
+  useTreasuryTokens,
+  useActivity,
 } from "./hooks/useApi";
 import { logsToFeedItems, logsToReasoningLines, apiYieldToChartData, getCycleTimestamp } from "./data/transformers";
 import type { CycleOption } from "./components/CycleNav";
@@ -26,6 +31,7 @@ export default function App() {
   const logs = useAgentLogs();
   const yieldHist = useYieldHistory();
   const usersApi = useUsers();
+  const activityApi = useActivity(100);
 
   const apiConnected = treasury.connected || status.connected;
 
@@ -34,6 +40,14 @@ export default function App() {
   const registryAddress = (status.data as any)?.registryAddress ?? (treasury.data as any)?.registryAddress ?? "";
   const users = usersApi.data?.users ?? [];
   const totalUsers = users.length;
+
+  // Get the first treasury address for token balance queries
+  const firstTreasuryAddress = useMemo(() => {
+    if (users.length > 0 && users[0].treasury) return users[0].treasury;
+    return (treasury.data as any)?.address ?? undefined;
+  }, [users, treasury.data]);
+
+  const treasuryTokens = useTreasuryTokens(firstTreasuryAddress);
 
   // ── Aggregate stats across all users ──────────────────────────
   const aggregateStats = useMemo(() => {
@@ -88,21 +102,12 @@ export default function App() {
   const [pinnedCycleIdx, setPinnedCycleIdx] = useState<number | null>(null);
 
   const rawCycles = logs.data?.cycles ?? [];
-  const sessionStartedAt = status.data?.startedAt ?? null;
-
-  // Only complete LoopLog entries from the current agent session
-  // Filter by sessionStartedAt so cycle numbers align with the header's cycleCount
+  // All LoopLog entries across sessions — cycle numbers come from the DB record
   const loopCycles = useMemo(() => {
-    const loops = rawCycles.filter(
+    return rawCycles.filter(
       (c) => (c as any).type === "autonomous_loop" || (c as any).phases != null
     );
-    if (!sessionStartedAt) return loops;
-    const sessionStart = new Date(sessionStartedAt).getTime();
-    return loops.filter((c) => {
-      const ts = getCycleTimestamp(c);
-      return ts ? new Date(ts).getTime() >= sessionStart : true;
-    });
-  }, [rawCycles, sessionStartedAt]);
+  }, [rawCycles]);
 
   const cycleOptions: CycleOption[] = useMemo(() => {
     return loopCycles.map((cycle, i) => {
@@ -116,8 +121,9 @@ export default function App() {
         else if (secs < 3600) timeAgo = `${Math.floor(secs / 60)}m ago`;
         else timeAgo = `${Math.floor(secs / 3600)}h ago`;
       }
-      // Simple 1-based index within the fetched window (oldest = 1, newest = N)
-      return { index: i, label: `Cycle ${i + 1}`, timeAgo };
+      // Use the cycle number stored in the DB record; fall back to array index
+      const cycleNum = (cycle as any).cycleNumber ?? (i + 1);
+      return { index: i, label: `Cycle #${cycleNum}`, timeAgo };
     });
   }, [loopCycles]);
 
@@ -146,6 +152,17 @@ export default function App() {
   const yieldChartData = useMemo(() => {
     return apiYieldToChartData(yieldHist.data?.history);
   }, [yieldHist.data]);
+
+  // ── Activity data ─────────────────────────────────────────────
+  const activityRecords = activityApi.data?.records ?? [];
+  const activityTotal = activityApi.data?.total ?? 0;
+  const activityStats = activityApi.data?.stats ?? {
+    totalCycles: 0,
+    totalSwaps: 0,
+    totalHolds: 0,
+    totalErrors: 0,
+    totalVolumeStETH: 0,
+  };
 
   return (
     <div className="relative z-[1]">
@@ -255,7 +272,16 @@ export default function App() {
               onGoLive={() => setPinnedCycleIdx(null)}
             />
 
-            {/* Multi-user list (below activity feed on left) */}
+            {/* Yield Deployment History — full activity log with all cycles */}
+            <div className="mt-5">
+              <DeploymentHistory
+                records={activityRecords}
+                total={activityTotal}
+                stats={activityStats}
+              />
+            </div>
+
+            {/* Multi-user list (below deployment history) */}
             {(registryMode || users.length > 0) && (
               <div className="mt-5">
                 <UserList
@@ -275,11 +301,27 @@ export default function App() {
               registryMode={registryMode}
             />
 
+            {/* Token Portfolio — shows all tokens the treasury holds */}
+            {firstTreasuryAddress && treasuryTokens.data && (
+              <TokenPortfolio
+                tokens={treasuryTokens.data.tokens}
+                ethBalance={treasuryTokens.data.eth}
+                treasuryAddress={firstTreasuryAddress}
+              />
+            )}
+
             <TreasuryRing
               principal={aggregateStats.principal}
               yieldAvailable={aggregateStats.availableYield}
               yieldDeployed={aggregateStats.yieldWithdrawn}
             />
+
+            {/* Yield Analytics — cumulative volume + distribution charts */}
+            <YieldAnalytics
+              records={activityRecords}
+              stats={activityStats}
+            />
+
             <YieldChart data={yieldChartData} />
           </div>
         </div>

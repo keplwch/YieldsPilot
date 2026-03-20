@@ -125,21 +125,49 @@ export async function synthesizeStrategy(
 ): Promise<StrategyResult> {
   const raw = await askBankr<Omit<StrategyResult, "model" | "provider" | "task">>(
     config.bankr.models.strategy,
-    `You are a DeFi strategy synthesizer. Given risk assessment, market analysis, and treasury state, produce a concrete action plan. Respond in JSON:
+    `You are a DeFi yield management strategy engine. You receive risk assessment, market analysis, and treasury state. You MUST output exactly ONE of two actions:
+
+1. "swap_yield" — spend some yield via a swap (stETH → USDC, stETH → ETH, etc.)
+   Use this when: there's actionable yield, market conditions favor a swap, gas buffer is needed, or diversification is prudent.
+
+2. "hold" — do nothing this cycle, wait for better conditions.
+   Use this when: yield is too small to justify gas, market is volatile, risk is too high, or daily limit is already exhausted.
+
+IMPORTANT RULES:
+- There are ONLY two valid actions: "swap_yield" or "hold". Do NOT use "rebalance", "compound", or any other action name.
+- If action is "swap_yield", you MUST provide swap_amount (string, in ETH units) and swap_path (array of two token names).
+- swap_amount MUST be <= the treasury's dailySpendRemaining.
+- swap_amount MUST be <= availableYield.
+- Valid swap paths: ["stETH", "USDC"], ["stETH", "ETH"], ["stETH", "DAI"]
+- If the treasury has 0 ETH for gas, prioritize ["stETH", "ETH"] to establish a gas buffer.
+- If risk recommendation is "abort", you MUST output "hold".
+
+Respond with valid JSON only:
 {
-  "action": "hold" | "swap_yield" | "rebalance" | "compound",
+  "action": "swap_yield" | "hold",
   "urgency": "immediate" | "next_cycle" | "no_rush",
-  "swap_amount": "amount or null",
-  "swap_path": ["tokenA", "tokenB"] or null,
+  "swap_amount": "0.01" (required if action=swap_yield, null if hold),
+  "swap_path": ["stETH", "USDC"] (required if action=swap_yield, null if hold),
   "slippage_tolerance": 0.005,
-  "reasoning": "brief explanation",
+  "reasoning": "brief explanation of why this action was chosen",
   "expected_outcome": "what this achieves"
 }`,
     { riskAssessment, marketAnalysis, treasuryState }
   );
 
+  // Normalize: if the LLM still outputs a non-standard action, map it
+  let action = raw.action;
+  if (action !== "swap_yield" && action !== "hold") {
+    if (raw.swap_amount && parseFloat(raw.swap_amount) > 0) {
+      action = "swap_yield";
+    } else {
+      action = "hold";
+    }
+  }
+
   return {
     ...raw,
+    action,
     model: config.bankr.models.strategy,
     provider: "bankr",
     task: "strategy_synthesis",
