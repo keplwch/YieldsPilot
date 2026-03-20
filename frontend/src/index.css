@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══ Base ═══ */
+body {
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ═══ Custom scrollbar ═══ */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.3); }
+::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.5); }
+
+/* ═══ Dot grid ═══ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(99,102,241,0.10) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 20%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 20%, transparent 100%);
+}
+
+/* ═══ Atmospheric background glows — NOT on cards, body only ═══ */
+
+/* Top-center indigo glow */
+.glow-top {
+  position: fixed;
+  top: -300px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1000px;
+  height: 700px;
+  background: radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 62%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Bottom-right emerald glow */
+.glow-br {
+  position: fixed;
+  bottom: -250px;
+  right: -150px;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(ellipse, rgba(0,229,160,0.07) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Top-left subtle blue glow (depth) */
+.glow-tl {
+  position: fixed;
+  top: -100px;
+  left: -200px;
+  width: 600px;
+  height: 500px;
+  background: radial-gradient(ellipse, rgba(6,182,212,0.05) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   TWO-LAYER CARD SYSTEM — border follows clip-path
+   ═══════════════════════════════════════════════
+
+   OUTER (.card-wrap): the "border" — shown as a 1px strip
+     - Has clip-path
+     - Background = border color
+     - padding: 1px so inner shows through
+
+   INNER (.card-body): the actual card
+     - Same clip-path adjusted for the 1px inset
+     - Background = card color
+
+   This makes the border follow the diagonal cut exactly.
+   ═══════════════════════════════════════════════ */
+
+/* ── Standard card (top-right notch) ── */
+.card-wrap {
+  position: relative;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  background: rgba(99,102,241,0.18);
+  padding: 1px;
+  transition: background 0.2s ease;
+}
+.card-wrap:hover {
+  background: rgba(99,102,241,0.38);
+}
+
+.card-body {
+  position: relative;
+  /* Inner notch = 13.5px so the 45° diagonal border renders at true 1px perpendicular width.
+     Formula: inner = N - 2p + √2 = 14 - 2 + 1.41 ≈ 13.4 → 13.5px */
+  clip-path: polygon(0 0, calc(100% - 13.5px) 0, 100% 13.5px, 100% 100%, 0 100%);
+  background: rgba(9, 9, 22, 0.94);
+}
+
+/* Hover top accent line on card-body */
+.card-body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 13.5px; /* match the notch size */
+  height: 1.5px;
+  background: transparent;
+  transition: background 0.25s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+.card-wrap:hover .card-body::before {
+  background: rgba(99,102,241,0.65);
+}
+
+/* ── Stat card (dual corner: top-left + bottom-right notch) ── */
+.stat-wrap {
+  position: relative;
+  clip-path: polygon(13px 0, 100% 0, 100% calc(100% - 13px), calc(100% - 13px) 100%, 0 100%, 0 13px);
+  background: rgba(99,102,241,0.18);
+  padding: 1px;
+  transition: background 0.2s ease;
+}
+.stat-wrap:hover {
+  background: rgba(99,102,241,0.38);
+}
+
+.stat-body {
+  position: relative;
+  /* Inner notch = 12.5px for 1px perpendicular diagonal border on both corners.
+     Formula: inner = N - 2p + √2 = 13 - 2 + 1.41 ≈ 12.4 → 12.5px */
+  clip-path: polygon(12.5px 0, 100% 0, 100% calc(100% - 12.5px), calc(100% - 12.5px) 100%, 0 100%, 0 12.5px);
+  background: rgba(9, 9, 22, 0.94);
+}
+
+/* ── Panel header border ── */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(99,102,241,0.10);
+}
+
+/* ── Tabular numbers ── */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Keyboard focus ── */
+*:focus-visible {
+  outline: 2px solid rgba(99,102,241,0.55);
+  outline-offset: 2px;
+}
+
+/* ── Terminal cursor ── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.cursor-blink { animation: blink 1s step-end infinite; }

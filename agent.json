@@ -1,0 +1,117 @@
+{
+  "$schema": "https://erc8004.org/agent.schema.json",
+  "name": "YieldPilot",
+  "version": "1.0.0",
+  "description": "Autonomous DeFi agent that manages staking yield with privacy-preserving reasoning. Deposits earn yield via Lido stETH; the agent can only spend the yield, never the principal. Reasoning is private (Venice), execution is public (onchain).",
+  "did": "${AGENT_DID}",
+  "operator": {
+    "name": "YieldPilot Team",
+    "contact": "keplwchoom@gmail.com"
+  },
+  "capabilities": [
+    "yield_management",
+    "autonomous_swaps",
+    "vault_monitoring",
+    "private_reasoning",
+    "multi_model_analysis",
+    "mcp_tools"
+  ],
+  "tools": [
+    {
+      "name": "lido_stake",
+      "type": "onchain",
+      "description": "Stake ETH via Lido to receive stETH"
+    },
+    {
+      "name": "lido_unstake",
+      "type": "onchain",
+      "description": "Request stETH withdrawal back to ETH"
+    },
+    {
+      "name": "lido_wrap",
+      "type": "onchain",
+      "description": "Wrap stETH to wstETH"
+    },
+    {
+      "name": "lido_unwrap",
+      "type": "onchain",
+      "description": "Unwrap wstETH to stETH"
+    },
+    {
+      "name": "lido_balances",
+      "type": "read",
+      "description": "Query ETH, stETH, wstETH balances"
+    },
+    {
+      "name": "lido_spend_yield",
+      "type": "onchain",
+      "description": "Spend available yield from treasury"
+    },
+    {
+      "name": "uniswap_swap",
+      "type": "onchain",
+      "description": "Execute token swaps via Uniswap Trading API"
+    },
+    {
+      "name": "venice_reason",
+      "type": "inference",
+      "description": "Private reasoning via Venice (no data retention)"
+    },
+    {
+      "name": "bankr_analyze",
+      "type": "inference",
+      "description": "Multi-model analysis via Bankr LLM Gateway"
+    },
+    {
+      "name": "telegram_alert",
+      "type": "notification",
+      "description": "Send vault monitoring alerts via Telegram"
+    }
+  ],
+  "safety": {
+    "principal_protection": "Smart contract enforces principal is inaccessible to agent",
+    "daily_spend_limit": "Configurable basis points cap on daily yield spending",
+    "allowed_targets": "Whitelist of addresses agent can send yield to",
+    "compute_budget": "USD-denominated cap on daily inference spending",
+    "pause_mechanism": "Owner can pause all agent operations instantly",
+    "dry_run_support": "All write operations support dry_run preview",
+    "risk_assessment": "Multi-model risk check before every execution"
+  },
+  "chains": [
+    {
+      "chainId": 1,
+      "name": "Ethereum Mainnet"
+    },
+    {
+      "chainId": 11155111,
+      "name": "Sepolia Testnet"
+    }
+  ],
+  "inference": {
+    "primary": {
+      "provider": "venice",
+      "model": "llama-3.3-70b",
+      "privacy": "no-data-retention"
+    },
+    "secondary": {
+      "provider": "bankr",
+      "models": {
+        "risk": "gpt-4o",
+        "market": "claude-sonnet-4-20250514",
+        "strategy": "llama-3.3-70b"
+      }
+    }
+  },
+  "mcp": {
+    "server": "lido-mcp-server",
+    "tools_count": 9,
+    "transport": "stdio"
+  },
+  "autonomy": {
+    "loop": "discover → plan → execute → verify",
+    "interval": "60s",
+    "human_intervention": "none (fully autonomous after deposit)"
+  },
+  "repository": "https://github.com/YOUR_USERNAME/yield-pilot",
+  "license": "MIT"
+}

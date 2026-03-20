@@ -1,0 +1,70 @@
+# ╔══════════════════════════════════════════════════════════════╗
+# ║              🛫 YieldPilot — Docker Compose                 ║
+# ║                                                             ║
+# ║  Services:                                                  ║
+# ║    agent     — Autonomous yield management loop             ║
+# ║    monitor   — Vault position monitor + Telegram alerts     ║
+# ║    dashboard — React frontend served via nginx              ║
+# ║                                                             ║
+# ║  Usage:                                                     ║
+# ║    ./scripts/prod.sh up    — build & start everything       ║
+# ║    ./scripts/prod.sh logs  — tail logs                     ║
+# ║    ./scripts/prod.sh stop  — shut down                     ║
+# ╚══════════════════════════════════════════════════════════════╝
+
+services:
+  # ── Autonomous Agent ─────────────────────────────────
+  agent:
+    build:
+      context: .
+      dockerfile: docker/agent.Dockerfile
+    container_name: yieldpilot-agent
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+    volumes:
+      # Persist agent logs outside container
+      - ./data/agent_log.json:/app/agent_log.json
+    depends_on:
+      dashboard:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ── Vault Monitor ───────────────────────────────────
+  monitor:
+    build:
+      context: .
+      dockerfile: docker/monitor.Dockerfile
+    container_name: yieldpilot-monitor
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ── Dashboard (Frontend) ────────────────────────────
+  dashboard:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    container_name: yieldpilot-dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+volumes:
+  agent-data:
