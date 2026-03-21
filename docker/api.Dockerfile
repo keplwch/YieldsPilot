@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════
-# YieldsPilot Agent — Multi-stage Docker Build
+# YieldsPilot API — Express REST Server
 # ═══════════════════════════════════════════════════════
 
 FROM oven/bun:1-alpine AS base
@@ -18,12 +18,11 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY package.json tsconfig.json ./
 COPY types/ ./types/
 COPY config/ ./config/
-COPY agent/ ./agent/
-COPY mcp/ ./mcp/
-COPY agent.json ./
+COPY api/ ./api/
 
-# Healthcheck — agent writes to agent_log.json on each cycle
-HEALTHCHECK --interval=120s --timeout=10s --start-period=30s --retries=3 \
-  CMD test $(find agent_log.json -mmin -5 | wc -l) -gt 0 || exit 1
+EXPOSE 3001
 
-CMD ["bun", "run", "agent"]
+HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget -qO- http://localhost:3001/api/status || exit 1
+
+CMD ["bun", "run", "api"]

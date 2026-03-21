@@ -1,27 +1,28 @@
 # ═══════════════════════════════════════════════════════
 # YieldsPilot Dashboard — Multi-stage Build
-# Build with Vite, serve with nginx
+# Build with Vite, serve with Bun (no nginx)
 # ═══════════════════════════════════════════════════════
 
 # ── Build stage ───────────────────────────────────────
-FROM node:20-alpine AS builder
+FROM oven/bun:1-alpine AS builder
 WORKDIR /app
 
-COPY frontend/package.json frontend/package-lock.json* ./
-RUN npm install
+COPY frontend/package.json frontend/bun.lockb ./
+RUN bun install --frozen-lockfile
 
 COPY frontend/ .
-RUN npm run build
+RUN bun run build
 
 # ── Serve stage ───────────────────────────────────────
-FROM nginx:alpine AS runner
+FROM oven/bun:1-alpine AS runner
+WORKDIR /app
 
-# Custom nginx config for SPA routing
-COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/dist ./dist
+COPY docker/serve.ts ./
 
-COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 3000
 
-EXPOSE 80
+HEALTHCHECK --interval=15s --timeout=5s --start-period=5s --retries=3 \
+  CMD wget -qO- http://localhost:3000 || exit 1
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD wget -q --spider http://localhost/ || exit 1
+CMD ["bun", "serve.ts"]

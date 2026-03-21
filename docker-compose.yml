@@ -2,17 +2,51 @@
 # ║              🛫 YieldsPilot — Docker Compose                 ║
 # ║                                                             ║
 # ║  Services:                                                  ║
+# ║    api       — Express REST API (port 3001, internal only)  ║
 # ║    agent     — Autonomous yield management loop             ║
 # ║    monitor   — Vault position monitor + Telegram alerts     ║
 # ║    dashboard — React frontend served via nginx              ║
+# ║    tunnel    — Cloudflare Tunnel (public HTTPS access)      ║
 # ║                                                             ║
 # ║  Usage:                                                     ║
 # ║    ./scripts/prod.sh up    — build & start everything       ║
 # ║    ./scripts/prod.sh logs  — tail logs                     ║
 # ║    ./scripts/prod.sh stop  — shut down                     ║
+# ║                                                             ║
+# ║  Tunnel modes:                                              ║
+# ║    Named tunnel  — set CLOUDFLARE_TUNNEL_TOKEN in .env      ║
+# ║    Quick tunnel  — omit token for a temporary trycloudflare ║
+# ║                    URL (printed in tunnel logs)             ║
 # ╚══════════════════════════════════════════════════════════════╝
 
 services:
+  # ── Express REST API ─────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    container_name: yieldpilot-api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+    volumes:
+      # Persist agent logs so the API can serve them
+      - ./data/agent_log.json:/app/agent_log.json
+      - ./data/agent_state.json:/app/agent_state.json
+      # Shared SQLite DB (agent writes, api reads)
+      - ./data/yieldpilot.db:/app/yieldpilot.db
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/api/status"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   # ── Autonomous Agent ─────────────────────────────────
   agent:
     build:
@@ -26,8 +60,11 @@ services:
     volumes:
       # Persist agent logs outside container
       - ./data/agent_log.json:/app/agent_log.json
+      - ./data/agent_state.json:/app/agent_state.json
+      # Shared SQLite DB (agent writes, api reads)
+      - ./data/yieldpilot.db:/app/yieldpilot.db
     depends_on:
-      dashboard:
+      api:
         condition: service_healthy
     logging:
       driver: json-file
@@ -58,8 +95,41 @@ services:
       dockerfile: docker/frontend.Dockerfile
     container_name: yieldpilot-dashboard
     restart: unless-stopped
-    ports:
-      - "3000:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  # ── Cloudflare Tunnel ────────────────────────────────
+  # Named tunnel:  set CLOUDFLARE_TUNNEL_TOKEN in .env
+  # Quick tunnel:  omit CLOUDFLARE_TUNNEL_TOKEN — a temporary
+  #                trycloudflare.com URL will appear in the logs
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: yieldpilot-tunnel
+    restart: unless-stopped
+    depends_on:
+      dashboard:
+        condition: service_healthy
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-}
+    command: >
+      sh -c '
+        if [ -n "$$TUNNEL_TOKEN" ]; then
+          cloudflared tunnel --no-autoupdate run --token $$TUNNEL_TOKEN
+        else
+          cloudflared tunnel --no-autoupdate --url http://dashboard:3000
+        fi
+      '
     logging:
       driver: json-file
       options:
