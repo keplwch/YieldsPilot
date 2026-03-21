@@ -1,7 +1,18 @@
-![YieldsPilot](./banner.png)
+<div align="center">
 
-# YieldsPilot 
-**Autonomous DeFi Agent with Privacy-Preserving Yield Management**
+  <img src="banner.png" alt="YieldsPilot Banner" width="100%">
+
+  <h1>YieldsPilot</h1>
+  <h3>Autonomous DeFi Agent with Privacy-Preserving Yield Management</h3>
+
+  <p>
+    <a href="https://yieldspilot.com"><img src="https://img.shields.io/badge/website-yieldspilot.com-05B6D4?style=flat-square" alt="Website"></a>
+    <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License">
+  </p>
+
+</div>
+
+---
 
 > **Private cognition. Trusted onchain action.**
 
