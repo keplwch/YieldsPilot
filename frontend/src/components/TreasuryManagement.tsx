@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi";
 import { parseEther, formatEther, isAddress } from "viem";
+import { NETWORK } from "@/config/network";
 import {
   Settings,
   ArrowUpFromLine,
@@ -130,7 +131,7 @@ function TxStatus({ hash, label }: { hash?: `0x${string}`; label: string }) {
         <Loader2 size={12} className="text-accent-purple animate-spin" />
       )}
       <span className="text-[10px] font-mono text-text-muted">{label}</span>
-      <a href={`https://sepolia.etherscan.io/tx/${hash}`} target="_blank" rel="noopener noreferrer"
+      <a href={`${NETWORK.explorerBase}/tx/${hash}`} target="_blank" rel="noopener noreferrer"
         className="text-[10px] font-mono text-accent-purple hover:underline flex items-center gap-0.5">
         {hash.slice(0, 10)}... <ExternalLink size={8} />
       </a>
@@ -303,7 +304,7 @@ export default function TreasuryManagement({ treasuryAddress, registryAddress }:
                   {(allowedTargets as string[]).map((t) => (
                     <div key={t} className="flex items-center justify-between py-1.5 px-2"
                       style={{ background: "rgba(0,0,0,0.15)", border: "1px solid rgba(99,102,241,0.06)" }}>
-                      <a href={`https://sepolia.etherscan.io/address/${t}`} target="_blank" rel="noopener noreferrer"
+                      <a href={`${NETWORK.explorerBase}/address/${t}`} target="_blank" rel="noopener noreferrer"
                         className="text-[10px] font-mono text-accent-purple hover:underline flex items-center gap-1">
                         {t.slice(0, 8)}...{t.slice(-6)} <ExternalLink size={8} />
                       </a>

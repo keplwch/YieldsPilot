@@ -3,8 +3,9 @@ import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadCont
 import { parseEther, formatEther } from "viem";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { ArrowDownToLine, Lock, Loader2, CheckCircle2, ExternalLink } from "lucide-react";
+import { NETWORK } from "@/config/network";
 
-const STETH_ADDRESS = "0xB43d41AB3aD0f006b8A4d872FBA11f4858E23a87" as const;
+const STETH_ADDRESS = NETWORK.stETH;
 
 const ERC20_ABI = [
   { name: "approve", type: "function", stateMutability: "nonpayable",
@@ -226,7 +227,7 @@ export default function DepositPanel({ registryAddress, registryMode }: DepositP
                 <CheckCircle2 size={12} className="text-accent-green flex-shrink-0" strokeWidth={1.75} />
                 <span className="text-[10px] text-text-secondary font-mono">
                   Treasury active —{" "}
-                  <a href={`https://sepolia.etherscan.io/address/${existingTreasury}`} target="_blank" rel="noopener noreferrer"
+                  <a href={`${NETWORK.explorerBase}/address/${existingTreasury}`} target="_blank" rel="noopener noreferrer"
                     className="text-accent-purple hover:underline inline-flex items-center gap-0.5">
                     {(existingTreasury as string).slice(0, 8)}...{(existingTreasury as string).slice(-4)}
                     <ExternalLink size={7} />
@@ -283,7 +284,7 @@ export default function DepositPanel({ registryAddress, registryMode }: DepositP
               {isApprovePending ? "Confirm in wallet..." : approveTxHash ? "Waiting for block..." : "Preparing..."}
             </p>
             {approveTxHash && (
-              <a href={`https://sepolia.etherscan.io/tx/${approveTxHash}`} target="_blank" rel="noopener noreferrer"
+              <a href={`${NETWORK.explorerBase}/tx/${approveTxHash}`} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-[10px] text-accent-purple hover:underline font-mono">
                 {approveTxHash.slice(0, 14)}... <ExternalLink size={9} />
               </a>
@@ -306,7 +307,7 @@ export default function DepositPanel({ registryAddress, registryMode }: DepositP
               {(isDepositPending || isDepositExistingPending) ? "Confirm in wallet..." : (depositTxHash || depositExistingHash) ? (hasTreasury ? "Depositing to Treasury..." : "Deploying Treasury contract...") : "Preparing..."}
             </p>
             {(depositTxHash || depositExistingHash) && (
-              <a href={`https://sepolia.etherscan.io/tx/${depositTxHash || depositExistingHash}`} target="_blank" rel="noopener noreferrer"
+              <a href={`${NETWORK.explorerBase}/tx/${depositTxHash || depositExistingHash}`} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-[10px] text-accent-purple hover:underline font-mono">
                 {(depositTxHash || depositExistingHash)!.slice(0, 14)}... <ExternalLink size={9} />
               </a>
@@ -329,7 +330,7 @@ export default function DepositPanel({ registryAddress, registryMode }: DepositP
               {amount} stETH deposited. {hasTreasury ? "Principal updated." : "Agent will manage yield on the next cycle."}
             </p>
             {(depositTxHash || depositExistingHash) && (
-              <a href={`https://sepolia.etherscan.io/tx/${depositTxHash || depositExistingHash}`} target="_blank" rel="noopener noreferrer"
+              <a href={`${NETWORK.explorerBase}/tx/${depositTxHash || depositExistingHash}`} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 mb-4 text-[10px] text-accent-purple hover:underline font-mono">
                 View transaction <ExternalLink size={9} />
               </a>

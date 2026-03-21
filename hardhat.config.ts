@@ -34,12 +34,12 @@ const config: HardhatUserConfig = {
   networks: {
     // ── Local ────────────────────────────────────────────
     hardhat: {
-      // Fork mainnet only if ETH_MAINNET_RPC is explicitly set
+      // Fork mainnet only if FORK_RPC is explicitly set (for local fork testing)
       // Otherwise use plain Hardhat network (for unit tests with mocks)
-      ...(process.env.ETH_MAINNET_RPC
+      ...(process.env.FORK_RPC
         ? {
             forking: {
-              url: process.env.ETH_MAINNET_RPC,
+              url: process.env.FORK_RPC,
               blockNumber: 19_500_000,
             },
           }
@@ -55,10 +55,14 @@ const config: HardhatUserConfig = {
     },
 
     // ── Ethereum Mainnet (production) ────────────────────
+    // Uses the same RPC_URL as Sepolia — just point it at a mainnet
+    // endpoint when deploying to mainnet (e.g. Alchemy mainnet URL)
     mainnet: {
-      url: process.env.ETH_MAINNET_RPC || "https://eth.llamarpc.com",
+      url: process.env.RPC_URL || "",
       chainId: 1,
       accounts: [DEPLOYER_KEY],
+      // Slightly higher gas for faster inclusion on mainnet
+      gasMultiplier: 1.2,
     },
 
     // ── Status Network Sepolia (bonus $2,000 bounty) ─────

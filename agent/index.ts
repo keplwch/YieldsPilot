@@ -163,8 +163,8 @@ async function runCycleForTreasury(
     return { loopId, action: "skip_paused", duration: Date.now() - cycleStart, user, treasuryAddress };
   }
 
-  if (availableYield <= 0) {
-    console.log(`    💤 No yield available (${treasuryInfo.availableYield} stETH), skipping.`);
+  if (availableYield < config.loop.minYieldThreshold) {
+    console.log(`    💤 Yield below threshold (${treasuryInfo.availableYield} stETH < ${config.loop.minYieldThreshold} stETH), skipping.`);
     recordActivity({
       id: loopId, cycle: state.cycleCount + 1, timestamp: new Date().toISOString(),
       user, treasuryAddress, action: "skip_no_yield", status: "skipped",

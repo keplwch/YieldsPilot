@@ -77,7 +77,7 @@ export async function assessRisk(portfolioState: RiskInput): Promise<RiskAssessm
 Your job is to assess whether it is safe to swap staking yield this cycle.
 
 WHAT TO EVALUATE (these are the ONLY relevant risk factors):
-- Is availableYield sufficient (> 0.001 stETH)? If zero or near-zero → risk is low, just hold
+- Is availableYield sufficient (> ${config.loop.minYieldThreshold} stETH)? If zero or near-zero → risk is low, just hold
 - Does swap_amount stay within dailySpendRemaining? If it exceeds it → high risk
 - Is the proposed swap_amount a reasonable fraction of availableYield (not 100% in one shot)?
 ${protocolStatsNote}
@@ -119,13 +119,21 @@ interface MarketInput {
 export async function analyzeMarket(marketData: MarketInput): Promise<MarketAnalysis> {
   const raw = await askBankr<Omit<MarketAnalysis, "model" | "provider" | "task">>(
     config.bankr.models.market,
-    `You are a DeFi market analyst. Analyze current conditions and recommend swap timing. Respond in JSON:
+    `You are a DeFi market analyst. Analyze current conditions and recommend swap timing and the best output token.
+
+AVAILABLE OUTPUT TOKENS (from stETH):
+- USDC   — stablecoin, best for capital preservation when bearish or uncertain
+- DAI    — decentralized stablecoin, good USDC alternative
+- WETH   — ETH exposure, best when bullish on ETH price trend
+- wstETH — wrapped stETH, best when yield compounding > diversification (bullish on staking APR)
+
+Recommend the optimal_pairs based on market conditions. Respond in JSON:
 {
   "market_sentiment": "bullish" | "neutral" | "bearish",
   "eth_trend": "up" | "stable" | "down",
   "steth_discount": "percentage vs ETH",
   "swap_recommendation": "swap_now" | "wait" | "urgent_swap",
-  "optimal_pairs": [{"from": "token", "to": "token", "reason": "why"}],
+  "optimal_pairs": [{"from": "stETH", "to": "USDC" | "DAI" | "WETH" | "wstETH", "reason": "why"}],
   "reasoning": "brief explanation"
 }`,
     marketData
@@ -151,17 +159,24 @@ export async function synthesizeStrategy(
     `You are a DeFi yield management strategy engine for YieldPilot. You receive risk assessment, market analysis, and treasury state. Synthesize the final action for this cycle.
 
 OUTPUT — EXACTLY ONE of two actions:
-1. "swap_yield" — deploy some yield by swapping stETH → USDC (preferred target for diversification)
+1. "swap_yield" — deploy some yield by swapping stETH into the best output token
 2. "hold" — do nothing this cycle
+
+AVAILABLE OUTPUT TOKENS — choose based on market analysis:
+- USDC   — capital preservation, use when bearish or market is uncertain
+- DAI    — decentralized stablecoin alternative to USDC
+- WETH   — ETH exposure, use when market_sentiment is bullish and eth_trend is "up"
+- wstETH — compound staking yield, use when staking APR is the best available return
+
+Use the market analysis "optimal_pairs" as your primary signal for which token to target.
 
 RULES:
 - ONLY valid actions: "swap_yield" or "hold". Do NOT output "rebalance", "compound", "abort", or anything else.
-- If action is "swap_yield": provide swap_amount (string, stETH units) and swap_path (two token names).
+- If action is "swap_yield": provide swap_amount (string, stETH units) and swap_path (two token names, e.g. ["stETH", "USDC"]).
 - swap_amount MUST be ≤ dailySpendRemaining AND ≤ availableYield. Use at most 50% of available yield per cycle.
-- Preferred swap path: ["stETH", "USDC"]. Only use ["stETH", "ETH"] if the user explicitly wants ETH exposure — NOT for gas.
-- Gas is paid externally. NEVER swap to ETH for gas purposes.
+- Gas is paid externally. NEVER swap to WETH/ETH for gas purposes.
 - If risk recommendation is "abort", output "hold".
-- If availableYield is 0 or below 0.001, output "hold".
+- If availableYield is 0 or below ${config.loop.minYieldThreshold}, output "hold".
 ${IS_MAINNET
     ? "- Protocol stats are live mainnet data. Use them to inform swap timing (e.g. avoid swapping during high slippage or stETH de-peg)."
     : "- Protocol stats are from a testnet mock and may be zero — treat zero/null protocol stats as unavailable data, not a real risk signal."

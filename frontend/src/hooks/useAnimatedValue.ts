@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 /**
  * Hook that smoothly animates a number from current to target value.
  */
-export function useAnimatedValue(target: number, duration = 2000, decimals = 4): string {
+export function useAnimatedValue(target: number, duration = 2000, decimals = 6): string {
   const [display, setDisplay] = useState(target.toFixed(decimals));
   const currentRef = useRef(target);
 

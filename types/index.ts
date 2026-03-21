@@ -219,6 +219,7 @@ export interface AppConfig {
     intervalMs: number;
     maxGasPerCycleGwei: number;
     computeBudgetUsd: number;
+    minYieldThreshold: number;
   };
 }
 

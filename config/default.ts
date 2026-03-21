@@ -79,6 +79,7 @@ const config: AppConfig = {
     intervalMs: 60_000, // 1 minute between cycles
     maxGasPerCycleGwei: 50,
     computeBudgetUsd: 5.0, // max spend on inference per day
+    minYieldThreshold: parseFloat(process.env.MIN_YIELD_THRESHOLD ?? "0.001"), // min stETH yield to act on
   },
 };
 

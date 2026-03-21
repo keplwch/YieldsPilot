@@ -25,6 +25,10 @@
  *               Lido provides real testnet contracts on Sepolia (see STETH_ADDRESS
  *               and WSTETH_ADDRESS). The mock contracts exist for Hardhat unit tests only.
  *
+ *  mainnet    Deploy Registry to Ethereum Mainnet with real Lido stETH/wstETH.
+ *             → No mocks deployed — uses real Uniswap Router as default target.
+ *             → Point RPC_URL at a mainnet endpoint and fund the deployer wallet.
+ *
  *  status     Deploy to Status Network Sepolia (gasless transactions, chainId=2020).
  *             → Deploys a simple Treasury for the "Go Gasless" bounty proof.
  *
@@ -84,9 +88,17 @@ import path from "path";
 
 // ─── Shared constants ─────────────────────────────────────────────────────────
 
+// Sepolia testnet defaults (Lido + Uniswap deployments on Sepolia)
 const STETH_SEPOLIA_DEFAULT  = "0x6df25A1734E181AFbBD9c8A50b1D00e39D482704";
 const WSTETH_SEPOLIA_DEFAULT = "0xB82381A3fBD3FaFA77B3a7bE693342AA3d14232a";
+
+// Ethereum Mainnet addresses (Lido + Uniswap production contracts)
+const STETH_MAINNET  = "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84";
+const WSTETH_MAINNET = "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0";
+
+// Uniswap Universal Router (same address on both Sepolia and Mainnet)
 const UNISWAP_ROUTER         = "0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD";
+
 const DEFAULT_MAX_DAILY_BPS  = 5000; // 50% of available yield per day
 const MOCK_ROUTER_RATE       = "2000"; // USDC per stETH
 
@@ -594,6 +606,107 @@ async function cmdStatus() {
   });
 }
 
+// ─── mainnet ─────────────────────────────────────────────────────────────────
+//  Deploy Registry to Ethereum Mainnet with real Lido stETH/wstETH
+//  NO mock contracts — only the Registry + Uniswap Router as default target
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function cmdMainnet() {
+  console.log("╔══════════════════════════════════════════════════════════╗");
+  console.log("║   🚀 YieldPilot — MAINNET Deploy                        ║");
+  console.log("║   Registry + Uniswap Router (real Lido stETH/wstETH)    ║");
+  console.log("╚══════════════════════════════════════════════════════════╝\n");
+
+  const { deployer, network } = await deployerInfo();
+
+  // Safety check: ensure we're on mainnet
+  if (Number(network.chainId) !== 1) {
+    console.error(`\n❌ Expected chainId=1 (Ethereum Mainnet), got chainId=${network.chainId}`);
+    console.error("   Make sure RPC_URL points to a mainnet endpoint and you're using --network mainnet.\n");
+    process.exit(1);
+  }
+
+  const STETH  = envVal("STETH_ADDRESS",  STETH_MAINNET);
+  const WSTETH = envVal("WSTETH_ADDRESS", WSTETH_MAINNET);
+  const AGENT  = envVal("AGENT_WALLET",   deployer.address);
+  const BPS    = Number(envVal("MAX_DAILY_BPS", String(DEFAULT_MAX_DAILY_BPS)));
+
+  console.log(`\n  Config:`);
+  console.log(`    stETH:        ${STETH}`);
+  console.log(`    wstETH:       ${WSTETH}`);
+  console.log(`    Agent:        ${AGENT}`);
+  console.log(`    Daily limit:  ${BPS} bps (${BPS / 100}%)`);
+  console.log(`    Chain:        Ethereum Mainnet (chainId=1)`);
+
+  console.log("\n  ⚠️  THIS IS A MAINNET DEPLOYMENT — REAL ETH WILL BE SPENT");
+  console.log("  ⚠️  Double-check all addresses above before proceeding\n");
+
+  // Step 1 — Registry
+  sep("Step 1/2: Deploying YieldPilotRegistry");
+  const Registry = await ethers.getContractFactory("YieldPilotRegistry");
+  const registry = await Registry.deploy(STETH, WSTETH, AGENT, BPS);
+  await registry.waitForDeployment();
+  const registryAddress = await registry.getAddress();
+  console.log(`  ✅ Registry:    ${registryAddress}`);
+  console.log(`     tx: ${registry.deploymentTransaction()?.hash}`);
+
+  // Step 2 — Default targets (Uniswap Router only, no mocks on mainnet)
+  sep("Step 2/2: Configuring default target (Uniswap Router)");
+  const tx1 = await registry.addDefaultTarget(UNISWAP_ROUTER);
+  await tx1.wait();
+  console.log(`  ✅ Uniswap Router added: ${UNISWAP_ROUTER}`);
+
+  const targets = await registry.getDefaultTargets();
+  console.log(`\n  Default targets (${targets.length}):`);
+  for (const t of targets) console.log(`    • ${t}`);
+
+  const envBlock = [
+    `# ═══ YieldPilot MAINNET Deploy — ${new Date().toISOString()} ═══`,
+    `REGISTRY_CONTRACT=${registryAddress}`,
+    `STETH_ADDRESS=${STETH}`,
+    `WSTETH_ADDRESS=${WSTETH}`,
+  ].join("\n");
+
+  console.log("\n╔══════════════════════════════════════════════════════════╗");
+  console.log("║   ✅ MAINNET DEPLOYMENT COMPLETE                        ║");
+  console.log("╚══════════════════════════════════════════════════════════╝");
+  console.log(`
+  ┌──────────────────┬──────────────────────────────────────────────┐
+  │ Registry         │ ${registryAddress} │
+  └──────────────────┴──────────────────────────────────────────────┘
+
+  ━━━ Paste into .env ━━━
+
+${envBlock}
+
+  ━━━ Next steps ━━━
+
+  1. Paste the .env block above into your .env
+  2. Set VITE_NETWORK=mainnet in frontend .env
+  3. RPC_URL should already point to mainnet (used for this deploy)
+  4. Restart the agent:  bun run agent
+  5. Open the frontend, connect wallet, deposit stETH
+  6. Agent uses Uniswap V3 for real yield swaps on mainnet
+
+  ━━━ Verify on Etherscan ━━━
+
+  npx hardhat verify --network mainnet ${registryAddress} ${STETH} ${WSTETH} ${AGENT} ${BPS}
+
+  https://etherscan.io/address/${registryAddress}
+`);
+
+  saveManifest({
+    command: "mainnet",
+    timestamp: new Date().toISOString(),
+    deployer: deployer.address,
+    network: 1,
+    contracts: { registry: registryAddress },
+    config: { stETH: STETH, wstETH: WSTETH, agent: AGENT, uniswapRouter: UNISWAP_ROUTER, maxDailyBps: BPS },
+    defaultTargets: targets.map((t: string) => t),
+    envBlock,
+  });
+}
+
 // ─── verify ───────────────────────────────────────────────────────────────────
 //  Prints the hardhat verify command — actual verification is run by deploy.sh
 //  (hardhat verify can't be called programmatically in all setups)
@@ -636,6 +749,7 @@ const COMMANDS: Record<string, () => Promise<void>> = {
   treasury:   cmdTreasury,
   mocks:      cmdMocks,
   "mocks-all": cmdMocksAll,
+  mainnet:    cmdMainnet,
   status:     cmdStatus,
   verify:     cmdVerify,
 };
@@ -651,6 +765,7 @@ async function main() {
     console.error("   ./deploy.sh treasury      Single Treasury");
     console.error("   ./deploy.sh mocks         MockUSDC + MockRouter");
     console.error("   ./deploy.sh mocks-all     MockStETH + MockWstETH + MockUSDC + MockRouter");
+    console.error("   ./deploy.sh mainnet       Production deploy to Ethereum Mainnet");
     console.error("   ./deploy.sh status        Status Network Sepolia");
     console.error("   ./deploy.sh verify        Verify on Etherscan\n");
     process.exit(1);

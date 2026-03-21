@@ -8,6 +8,7 @@ frontend/dist/
 
 # Environment
 .env
+.env.dev
 
 # Logs
 *.log
@@ -31,3 +32,6 @@ typechain-types/
 .claude/settings.local.json
 
 PRIZE_ELIGIBILITY.md
+MAINNET_DEPLOYMENT.md
+
+.skill-archive

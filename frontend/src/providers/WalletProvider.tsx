@@ -2,18 +2,21 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 import { getDefaultConfig, RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import { WagmiProvider, http } from "wagmi";
-import { sepolia } from "wagmi/chains";
+import { mainnet, sepolia } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import type { ReactNode } from "react";
+import { IS_MAINNET, NETWORK } from "@/config/network";
+
+const activeChain = IS_MAINNET ? mainnet : sepolia;
 
 const config = getDefaultConfig({
   appName: "YieldPilot",
   projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || "b2c5e57fb6f2b0e6a35f3e8d6a0e5c4a",
-  chains: [sepolia],
-  // Use /rpc which Vite proxies to the Alchemy URL in .env (avoids CORS blocks
-  // from Thirdweb's public node which rejects requests from localhost origins)
+  chains: [activeChain],
+  // Use /rpc which Vite proxies to the RPC URL in .env (avoids CORS blocks
+  // from public nodes that reject requests from localhost origins)
   transports: {
-    [sepolia.id]: http("/rpc"),
+    [activeChain.id]: http("/rpc"),
   },
   ssr: false,
 });
@@ -32,7 +35,7 @@ export default function WalletProvider({ children }: { children: ReactNode }) {
             fontStack: "system",
             overlayBlur: "small",
           })}
-          initialChain={sepolia}
+          initialChain={activeChain}
         >
           {children}
         </RainbowKitProvider>

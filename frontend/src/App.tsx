@@ -14,7 +14,7 @@ import TreasuryManagement from "./components/TreasuryManagement";
 import TokenPortfolio from "./components/TokenPortfolio";
 import DeploymentHistory from "./components/DeploymentHistory";
 import YieldAnalytics from "./components/YieldAnalytics";
-import { useAnimatedValue, useLiveYield } from "./hooks/useAnimatedValue";
+import { useAnimatedValue } from "./hooks/useAnimatedValue";
 import {
   useTreasury,
   useAgentStatus,
@@ -101,14 +101,8 @@ export default function App() {
     };
   }, [users, treasury.data]);
 
-  // Live yield: adds tiny rebasing simulation on top of real values
-  const { total, yieldVal } = useLiveYield(
-    aggregateStats.totalBalance,
-    aggregateStats.availableYield
-  );
-
-  const totalDisplay = useAnimatedValue(total);
-  const yieldDisplay = useAnimatedValue(yieldVal);
+  const totalDisplay = useAnimatedValue(aggregateStats.totalBalance);
+  const yieldDisplay = useAnimatedValue(aggregateStats.availableYield);
 
   const cycleCount = status.data?.cycleCount ?? 0;
   const usersProcessed = (status.data as any)?.usersProcessed ?? 0;
@@ -231,8 +225,8 @@ export default function App() {
               apiConnected
                 ? aggregateStats.totalBalance > 0
                   ? registryMode
-                    ? `${totalUsers} user${totalUsers !== 1 ? "s" : ""} • Live on Sepolia`
-                    : "Live on Sepolia"
+                    ? `${totalUsers} user${totalUsers !== 1 ? "s" : ""} • Live`
+                    : "Live"
                   : "No stETH deposited yet"
                 : "Connecting..."
             }
@@ -242,7 +236,7 @@ export default function App() {
           />
           <StatCard
             label="Locked Principal"
-            value={aggregateStats.principal.toFixed(4)}
+            value={aggregateStats.principal.toFixed(6)}
             sub={registryMode ? `stETH — across ${totalUsers} treasuries` : "stETH — untouchable by agent"}
             delay={0.1}
           />
@@ -261,7 +255,7 @@ export default function App() {
           />
           <StatCard
             label="Yield Deployed"
-            value={aggregateStats.yieldWithdrawn.toFixed(4)}
+            value={aggregateStats.yieldWithdrawn.toFixed(6)}
             sub="stETH swapped via Uniswap"
             change={
               cycleCount > 0

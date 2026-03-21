@@ -11,8 +11,13 @@ import TelegramBot from "node-telegram-bot-api";
 import config from "../../config/default";
 import * as lido from "./lido";
 
-// Initialize
-lido.init(config.chain.rpcUrl, config.chain.agentPrivateKey, config.treasury.address);
+// Initialize — pass both treasury (single-user fallback) and registry (multi-user)
+lido.init(
+  config.chain.rpcUrl,
+  config.chain.agentPrivateKey,
+  config.treasury.address,
+  (config as any).registry?.address ?? process.env.REGISTRY_CONTRACT
+);
 
 const bot: TelegramBot | null = config.telegram.botToken
   ? new TelegramBot(config.telegram.botToken)
@@ -65,17 +70,20 @@ async function monitorCycle(): Promise<void> {
   console.log(`\n🔍 Monitor check at ${timestamp}`);
 
   try {
-    const balances = await lido.getBalances();
-    const protocolStats = await lido.getProtocolStats();
+    const [userTreasuries, protocolStats] = await Promise.all([
+      lido.getAllUserTreasuries(),
+      lido.getProtocolStats(),
+    ]);
 
+    // Aggregate across all registered treasuries
     const currentState: VaultState = {
-      totalBalance: balances.treasury?.totalBalance ?? balances.stETH,
-      principal: balances.treasury?.principal ?? "0",
-      availableYield: balances.treasury?.availableYield ?? "0",
-      yieldWithdrawn: balances.treasury?.yieldWithdrawn ?? "0",
+      totalBalance: userTreasuries.reduce((s, t) => s + parseFloat(t.totalBalance), 0).toFixed(6),
+      principal: userTreasuries.reduce((s, t) => s + parseFloat(t.principal), 0).toFixed(6),
+      availableYield: userTreasuries.reduce((s, t) => s + parseFloat(t.availableYield), 0).toFixed(6),
+      yieldWithdrawn: userTreasuries.reduce((s, t) => s + parseFloat(t.yieldWithdrawn), 0).toFixed(6),
+      paused: userTreasuries.some((t) => t.paused),
       exchangeRate: protocolStats.exchangeRate,
       stEthPerWstEth: protocolStats.stEthPerWstEth,
-      paused: balances.treasury?.paused ?? false,
       timestamp,
     };
 

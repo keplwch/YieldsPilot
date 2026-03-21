@@ -1,5 +1,5 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Activity, Cpu } from "lucide-react";
+import { Activity } from "lucide-react";
 
 interface HeaderProps {
   cycleCount: number;
@@ -27,13 +27,8 @@ export default function Header({ cycleCount, connected, running }: HeaderProps) 
       <div className="max-w-[1360px] mx-auto px-8 py-4 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="relative w-9 h-9 flex items-center justify-center flex-shrink-0"
-            style={{
-              background: "rgba(99,102,241,0.1)",
-              border: "1px solid rgba(99,102,241,0.3)",
-              clipPath: "polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%)",
-            }}>
-            <Cpu size={16} className="text-accent-purple" strokeWidth={1.5} />
+          <div className="relative w-9 h-9 flex-shrink-0">
+            <img src="/logo.svg" alt="YieldPilot" className="w-full h-full object-contain" />
             {running && (
               <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent-green border-2 border-bg-primary animate-pulse-glow" />
             )}
@@ -46,13 +41,6 @@ export default function Header({ cycleCount, connected, running }: HeaderProps) 
 
         {/* Right side */}
         <div className="flex items-center gap-2">
-          {/* Network badge */}
-          {connected && (
-            <div className="px-2.5 py-1 text-[10px] font-mono text-text-muted tracking-widest uppercase"
-              style={{ border: "1px solid rgba(99,102,241,0.15)", background: "transparent" }}>
-              Sepolia
-            </div>
-          )}
 
           {/* Agent status */}
           <div className={`flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono border ${statusBg}`}>

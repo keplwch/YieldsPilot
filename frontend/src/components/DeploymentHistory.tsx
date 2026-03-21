@@ -1,4 +1,5 @@
 import { History, ArrowRightLeft, Pause, AlertTriangle, ExternalLink } from "lucide-react";
+import { NETWORK } from "@/config/network";
 
 export interface ActivityRecord {
   id: string;
@@ -132,7 +133,7 @@ function HistoryRow({ record, index }: { record: ActivityRecord; index: number }
         {/* Tx hash */}
         {record.txHash && (
           <a
-            href={`https://sepolia.etherscan.io/tx/${record.txHash}`}
+            href={`${NETWORK.explorerBase}/tx/${record.txHash}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 mt-1.5 text-[10px] font-mono text-text-muted hover:text-accent-purple transition-colors"

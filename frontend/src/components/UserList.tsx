@@ -1,4 +1,5 @@
 import { Users, ExternalLink } from "lucide-react";
+import { NETWORK } from "@/config/network";
 import type { RegistryUser } from "../hooks/useApi";
 
 interface UserListProps {
@@ -43,7 +44,7 @@ export default function UserList({ users, registryMode, registryAddress }: UserL
 
           {registryAddress && (
             <a
-              href={`https://sepolia.etherscan.io/address/${registryAddress}`}
+              href={`${NETWORK.explorerBase}/address/${registryAddress}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-[10px] font-mono text-accent-purple hover:text-[#a5b4fc] transition-colors"
@@ -119,7 +120,7 @@ function UserRow({ user: u, index }: { user: RegistryUser; index: number }) {
 
             <div className="flex flex-col gap-0.5">
               <a
-                href={`https://sepolia.etherscan.io/address/${u.user}`}
+                href={`${NETWORK.explorerBase}/address/${u.user}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-mono text-[12px] text-text-primary hover:text-accent-purple transition-colors flex items-center gap-1"
@@ -130,7 +131,7 @@ function UserRow({ user: u, index }: { user: RegistryUser; index: number }) {
               <div className="flex items-center gap-1 text-[10px] font-mono text-text-muted">
                 <span className="opacity-50">Treasury:</span>
                 <a
-                  href={`https://sepolia.etherscan.io/address/${u.treasury}`}
+                  href={`${NETWORK.explorerBase}/address/${u.treasury}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-accent-purple transition-colors"

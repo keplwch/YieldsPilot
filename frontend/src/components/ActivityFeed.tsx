@@ -1,6 +1,7 @@
 import { CheckCircle, Zap, Brain, Radio, AlertTriangle } from "lucide-react";
 import type { FeedItem } from "../data/transformers";
 import CycleNav, { type CycleOption } from "./CycleNav";
+import { NETWORK } from "@/config/network";
 
 const phaseConfig: Record<string, { bg: string; text: string; border: string; label: string }> = {
   discover: { bg: "rgba(6,182,212,0.08)",  text: "#06b6d4", border: "rgba(6,182,212,0.22)", label: "DISCOVER" },
@@ -39,7 +40,7 @@ function FeedEntry({ item, index }: { item: FeedItem; index: number }) {
         </div>
         <div className="text-[12px] text-text-secondary leading-relaxed font-body">{item.desc}</div>
         {item.tx && (
-          <a href={`https://sepolia.etherscan.io/tx/${item.tx}`} target="_blank" rel="noopener noreferrer"
+          <a href={`${NETWORK.explorerBase}/tx/${item.tx}`} target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1 mt-1.5 text-[10px] font-mono text-text-muted hover:text-accent-purple transition-colors">
             <span className="opacity-50">tx:</span>
             <span>{item.tx.length > 12 ? `${item.tx.slice(0, 8)}...${item.tx.slice(-4)}` : item.tx}</span>

@@ -27,6 +27,10 @@
 # ║                                    MockRouter). Use for fully self-contained  ║
 # ║                                    testing with mintable stETH/wstETH         ║
 # ║                                                                              ║
+# ║    ./deploy.sh mainnet          Deploy Registry to Ethereum Mainnet          ║
+# ║                                    Real Lido stETH/wstETH, no mocks          ║
+# ║                                    Point RPC_URL at mainnet endpoint         ║
+# ║                                                                              ║
 # ║    ./deploy.sh status           Deploy to Status Network Sepolia              ║
 # ║                                    Gasless transactions (chainId=2020)        ║
 # ║                                                                              ║
@@ -185,6 +189,7 @@ cmd_registry()  { banner; run_deploy "registry"  "sepolia"; }
 cmd_treasury()  { banner; run_deploy "treasury"  "sepolia"; }
 cmd_mocks()     { banner; run_deploy "mocks"     "sepolia"; }
 cmd_mocks_all() { banner; run_deploy "mocks-all" "sepolia"; }
+cmd_mainnet()   { banner; run_deploy "mainnet"   "mainnet"; }
 cmd_status()    { banner; run_deploy "status"    "statusSepolia"; }
 
 # ── Verify ─────────────────────────────────────────────────────────────────────
@@ -206,8 +211,17 @@ cmd_verify() {
     fail "ETHERSCAN_API_KEY not set in .env"
   fi
 
-  local steth="${STETH_ADDRESS:-0x6df25A1734E181AFbBD9c8A50b1D00e39D482704}"
-  local wsteth="${WSTETH_ADDRESS:-0xB82381A3fBD3FaFA77B3a7bE693342AA3d14232a}"
+  local verify_network="${3:-sepolia}"
+
+  # Select defaults based on network
+  local steth wsteth
+  if [ "$verify_network" = "mainnet" ]; then
+    steth="${STETH_ADDRESS:-0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84}"
+    wsteth="${WSTETH_ADDRESS:-0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0}"
+  else
+    steth="${STETH_ADDRESS:-0x6df25A1734E181AFbBD9c8A50b1D00e39D482704}"
+    wsteth="${WSTETH_ADDRESS:-0xB82381A3fBD3FaFA77B3a7bE693342AA3d14232a}"
+  fi
   local agent="${AGENT_WALLET:-}"
 
   # Derive agent address from private key if not set
@@ -223,10 +237,14 @@ cmd_verify() {
   log "Constructor args: stETH=${steth}, wstETH=${wsteth}, agent=${agent}, bps=5000"
   echo ""
 
-  npx hardhat verify --network sepolia "$address" "$steth" "$wsteth" "$agent" "5000"
+  npx hardhat verify --network "$verify_network" "$address" "$steth" "$wsteth" "$agent" "5000"
 
   ok "Verified!"
-  echo -e "\n  View: ${CYAN}https://sepolia.etherscan.io/address/${address}#code${NC}\n"
+  if [ "$verify_network" = "mainnet" ]; then
+    echo -e "\n  View: ${CYAN}https://etherscan.io/address/${address}#code${NC}\n"
+  else
+    echo -e "\n  View: ${CYAN}https://sepolia.etherscan.io/address/${address}#code${NC}\n"
+  fi
 }
 
 # ── History ────────────────────────────────────────────────────────────────────
@@ -325,10 +343,19 @@ cmd_help() {
   echo "                        Fully self-contained testnet with mintable stETH/wstETH."
   echo "                        Use this when you want your own faucet tokens."
   echo ""
+  echo -e "  ${BOLD}Mainnet:${NC}"
+  echo ""
+  echo "    mainnet          Deploy Registry to Ethereum Mainnet (production)"
+  echo "                        Uses real Lido stETH/wstETH — no mocks deployed."
+  echo "                        Point RPC_URL at a mainnet endpoint first."
+  echo ""
+  echo -e "  ${BOLD}Other networks:${NC}"
+  echo ""
   echo "    status           Deploy to Status Network Sepolia (gasless, chainId=2020)"
   echo ""
   echo "    verify <addr>    Verify contract on Etherscan"
   echo "      [ContractName]   Optional: YieldPilotRegistry (default), YieldPilotTreasury"
+  echo "      [network]        Optional: sepolia (default) or mainnet"
   echo "                       Requires ETHERSCAN_API_KEY in .env"
   echo ""
   echo -e "  ${BOLD}Testing (Sepolia):${NC}"
@@ -357,7 +384,9 @@ cmd_help() {
   echo "    STETH_ADDRESS          stETH address (default: Lido Sepolia testnet)"
   echo "    WSTETH_ADDRESS         wstETH address (default: Lido Sepolia testnet)"
   echo "    AGENT_WALLET           Agent address (default: derived from private key)"
+  echo "    MAX_DAILY_BPS          Daily spend limit in bps (default: 5000 = 50%)"
   echo "    ETHERSCAN_API_KEY      Required for verify command"
+  echo "    VITE_NETWORK           Frontend network: sepolia (default) or mainnet"
   echo ""
   echo -e "  ${DIM}Set by 'fresh' — paste into .env after running:${NC}"
   echo ""
@@ -387,8 +416,9 @@ case "$CMD" in
   treasury)       cmd_treasury ;;
   mocks)          cmd_mocks ;;
   mocks-all|mocks:all) cmd_mocks_all ;;
+  mainnet)        cmd_mainnet ;;
   status)         cmd_status ;;
-  verify)         cmd_verify "${1:-}" "${2:-}" ;;
+  verify)         cmd_verify "${1:-}" "${2:-}" "${3:-sepolia}" ;;
   mint)           cmd_mint ;;
   simulate:yield|simulate-yield) cmd_simulate_yield ;;
   compile)        cmd_compile ;;

@@ -18,7 +18,8 @@
     "simulate:yield": "npx hardhat run scripts/simulate-yield.ts --network sepolia",
     "test": "npx hardhat test",
     "typecheck": "tsc --noEmit",
-    "lint": "tsc --noEmit && echo '✅ No type errors'"
+    "lint": "tsc --noEmit && echo '✅ No type errors'",
+    "postinstall": "node scripts/postinstall.js"
   },
   "dependencies": {
     "@lido-sdk/contracts": "^3.0.0",

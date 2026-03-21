@@ -30,7 +30,7 @@ export default function ConnectionBanner({ connected, network }: ConnectionBanne
               style={{ background: "rgba(0,0,0,0.3)", color: "#818cf8", border: "1px solid rgba(99,102,241,0.18)" }}>
               ./scripts/dev.sh start
             </code>
-            <span className="text-amber-400/70"> for live Sepolia data.</span>
+            <span className="text-amber-400/70"> for live data.</span>
             {network && <span className="ml-2 text-amber-400/40 font-mono text-[10px]">net:{network}</span>}
           </div>
         </div>

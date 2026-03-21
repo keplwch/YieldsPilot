@@ -3,8 +3,9 @@ import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadCont
 import { parseEther, formatEther } from "viem";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Layers, Lock, Loader2, CheckCircle2, ExternalLink, ArrowRight } from "lucide-react";
+import { NETWORK } from "@/config/network";
 
-const WSTETH_ADDRESS = "0x6F3bf3371aBe2A27C89B0FFE38E8057CD4089C83" as const;
+const WSTETH_ADDRESS = NETWORK.wstETH;
 
 const ERC20_ABI = [
   { name: "approve", type: "function", stateMutability: "nonpayable",
@@ -286,7 +287,7 @@ export default function WstETHDepositPanel({ registryAddress }: WstETHDepositPan
                 {isApprovePending ? "Confirm in wallet..." : approveTxHash ? "Waiting for block..." : "Preparing..."}
               </p>
               {approveTxHash && (
-                <a href={`https://sepolia.etherscan.io/tx/${approveTxHash}`} target="_blank" rel="noopener noreferrer"
+                <a href={`${NETWORK.explorerBase}/tx/${approveTxHash}`} target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-[10px] text-accent-purple hover:underline font-mono">
                   {approveTxHash.slice(0, 14)}... <ExternalLink size={9} />
                 </a>
@@ -307,7 +308,7 @@ export default function WstETHDepositPanel({ registryAddress }: WstETHDepositPan
                 {isDepositPending ? "Confirm in wallet..." : depositTxHash ? "Unwrapping wstETH → stETH..." : "Preparing..."}
               </p>
               {depositTxHash && (
-                <a href={`https://sepolia.etherscan.io/tx/${depositTxHash}`} target="_blank" rel="noopener noreferrer"
+                <a href={`${NETWORK.explorerBase}/tx/${depositTxHash}`} target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-[10px] text-accent-purple hover:underline font-mono">
                   {depositTxHash.slice(0, 14)}... <ExternalLink size={9} />
                 </a>
@@ -333,7 +334,7 @@ export default function WstETHDepositPanel({ registryAddress }: WstETHDepositPan
                 </p>
               )}
               {depositTxHash && (
-                <a href={`https://sepolia.etherscan.io/tx/${depositTxHash}`} target="_blank" rel="noopener noreferrer"
+                <a href={`${NETWORK.explorerBase}/tx/${depositTxHash}`} target="_blank" rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 mb-4 text-[10px] text-accent-purple hover:underline font-mono">
                   View transaction <ExternalLink size={9} />
                 </a>

@@ -1,4 +1,5 @@
 import { Coins } from "lucide-react";
+import { NETWORK } from "@/config/network";
 
 interface TokenBalance {
   address: string;
@@ -52,7 +53,7 @@ export default function TokenPortfolio({ tokens, ethBalance, treasuryAddress }: 
             <span className="text-[13px] font-display font-semibold text-text-primary">Treasury Portfolio</span>
           </div>
           <a
-            href={`https://sepolia.etherscan.io/address/${treasuryAddress}`}
+            href={`${NETWORK.explorerBase}/address/${treasuryAddress}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-[10px] font-mono text-text-muted hover:text-accent-purple transition-colors"
