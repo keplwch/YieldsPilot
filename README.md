@@ -88,8 +88,19 @@ YieldsPilot is an autonomous AI agent that manages staking yield on behalf of us
 
 ## What Makes YieldsPilot Special
 
+### Who This Is For
+
+Meet Lena. She's the part-time treasurer of a 200-person creative cooperative DAO. The DAO holds 50 ETH staked through Lido, earning daily stETH rebases. Every week, Lena logs into three dashboards, checks if yield has accrued, evaluates gas prices, looks at ETH/USDC rates, and decides whether to swap the yield into stablecoins for the DAO's operating budget. It takes 45 minutes each time. She has a full-time job. Half the time, she just lets the yield sit because she doesn't have bandwidth.
+
+She can't delegate this to a bot because that means handing over the DAO's treasury keys. She can't use a centralized yield optimizer because the DAO voted against custodial solutions. And every time she checks DeFi dashboards and queries rates through APIs, she's leaking the DAO's financial strategy to every service she touches.
+
+Lena's problem isn't technical. It's structural: there's no way to let an agent manage yield without also trusting it with the principal, and no way to automate DeFi reasoning without exposing your strategy to the infrastructure you reason through.
+
 ### The Problem
-DeFi yield management is tedious, time-consuming, and error-prone. Users stake ETH, earn yield, and then... manually check rates, manually swap tokens, manually rebalance, or just let yield sit idle. Meanwhile, every interaction leaks intent data to centralized APIs.
+
+DeFi yield sits idle because active management requires constant monitoring, gas timing, and swap execution. Delegating to a bot means trusting it with your funds and your data. Existing solutions either expose your reasoning patterns to LLM providers (building a profile of your risk tolerance and portfolio over thousands of API calls) or require you to hand over full custody of your tokens.
+
+**How might we let someone like Lena put her DAO's staking yield to work automatically, without trusting a bot with the principal or leaking the DAO's strategy to every API it touches?**
 
 ### Our Solution
 YieldsPilot automates the entire yield management lifecycle while keeping your strategy private:
@@ -99,6 +110,8 @@ YieldsPilot automates the entire yield management lifecycle while keeping your s
 3. **Your principal is untouchable**: the smart contract mathematically prevents the agent from accessing your deposited principal. It can only spend yield, and only up to a daily limit you configure
 4. **Your strategy stays private**: all reasoning happens via Venice's no-data-retention API. No one (not even Venice) can see what the agent is thinking or planning
 5. **Everything is verifiable**: every action is onchain, every decision is logged in ERC-8004 format, and you can audit the full history
+
+For Lena, this means: deposit the DAO's stETH, set a daily spend cap of 50 BPS, whitelist USDC and DAI as allowed targets, and walk away. The agent handles the rest. The DAO's principal is locked by math, the strategy stays private, and every swap shows up onchain for the whole DAO to audit.
 
 ### Future Vision: Where This Goes Next
 
