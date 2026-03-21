@@ -265,78 +265,105 @@ async function runCycleForTreasury(
       const swapAmount = strategy.swap_amount;
       const tokenIn = strategy.swap_path?.[0] ?? "stETH";
       const tokenOut = strategy.swap_path?.[1] ?? "USDC";
-      const isTestnet = config.chain.chainId !== 1;
+      const isMainnet = config.chain.chainId === 1;
 
       console.log(`      💱 Swap request: ${swapAmount} ${tokenIn} → ${tokenOut}`);
-      console.log(`      🌐 Network: ${isTestnet ? "testnet (chain " + config.chain.chainId + ")" : "mainnet"}`);
+      console.log(`      🌐 Network: ${isMainnet ? "mainnet" : "testnet"} (chain ${config.chain.chainId})`);
       console.log(`      📍 Treasury: ${treasuryAddress}`);
 
-      if (!isTestnet && config.uniswap.apiKey) {
-        // ── MAINNET: Use Uniswap Trading API → atomic swapYield() ──
-        console.log(`      🦄 Using Uniswap Trading API (mainnet)...`);
-
-        try {
-          console.log(`      📦 Step 1/3: Fetching quote from Uniswap API...`);
-          const swapCalldata = await uniswap.buildContractSwap({
-            tokenIn,
-            tokenOut,
-            amount: swapAmount,
-            treasuryAddress,
-            slippageTolerance: 0.5,
-          });
-
-          console.log(`      ✅ Quote received:`);
-          console.log(`         Router:   ${swapCalldata.router}`);
-          console.log(`         Expected: ${swapCalldata.expectedOutput} ${tokenOut}`);
-          console.log(`         MinOut:   ${swapCalldata.minAmountOut} (slippage-adjusted)`);
-          console.log(`         Impact:   ${swapCalldata.priceImpact}%`);
-          console.log(`         Calldata: ${swapCalldata.calldata.slice(0, 20)}...${swapCalldata.calldata.slice(-8)}`);
-
-          console.log(`      🔒 Step 2/3: Calling treasury.swapYield() (atomic — funds stay in contract)...`);
-          const swapResult = await lido.swapYieldFromTreasury({
-            treasuryAddress,
-            routerAddress: swapCalldata.router,
-            amountIn: swapAmount,
-            swapCalldata: swapCalldata.calldata,
-            tokenOut: swapCalldata.tokenOut,
-            minAmountOut: swapCalldata.minAmountOut,
-            reason: `YieldsPilot auto-swap for ${shortUser}: ${strategy.reasoning}`,
-          });
-
-          console.log(`      ✅ Step 3/3: Swap confirmed!`);
-          console.log(`         txHash: ${swapResult.txHash}`);
-          console.log(`         Block:  ${swapResult.blockNumber}`);
-
+      if (isMainnet) {
+        // ═══════════════════════════════════════════════════════════
+        // MAINNET: Uniswap Trading API → atomic swapYield()
+        // API provides router, calldata, and tokenOut dynamically.
+        // ═══════════════════════════════════════════════════════════
+        if (!config.uniswap.apiKey) {
+          console.error(`      ❌ Swap BLOCKED: UNISWAP_API_KEY not set`);
+          console.error(`         The Uniswap Trading API is required for mainnet atomic swaps.`);
           executeResult = {
             action: "swap_yield",
-            swap: swapResult,
-            txHash: swapResult.txHash,
-            status: "executed",
-            router: swapCalldata.router,
-            expectedOutput: swapCalldata.expectedOutput,
+            status: "blocked_no_api_key",
+            error: "UNISWAP_API_KEY not configured. Cannot execute mainnet swap without Uniswap Trading API.",
           };
-        } catch (swapError) {
-          const err = swapError as Error;
-          console.error(`      ❌ Mainnet swap failed: ${err.message}`);
-          console.error(`         Stack: ${err.stack?.split("\n")[1]?.trim()}`);
+        } else {
+          console.log(`      🦄 Using Uniswap Trading API (mainnet)...`);
 
-          // On mainnet, do NOT fallback to blind transfer — that just burns funds
-          executeResult = {
-            action: "swap_yield",
-            status: "failed",
-            error: err.message,
-          };
+          try {
+            console.log(`      📦 Step 1/3: Fetching quote from Uniswap API...`);
+            const swapCalldata = await uniswap.buildContractSwap({
+              tokenIn,
+              tokenOut,
+              amount: swapAmount,
+              treasuryAddress,
+              slippageTolerance: 0.5,
+            });
+
+            console.log(`      ✅ Quote received:`);
+            console.log(`         Router:   ${swapCalldata.router}`);
+            console.log(`         Expected: ${swapCalldata.expectedOutput} ${tokenOut}`);
+            console.log(`         MinOut:   ${swapCalldata.minAmountOut} (slippage-adjusted)`);
+            console.log(`         Impact:   ${swapCalldata.priceImpact}%`);
+            console.log(`         Calldata: ${swapCalldata.calldata.slice(0, 20)}...${swapCalldata.calldata.slice(-8)}`);
+
+            console.log(`      🔒 Step 2/3: Calling treasury.swapYield() (atomic — funds stay in contract)...`);
+            const swapResult = await lido.swapYieldFromTreasury({
+              treasuryAddress,
+              routerAddress: swapCalldata.router,
+              amountIn: swapAmount,
+              swapCalldata: swapCalldata.calldata,
+              tokenOut: swapCalldata.tokenOut,
+              minAmountOut: swapCalldata.minAmountOut,
+              reason: `YieldsPilot auto-swap for ${shortUser}: ${strategy.reasoning}`,
+            });
+
+            console.log(`      ✅ Step 3/3: Swap confirmed!`);
+            console.log(`         txHash: ${swapResult.txHash}`);
+            console.log(`         Block:  ${swapResult.blockNumber}`);
+
+            executeResult = {
+              action: "swap_yield",
+              swap: swapResult,
+              txHash: swapResult.txHash,
+              status: "executed",
+              router: swapCalldata.router,
+              expectedOutput: swapCalldata.expectedOutput,
+            };
+          } catch (swapError) {
+            const err = swapError as Error;
+            console.error(`      ❌ Mainnet swap failed: ${err.message}`);
+            console.error(`         Stack: ${err.stack?.split("\n")[1]?.trim()}`);
+
+            // Do NOT fallback to blind transfer — that burns funds
+            executeResult = {
+              action: "swap_yield",
+              status: "failed",
+              error: err.message,
+            };
+          }
         }
       } else {
-        // ── TESTNET ──
-        const mockRouter = process.env.MOCK_ROUTER_ADDRESS;
-        const mockTokenOut = process.env.MOCK_TOKEN_OUT_ADDRESS;
+        // ═══════════════════════════════════════════════════════════
+        // TESTNET: MockRouter → atomic swapYield()
+        // Uses deployed MockRouter contract with hardcoded calldata.
+        // Uniswap Trading API doesn't support testnet tokens.
+        // ═══════════════════════════════════════════════════════════
+        const testnetRouter = process.env.MOCK_ROUTER_ADDRESS;
+        const testnetTokenOut = process.env.MOCK_TOKEN_OUT_ADDRESS;
 
-        if (mockRouter && mockTokenOut) {
-          // ── TESTNET + MOCK ROUTER: Full atomic swapYield() demo ──
-          console.log(`      🧪 Testnet mode with MockRouter deployed`);
-          console.log(`         MockRouter:  ${mockRouter}`);
-          console.log(`         MockTokenOut: ${mockTokenOut}`);
+        if (!testnetRouter || !testnetTokenOut) {
+          console.error(`      ❌ Testnet swap BLOCKED: MockRouter not configured`);
+          console.error(`         MOCK_ROUTER_ADDRESS and MOCK_TOKEN_OUT_ADDRESS are required.`);
+          console.error(`         Run: ./scripts/deploy.sh fresh — then paste the env vars into .env`);
+          console.error(`         Refusing to execute — spendYield() sends funds irreversibly.`);
+
+          executeResult = {
+            action: "swap_yield",
+            status: "blocked_no_router",
+            error: "MockRouter not configured. Set MOCK_ROUTER_ADDRESS + MOCK_TOKEN_OUT_ADDRESS. Refusing to execute without atomic swap path.",
+          };
+        } else {
+          console.log(`      🧪 Using MockRouter (testnet)...`);
+          console.log(`         Router:   ${testnetRouter}`);
+          console.log(`         TokenOut: ${testnetTokenOut}`);
 
           try {
             // Build calldata for MockRouter.swap(tokenIn, amountIn, tokenOut, recipient)
@@ -344,13 +371,13 @@ async function runCycleForTreasury(
             const amountInWei = ethersLib.parseEther(swapAmount);
             const stETHAddress = config.lido.stETH;
 
-            const mockRouterIface = new ethersLib.Interface([
+            const routerIface = new ethersLib.Interface([
               "function swap(address tokenIn, uint256 amountIn, address tokenOut, address recipient) returns (uint256)"
             ]);
-            const calldata = mockRouterIface.encodeFunctionData("swap", [
+            const calldata = routerIface.encodeFunctionData("swap", [
               stETHAddress,
               amountInWei,
-              mockTokenOut,
+              testnetTokenOut,
               treasuryAddress, // output goes back to Treasury
             ]);
 
@@ -361,10 +388,10 @@ async function runCycleForTreasury(
             console.log(`      🔒 Step 2/3: Calling treasury.swapYield() (atomic swap)...`);
             const swapResult = await lido.swapYieldFromTreasury({
               treasuryAddress,
-              routerAddress: mockRouter,
+              routerAddress: testnetRouter,
               amountIn: swapAmount,
               swapCalldata: calldata,
-              tokenOut: mockTokenOut,
+              tokenOut: testnetTokenOut,
               minAmountOut: "0", // mock router always succeeds
               reason: `YieldsPilot testnet atomic swap for ${shortUser}: ${strategy.reasoning}`,
             });
@@ -379,66 +406,16 @@ async function runCycleForTreasury(
               swap: swapResult,
               txHash: swapResult.txHash,
               status: "executed",
-              router: mockRouter,
+              router: testnetRouter,
             };
-          } catch (mockSwapErr) {
-            const err = mockSwapErr as Error;
-            console.error(`      ❌ MockRouter swapYield failed: ${err.message}`);
+          } catch (testnetSwapErr) {
+            const err = testnetSwapErr as Error;
+            console.error(`      ❌ Testnet swap failed: ${err.message}`);
             console.error(`         Stack: ${err.stack?.split("\n").slice(0, 3).join("\n         ")}`);
             executeResult = {
               action: "swap_yield",
               status: "failed",
               error: err.message,
-            };
-          }
-        } else {
-          // ── TESTNET without MockRouter: Use spendYield() as demo ──
-          console.log(`      🧪 Testnet mode: No MockRouter configured`);
-          console.log(`         Set MOCK_ROUTER_ADDRESS + MOCK_TOKEN_OUT_ADDRESS for atomic swaps`);
-          console.log(`         Using spendYield() to demonstrate yield management`);
-
-          // Dry run check
-          console.log(`      🔍 Step 1/3: Dry run check...`);
-          const dryRunResult = await lido.spendYieldFromTreasury(
-            treasuryAddress,
-            config.uniswap.routerAddress,
-            swapAmount,
-            `dry-run`,
-            true // dryRun=true
-          );
-          console.log(`         Available yield: ${dryRunResult.availableYield} stETH`);
-          console.log(`         Daily remaining: ${dryRunResult.dailyRemaining} stETH`);
-          console.log(`         Would succeed:   ${dryRunResult.wouldSucceed}`);
-
-          if (!dryRunResult.wouldSucceed) {
-            console.log(`      ⚠ Dry run says swap would fail. Skipping.`);
-            executeResult = {
-              action: "swap_yield",
-              status: "dry_run_rejected",
-              dryRun: dryRunResult,
-            };
-          } else {
-            console.log(`      💸 Step 2/3: Calling treasury.spendYield()...`);
-            console.log(`         Target: ${config.uniswap.routerAddress}`);
-            console.log(`         Amount: ${swapAmount} stETH`);
-
-            const spendResult = await lido.spendYieldFromTreasury(
-              treasuryAddress,
-              config.uniswap.routerAddress,
-              swapAmount,
-              `YieldsPilot testnet yield-spend for ${shortUser}: ${strategy.reasoning}`
-            );
-
-            console.log(`      ✅ Step 3/3: Yield spent!`);
-            console.log(`         txHash: ${spendResult.txHash}`);
-            console.log(`         Block:  ${spendResult.blockNumber}`);
-            console.log(`         Note:   Set MOCK_ROUTER_ADDRESS for atomic swapYield() demo`);
-
-            executeResult = {
-              action: "swap_yield",
-              spend: spendResult,
-              txHash: spendResult.txHash,
-              status: "executed_testnet",
             };
           }
         }
@@ -531,7 +508,7 @@ async function runCycleForTreasury(
     txHash: executeResult.txHash ?? undefined,
     router: (executeResult as any).router ?? undefined,
     expectedOutput: (executeResult as any).expectedOutput ?? undefined,
-    executionMode: !config.chain.chainId || config.chain.chainId === 1 ? "mainnet" : process.env.MOCK_ROUTER_ADDRESS ? "testnet_mock" : "testnet_spend",
+    executionMode: config.chain.chainId === 1 ? "mainnet" : "testnet",
     durationMs: duration,
     error: (executeResult as any).error ?? undefined,
   };
@@ -652,16 +629,19 @@ async function main(): Promise<void> {
   state.startedAt = new Date().toISOString();
   persistState();
 
-  const mockRouter = process.env.MOCK_ROUTER_ADDRESS ?? "";
-  const mockTokenOut = process.env.MOCK_TOKEN_OUT_ADDRESS ?? "";
-
+  const isMainnet = config.chain.chainId === 1;
   console.log(`Agent DID:      ${config.agent.did}`);
   console.log(`Treasury:       ${config.treasury.address || "(via registry)"}`);
   console.log(`Registry:       ${registryAddr || "not configured (single-user mode)"}`);
-  console.log(`Chain:          ${config.chain.chainId}`);
+  console.log(`Chain:          ${config.chain.chainId} (${isMainnet ? "mainnet" : "testnet"})`);
+  console.log(`Swap mode:      ${isMainnet ? "Uniswap Trading API" : "MockRouter"}`);
   console.log(`stETH address:  ${config.lido.stETH}`);
-  console.log(`MockRouter:     ${mockRouter || "not set (will use spendYield on testnet)"}`);
-  console.log(`MockTokenOut:   ${mockTokenOut || "not set"}`);
+  if (isMainnet) {
+    console.log(`Uniswap API:    ${config.uniswap.apiKey ? "configured" : "NOT SET — swaps will be blocked"}`);
+  } else {
+    console.log(`MockRouter:     ${process.env.MOCK_ROUTER_ADDRESS || "NOT SET — swaps will be blocked"}`);
+    console.log(`MockTokenOut:   ${process.env.MOCK_TOKEN_OUT_ADDRESS || "NOT SET"}`);
+  }
   console.log(`Venice Model:   ${config.venice.model}`);
   console.log(`Compute Budget: $${config.loop.computeBudgetUsd}/day`);
   console.log(`Cycle Interval: ${config.loop.intervalMs / 1000}s\n`);

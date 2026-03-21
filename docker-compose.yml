@@ -93,8 +93,11 @@ services:
     build:
       context: .
       dockerfile: docker/frontend.Dockerfile
+      args:
+        VITE_NETWORK: ${VITE_NETWORK:-mainnet}
     container_name: yieldpilot-dashboard
     restart: unless-stopped
+    env_file: .env
     depends_on:
       api:
         condition: service_healthy

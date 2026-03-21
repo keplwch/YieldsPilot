@@ -4,11 +4,13 @@
 // ═══════════════════════════════════════════════════════
 
 import http from "node:http";
+import https from "node:https";
 import fs from "node:fs";
 import path from "node:path";
 
 const STATIC_DIR = path.resolve("./dist");
 const API_ORIGIN = process.env.API_URL ?? "http://api:3001";
+const RPC_URL = process.env.RPC_URL ?? "";
 const PORT = 3000;
 
 const MIME: Record<string, string> = {
@@ -30,6 +32,58 @@ const ext = (p: string) => path.extname(p) || "";
 const server = http.createServer((req, res) => {
   const url = new URL(req.url ?? "/", `http://localhost:${PORT}`);
   const pathname = url.pathname;
+
+  // ── RPC proxy ───────────────────────────────────
+  // Wagmi sends JSON-RPC calls to /rpc to avoid CORS issues with
+  // public RPC nodes. Forward them to the actual RPC_URL.
+  if (pathname === "/rpc" && RPC_URL) {
+    // Handle CORS preflight
+    if (req.method === "OPTIONS") {
+      res.writeHead(204, {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      });
+      res.end();
+      return;
+    }
+
+    const rpcTarget = new URL(RPC_URL);
+    const transport = rpcTarget.protocol === "https:" ? https : http;
+
+    const proxyReq = transport.request(
+      {
+        hostname: rpcTarget.hostname,
+        port: rpcTarget.port || (rpcTarget.protocol === "https:" ? 443 : 80),
+        path: rpcTarget.pathname + rpcTarget.search,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Host: rpcTarget.host,
+        },
+        timeout: 30_000,
+      },
+      (proxyRes) => {
+        res.writeHead(proxyRes.statusCode ?? 502, {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "Content-Type",
+        });
+        proxyRes.pipe(res);
+      }
+    );
+    proxyReq.on("error", () => {
+      res.writeHead(502, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "RPC unreachable" }));
+    });
+    proxyReq.on("timeout", () => {
+      proxyReq.destroy();
+      res.writeHead(504, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "RPC timeout" }));
+    });
+    req.pipe(proxyReq);
+    return;
+  }
 
   // ── API proxy ────────────────────────────────────
   if (pathname.startsWith("/api")) {

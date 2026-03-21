@@ -999,10 +999,20 @@ app.get("/api/treasury-tokens/:address", async (req, res) => {
       { address: STETH_ADDRESS, symbol: "stETH", decimals: 18 },
     ];
 
-    // Add MockUSDC / swap output token if configured
-    const mockTokenOut = process.env.MOCK_TOKEN_OUT_ADDRESS;
-    if (mockTokenOut && ethers.isAddress(mockTokenOut)) {
-      tokenList.push({ address: mockTokenOut, symbol: "USDC", decimals: 6 });
+    // Swap output tokens — mainnet addresses or testnet MockUSDC
+    const chainId = parseInt(process.env.CHAIN_ID ?? "1", 10);
+    if (chainId === 1) {
+      tokenList.push(
+        { address: "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0", symbol: "wstETH", decimals: 18 },
+        { address: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", symbol: "WETH", decimals: 18 },
+        { address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", symbol: "USDC", decimals: 6 },
+        { address: "0x6B175474E89094C44Da98b954EedeAC495271d0F", symbol: "DAI", decimals: 18 },
+      );
+    } else {
+      const mockTokenOut = process.env.MOCK_TOKEN_OUT_ADDRESS;
+      if (mockTokenOut && ethers.isAddress(mockTokenOut)) {
+        tokenList.push({ address: mockTokenOut, symbol: "USDC", decimals: 6 });
+      }
     }
 
     // Add any additional tokens from env (comma-separated: TOKEN_ADDR:SYMBOL:DECIMALS)

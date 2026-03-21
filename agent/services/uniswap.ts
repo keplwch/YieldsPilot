@@ -74,8 +74,8 @@ export async function getQuote({
     method: "POST",
     headers: HEADERS,
     body: JSON.stringify({
-      tokenInChainId: 1,
-      tokenOutChainId: 1,
+      tokenInChainId: config.chain.chainId,
+      tokenOutChainId: config.chain.chainId,
       tokenIn: TOKENS[tokenIn] ?? tokenIn,
       tokenOut: TOKENS[tokenOut] ?? tokenOut,
       amount: amount.toString(),
@@ -245,8 +245,8 @@ export async function buildContractSwap({
     method: "POST",
     headers: HEADERS,
     body: JSON.stringify({
-      tokenInChainId: 1,
-      tokenOutChainId: 1,
+      tokenInChainId: config.chain.chainId,
+      tokenOutChainId: config.chain.chainId,
       tokenIn: tokenInAddr,
       tokenOut: tokenOutAddr,
       amount: amount.toString(),

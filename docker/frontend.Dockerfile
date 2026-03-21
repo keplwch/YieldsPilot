@@ -7,6 +7,9 @@
 FROM oven/bun:1-alpine AS builder
 WORKDIR /app
 
+ARG VITE_NETWORK=mainnet
+ENV VITE_NETWORK=$VITE_NETWORK
+
 COPY frontend/package.json ./
 RUN bun install
 

@@ -11,7 +11,7 @@ export type SwapRecommendation = "swap_now" | "wait" | "urgent_swap";
 export type RiskRecommendation = "proceed" | "caution" | "abort";
 export type Urgency = "immediate" | "next_cycle" | "no_rush";
 export type CyclePhase = "discover" | "plan" | "execute" | "verify" | "error";
-export type CycleStatus = "success" | "error" | "no_action_needed" | "executed" | "executed_fallback" | "executed_testnet" | "aborted" | "dry_run_only" | "dry_run_rejected" | "failed" | "completed";
+export type CycleStatus = "success" | "error" | "no_action_needed" | "executed" | "executed_fallback" | "executed_testnet" | "aborted" | "dry_run_only" | "dry_run_rejected" | "failed" | "completed" | "blocked_no_api_key" | "blocked_no_router";
 
 export interface VeniceDecision {
   analysis: string;

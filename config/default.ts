@@ -64,7 +64,7 @@ const config: AppConfig = {
   // === Blockchain ===
   chain: {
     rpcUrl: process.env.RPC_URL ?? "https://eth-sepolia.g.alchemy.com/v2/demo",
-    chainId: 11155111, // Sepolia
+    chainId: parseInt(process.env.CHAIN_ID ?? "1", 10), // mainnet default, override with CHAIN_ID
     agentPrivateKey: process.env.AGENT_PRIVATE_KEY ?? "",
   },
 

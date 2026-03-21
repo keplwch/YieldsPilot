@@ -47,7 +47,7 @@ export interface ActivityRecord {
   txHash?: string;
   router?: string;
   expectedOutput?: string;
-  executionMode?: "mainnet" | "testnet_mock" | "testnet_spend" | "none";
+  executionMode?: "mainnet" | "testnet";
 
   // Duration
   durationMs: number;
