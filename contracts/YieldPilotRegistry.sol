@@ -24,6 +24,7 @@ contract YieldPilotRegistry {
     // ══════════════════════════════════════════════════════════════════
 
     IERC20 public immutable stETH;
+    address public immutable wstETHAddress;  // wstETH contract address
     address public admin;               // protocol admin (deployer)
     address public agent;               // shared AI agent address
 
@@ -77,19 +78,23 @@ contract YieldPilotRegistry {
 
     /**
      * @param _stETH             Address of the stETH token
+     * @param _wstETH            Address of the wstETH wrapper token
      * @param _agent             Shared AI agent address
      * @param _defaultMaxDailyBps Default max daily spend (basis points)
      */
     constructor(
         address _stETH,
+        address _wstETH,
         address _agent,
         uint256 _defaultMaxDailyBps
     ) {
         require(_stETH != address(0), "Registry: zero stETH");
+        require(_wstETH != address(0), "Registry: zero wstETH");
         require(_agent != address(0), "Registry: zero agent");
         require(_defaultMaxDailyBps <= 10000, "Registry: bps > 100%");
 
         stETH = IERC20(_stETH);
+        wstETHAddress = _wstETH;
         admin = msg.sender;
         agent = _agent;
         defaultMaxDailyBps = _defaultMaxDailyBps;
@@ -111,6 +116,7 @@ contract YieldPilotRegistry {
         // Deploy a new Treasury contract with msg.sender as owner
         YieldPilotTreasury treasury = new YieldPilotTreasury(
             address(stETH),
+            wstETHAddress,
             agent,
             defaultMaxDailyBps
         );

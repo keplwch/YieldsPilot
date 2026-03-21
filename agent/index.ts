@@ -114,9 +114,9 @@ async function runCycleForTreasury(
   // Use the treasury info we already fetched from the registry
   const balancesForTreasury = {
     address: treasuryAddress,
-    eth: "0", // not relevant per-treasury
+    eth: "n/a", // gas is paid externally — not a decision factor
     stETH: treasuryInfo.totalBalance,
-    wstETH: "0",
+    wstETH: "n/a", // treasury holds stETH only
     treasury: {
       principal: treasuryInfo.principal,
       availableYield: treasuryInfo.availableYield,

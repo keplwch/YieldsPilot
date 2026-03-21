@@ -18,6 +18,11 @@ describe("YieldPilotRegistry", function () {
     const stETH = await MockERC20.deploy();
     await stETH.waitForDeployment();
 
+    // Deploy mock wstETH
+    const MockWstETH = await ethers.getContractFactory("MockWstETH");
+    const wstETH = await MockWstETH.deploy(await stETH.getAddress());
+    await wstETH.waitForDeployment();
+
     // Mint stETH to users
     const mintAmount = ethers.parseEther("100");
     await stETH.mint(user1.address, mintAmount);
@@ -29,6 +34,7 @@ describe("YieldPilotRegistry", function () {
     const Registry = await ethers.getContractFactory("YieldPilotRegistry");
     const registry = await Registry.connect(admin).deploy(
       await stETH.getAddress(),
+      await wstETH.getAddress(),
       agent.address,
       maxDailyBps
     );
@@ -37,7 +43,7 @@ describe("YieldPilotRegistry", function () {
     // Add a default target (e.g., Uniswap router)
     await registry.connect(admin).addDefaultTarget(target1.address);
 
-    return { registry, stETH, admin, agent, user1, user2, user3, target1, maxDailyBps };
+    return { registry, stETH, wstETH, admin, agent, user1, user2, user3, target1, maxDailyBps };
   }
 
   // ── Deployment ──────────────────────────────────────────────────

@@ -21,11 +21,6 @@
 # ║    ./dev.sh logs agent       Tail agent log                     ║
 # ║    ./dev.sh logs monitor     Tail monitor log                   ║
 # ║                                                                 ║
-# ║  Testing (Sepolia)                                              ║
-# ║    ./dev.sh deploy:mock      Deploy MockStETH + Registry        ║
-# ║    ./dev.sh simulate:yield   Mint yield into a treasury         ║
-# ║      TREASURY=0x... [YIELD=0.1] ./dev.sh simulate:yield        ║
-# ║                                                                 ║
 # ║  Tooling                                                        ║
 # ║    ./dev.sh install          Install all deps                   ║
 # ║    ./dev.sh typecheck        Run TypeScript checks              ║
@@ -427,8 +422,6 @@ start_all() {
   echo -e "    ./dev.sh stop             Stop everything"
   echo -e "    ./dev.sh restart          Stop + start"
   echo ""
-  echo -e "  ${CYAN}Dashboard${NC} → ${BOLD}http://localhost:5173${NC}"
-  echo ""
 }
 
 # ══════════════════════════════════════════════════════════════
@@ -447,8 +440,7 @@ case "$CMD" in
     check_node
     install_deps
     start_frontend
-    echo -e "\n  ${CYAN}Dashboard${NC} → ${BOLD}http://localhost:5173${NC}\n"
-    echo -e "  Tail logs: ${DIM}./dev.sh logs frontend${NC}\n"
+    echo -e "\n  Tail logs: ${DIM}./dev.sh logs frontend${NC}\n"
     ;;
   api)
     banner
@@ -507,28 +499,6 @@ case "$CMD" in
   clean)
     clean_install
     ;;
-  deploy:mock|deploy-mock)
-    banner
-    check_node
-    check_env
-    log "Deploying MockStETH + Registry to Sepolia..."
-    npx hardhat run scripts/deploy-mock.ts --network sepolia
-    ;;
-  simulate:yield|simulate-yield)
-    banner
-    check_env
-    if [ -z "${TREASURY:-}" ]; then
-      err "TREASURY env var required"
-      echo ""
-      echo -e "  Usage: ${BOLD}TREASURY=0xYourTreasuryAddress ./dev.sh simulate:yield${NC}"
-      echo -e "         ${BOLD}TREASURY=0x... YIELD=0.5 ./dev.sh simulate:yield${NC}"
-      echo ""
-      echo -e "  Find your treasury address on the dashboard under Treasury Overview"
-      exit 1
-    fi
-    log "Simulating yield for treasury ${TREASURY}..."
-    npx hardhat run scripts/simulate-yield.ts --network sepolia
-    ;;
   help|-h|--help)
     echo ""
     echo -e "  ${BOLD}🛫 YieldPilot Dev Runner${NC}"
@@ -548,12 +518,6 @@ case "$CMD" in
     echo "    install                 Install all dependencies"
     echo "    typecheck               Run TypeScript type checks"
     echo "    clean                   Nuke node_modules & reinstall"
-    echo ""
-    echo -e "  ${BOLD}Testing:${NC}"
-    echo "    deploy:mock             Deploy MockStETH + Registry to Sepolia"
-    echo "    simulate:yield          Simulate yield accrual into a treasury"
-    echo "                            Usage: TREASURY=0x... [YIELD=0.1] ./dev.sh simulate:yield"
-    echo ""
     echo "    help                    Show this message"
     echo ""
     ;;

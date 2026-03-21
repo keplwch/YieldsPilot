@@ -133,6 +133,7 @@ export interface DryRunResult {
 
 export interface CycleLogEntry {
   id?: string;
+  did?: string;
   cycleId?: string;
   timestamp?: string;
   phase: CyclePhase;
@@ -159,6 +160,8 @@ export interface LoopLogEntry {
 export interface AgentLog {
   agent: string;
   version: string;
+  did: string;
+  operator: string;
   cycles: Array<CycleLogEntry | LoopLogEntry & { type: "autonomous_loop" }>;
 }
 

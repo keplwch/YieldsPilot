@@ -3,7 +3,7 @@
   "name": "YieldPilot",
   "version": "1.0.0",
   "description": "Autonomous DeFi agent that manages staking yield with privacy-preserving reasoning. Deposits earn yield via Lido stETH; the agent can only spend the yield, never the principal. Reasoning is private (Venice), execution is public (onchain).",
-  "did": "${AGENT_DID}",
+  "did": "did:synthesis:34520",
   "operator": {
     "name": "YieldPilot Team",
     "contact": "keplwchoom@gmail.com"
@@ -112,6 +112,6 @@
     "interval": "60s",
     "human_intervention": "none (fully autonomous after deposit)"
   },
-  "repository": "https://github.com/YOUR_USERNAME/yield-pilot",
+  "repository": "https://github.com/keplwch/yield-pilot",
   "license": "MIT"
 }

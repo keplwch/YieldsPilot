@@ -6,13 +6,31 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
+ * @title IWstETH
+ * @notice Minimal interface for Lido's wstETH wrapper contract
+ */
+interface IWstETH {
+    function wrap(uint256 _stETHAmount) external returns (uint256);
+    function unwrap(uint256 _wstETHAmount) external returns (uint256);
+    function getStETHByWstETH(uint256 _wstETHAmount) external view returns (uint256);
+    function getWstETHByStETH(uint256 _stETHAmount) external view returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+    function approve(address spender, uint256 amount) external returns (bool);
+    function transferFrom(address from, address to, uint256 amount) external returns (bool);
+    function transfer(address to, uint256 amount) external returns (bool);
+}
+
+/**
  * @title YieldPilotTreasury
- * @notice A yield-separated treasury where humans deposit stETH, and an AI agent
- *         can ONLY spend the accrued staking yield — never the principal.
+ * @notice A yield-separated treasury where humans deposit stETH or wstETH, and an
+ *         AI agent can ONLY spend the accrued staking yield — never the principal.
  *
  * @dev stETH is a rebasing token: balances grow daily as Lido distributes staking
  *      rewards. This contract tracks the deposited principal and lets the agent
  *      withdraw only the difference (yield).
+ *
+ *      wstETH deposits are automatically unwrapped to stETH on deposit so yield
+ *      accrual works identically. Owners can withdraw principal as wstETH too.
  *
  * Bounty targets:
  *   - Lido "stETH Agent Treasury" ($3,000)
@@ -27,6 +45,7 @@ contract YieldPilotTreasury is ReentrancyGuard {
     // ══════════════════════════════════════════════════════════════════
 
     IERC20 public immutable stETH;
+    IWstETH public immutable wstETH;
 
     address public owner;          // human depositor
     address public agent;          // AI agent address
@@ -49,6 +68,7 @@ contract YieldPilotTreasury is ReentrancyGuard {
     // ══════════════════════════════════════════════════════════════════
 
     event Deposited(address indexed depositor, uint256 amount, uint256 newPrincipal);
+    event DepositedWstETH(address indexed depositor, uint256 wstETHAmount, uint256 stETHReceived, uint256 newPrincipal);
     event YieldSpent(address indexed agent, address indexed target, uint256 amount, string reason);
     event YieldSwapped(
         address indexed agent,
@@ -59,6 +79,7 @@ contract YieldPilotTreasury is ReentrancyGuard {
         string reason
     );
     event PrincipalWithdrawn(address indexed owner, uint256 amount);
+    event PrincipalWithdrawnAsWstETH(address indexed owner, uint256 stETHAmount, uint256 wstETHReceived);
     event AgentUpdated(address indexed oldAgent, address indexed newAgent);
     event PermissionsUpdated(uint256 maxDailySpendBps);
     event TargetAdded(address indexed target);
@@ -90,19 +111,23 @@ contract YieldPilotTreasury is ReentrancyGuard {
 
     /**
      * @param _stETH          Address of the stETH token
+     * @param _wstETH         Address of the wstETH wrapper token
      * @param _agent           Initial agent address
      * @param _maxDailyBps     Max yield the agent can spend per day (basis points, e.g., 5000 = 50%)
      */
     constructor(
         address _stETH,
+        address _wstETH,
         address _agent,
         uint256 _maxDailyBps
     ) {
         require(_stETH != address(0), "YP: zero stETH");
+        require(_wstETH != address(0), "YP: zero wstETH");
         require(_agent != address(0), "YP: zero agent");
         require(_maxDailyBps <= 10000, "YP: bps > 100%");
 
         stETH = IERC20(_stETH);
+        wstETH = IWstETH(_wstETH);
         owner = msg.sender;
         agent = _agent;
         maxDailySpendBps = _maxDailyBps;
@@ -124,6 +149,30 @@ contract YieldPilotTreasury is ReentrancyGuard {
         principal += amount;
 
         emit Deposited(msg.sender, amount, principal);
+    }
+
+    /**
+     * @notice Deposit wstETH into the treasury. The wstETH is unwrapped to stETH
+     *         internally so yield accrual works via rebasing. Principal is tracked
+     *         in stETH terms.
+     */
+    function depositWstETH(uint256 wstETHAmount) external onlyOwner nonReentrant {
+        require(wstETHAmount > 0, "YP: zero amount");
+
+        // Transfer wstETH from owner to this contract
+        IERC20(address(wstETH)).safeTransferFrom(msg.sender, address(this), wstETHAmount);
+
+        // Unwrap wstETH → stETH (stETH stays in this contract)
+        uint256 stETHBefore = stETH.balanceOf(address(this));
+        IERC20(address(wstETH)).approve(address(wstETH), wstETHAmount);
+        wstETH.unwrap(wstETHAmount);
+        uint256 stETHAfter = stETH.balanceOf(address(this));
+
+        // Use actual balance delta for safety (handles any rounding)
+        uint256 actualReceived = stETHAfter - stETHBefore;
+        principal += actualReceived;
+
+        emit DepositedWstETH(msg.sender, wstETHAmount, actualReceived, principal);
     }
 
     // ══════════════════════════════════════════════════════════════════
@@ -295,16 +344,42 @@ contract YieldPilotTreasury is ReentrancyGuard {
     }
 
     /**
+     * @notice Owner withdraws principal as wstETH. stETH is wrapped to wstETH
+     *         before sending — useful for DeFi composability or bridging.
+     * @param stETHAmount  Amount of stETH principal to withdraw (wrapped to wstETH)
+     */
+    function withdrawPrincipalAsWstETH(uint256 stETHAmount) external onlyOwner nonReentrant {
+        require(stETHAmount <= principal, "YP: exceeds principal");
+
+        principal -= stETHAmount;
+
+        // Approve wstETH contract to pull stETH, then wrap
+        stETH.approve(address(wstETH), stETHAmount);
+        uint256 wstETHReceived = wstETH.wrap(stETHAmount);
+
+        // Send wstETH to owner
+        IERC20(address(wstETH)).safeTransfer(owner, wstETHReceived);
+
+        emit PrincipalWithdrawnAsWstETH(owner, stETHAmount, wstETHReceived);
+    }
+
+    /**
      * @notice Emergency: owner withdraws everything and shuts down.
      */
     function emergencyWithdraw() external onlyOwner nonReentrant {
-        uint256 balance = stETH.balanceOf(address(this));
+        uint256 stETHBalance = stETH.balanceOf(address(this));
+        uint256 wstETHBalance = wstETH.balanceOf(address(this));
         principal = 0;
         paused = true;
 
-        stETH.safeTransfer(owner, balance);
+        if (stETHBalance > 0) {
+            stETH.safeTransfer(owner, stETHBalance);
+        }
+        if (wstETHBalance > 0) {
+            IERC20(address(wstETH)).safeTransfer(owner, wstETHBalance);
+        }
 
-        emit PrincipalWithdrawn(owner, balance);
+        emit PrincipalWithdrawn(owner, stETHBalance);
         emit Paused(true);
     }
 

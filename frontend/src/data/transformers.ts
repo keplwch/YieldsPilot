@@ -260,9 +260,36 @@ export function getCycleTimestamp(cycle: RawCycleLog | RawLoopLog): string | und
 
 // ── Yield chart ───────────────────────────────────────────────────
 
+export interface YieldChartBar {
+  cycle: number;
+  total: number;
+  segments: Array<{ user: string; yield: number }>;
+}
+
 export function apiYieldToChartData(
-  history: Array<{ date: string; yield: number }> | undefined
-): number[] {
+  history: Array<{ date: string; yield: number; balance: number; user?: string | null; cycle?: number | null }> | undefined
+): YieldChartBar[] {
   if (!history || history.length === 0) return [];
-  return history.map((h) => h.yield);
+
+  const byKey = new Map<number, YieldChartBar>();
+  for (const h of history) {
+    const key = h.cycle ?? 0;
+    if (!byKey.has(key)) {
+      byKey.set(key, { cycle: key, total: 0, segments: [] });
+    }
+    const bar = byKey.get(key)!;
+    const y = h.yield ?? 0;
+    const user = h.user ?? "unknown";
+    const existing = bar.segments.find((s) => s.user === user);
+    if (existing) {
+      existing.yield = Math.max(existing.yield, y);
+    } else {
+      bar.segments.push({ user, yield: y });
+    }
+    bar.total = bar.segments.reduce((s, seg) => s + seg.yield, 0);
+  }
+
+  return Array.from(byKey.values())
+    .sort((a, b) => a.cycle - b.cycle)
+    .slice(-20);
 }

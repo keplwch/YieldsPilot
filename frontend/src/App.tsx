@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useAccount } from "wagmi";
 import Header from "./components/Header";
 import StatCard from "./components/StatCard";
 import ReasoningPanel from "./components/ReasoningPanel";
@@ -8,6 +9,8 @@ import YieldChart from "./components/YieldChart";
 import ConnectionBanner from "./components/ConnectionBanner";
 import UserList from "./components/UserList";
 import DepositPanel from "./components/DepositPanel";
+import WstETHDepositPanel from "./components/WstETHDepositPanel";
+import TreasuryManagement from "./components/TreasuryManagement";
 import TokenPortfolio from "./components/TokenPortfolio";
 import DeploymentHistory from "./components/DeploymentHistory";
 import YieldAnalytics from "./components/YieldAnalytics";
@@ -25,6 +28,8 @@ import { logsToFeedItems, logsToReasoningLines, apiYieldToChartData, getCycleTim
 import type { CycleOption } from "./components/CycleNav";
 
 export default function App() {
+  const { address: connectedAddress } = useAccount();
+
   // ── Fetch real data from API ─────────────────────────────────
   const treasury = useTreasury();
   const status = useAgentStatus();
@@ -47,7 +52,18 @@ export default function App() {
     return (treasury.data as any)?.address ?? undefined;
   }, [users, treasury.data]);
 
-  const treasuryTokens = useTreasuryTokens(firstTreasuryAddress);
+  // Get the CONNECTED wallet's treasury (for TreasuryManagement ownership)
+  const connectedUserTreasury = useMemo(() => {
+    if (!connectedAddress) return firstTreasuryAddress;
+    const match = users.find(
+      (u) => u.user?.toLowerCase() === connectedAddress.toLowerCase()
+    );
+    if (match?.treasury) return match.treasury;
+    // Fallback: single-user mode or no match
+    return (treasury.data as any)?.address ?? firstTreasuryAddress;
+  }, [connectedAddress, users, treasury.data, firstTreasuryAddress]);
+
+  const treasuryTokens = useTreasuryTokens(connectedUserTreasury);
 
   // ── Aggregate stats across all users ──────────────────────────
   const aggregateStats = useMemo(() => {
@@ -102,12 +118,18 @@ export default function App() {
   const [pinnedCycleIdx, setPinnedCycleIdx] = useState<number | null>(null);
 
   const rawCycles = logs.data?.cycles ?? [];
-  // All LoopLog entries across sessions — cycle numbers come from the DB record
+  // Filter cycles to connected wallet only, then keep loop entries
   const loopCycles = useMemo(() => {
-    return rawCycles.filter(
-      (c) => (c as any).type === "autonomous_loop" || (c as any).phases != null
-    );
-  }, [rawCycles]);
+    return rawCycles.filter((c) => {
+      if (!((c as any).type === "autonomous_loop" || (c as any).phases != null)) return false;
+      // When a wallet is connected, show only that user's cycles
+      if (connectedAddress) {
+        const cycleUser = (c as any).phases?.discover?.inputs?.user as string | undefined;
+        if (cycleUser && cycleUser.toLowerCase() !== connectedAddress.toLowerCase()) return false;
+      }
+      return true;
+    });
+  }, [rawCycles, connectedAddress]);
 
   const cycleOptions: CycleOption[] = useMemo(() => {
     return loopCycles.map((cycle, i) => {
@@ -153,9 +175,13 @@ export default function App() {
     return apiYieldToChartData(yieldHist.data?.history);
   }, [yieldHist.data]);
 
-  // ── Activity data ─────────────────────────────────────────────
-  const activityRecords = activityApi.data?.records ?? [];
-  const activityTotal = activityApi.data?.total ?? 0;
+  // ── Activity data — scoped to connected wallet ───────────────
+  const activityRecords = useMemo(() => {
+    const all = activityApi.data?.records ?? [];
+    if (!connectedAddress) return all;
+    return all.filter((r) => r.user?.toLowerCase() === connectedAddress.toLowerCase());
+  }, [activityApi.data, connectedAddress]);
+  const activityTotal = activityRecords.length;
   const activityStats = activityApi.data?.stats ?? {
     totalCycles: 0,
     totalSwaps: 0,
@@ -272,6 +298,24 @@ export default function App() {
               onGoLive={() => setPinnedCycleIdx(null)}
             />
 
+            {/* Analytics mini-row: ring + chart side by side */}
+            <div className="mt-5 grid grid-cols-2 gap-5 items-stretch">
+              <TreasuryRing
+                principal={aggregateStats.principal}
+                yieldAvailable={aggregateStats.availableYield}
+                yieldDeployed={aggregateStats.yieldWithdrawn}
+              />
+              <YieldChart data={yieldChartData} />
+            </div>
+
+            {/* Yield Analytics — cumulative volume + distribution charts */}
+            <div className="mt-5">
+              <YieldAnalytics
+                records={activityRecords}
+                stats={activityStats}
+              />
+            </div>
+
             {/* Yield Deployment History — full activity log with all cycles */}
             <div className="mt-5">
               <DeploymentHistory
@@ -293,7 +337,7 @@ export default function App() {
             )}
           </div>
 
-          {/* Right sidebar */}
+          {/* Right sidebar — focused action panel */}
           <div className="flex flex-col gap-5">
             {/* Deposit panel — always first so it's always visible */}
             <DepositPanel
@@ -301,28 +345,24 @@ export default function App() {
               registryMode={registryMode}
             />
 
+            {/* wstETH Deposit panel — unwraps wstETH → stETH into treasury */}
+            <WstETHDepositPanel
+              registryAddress={registryAddress}
+            />
+
+            {/* Treasury Management — owner controls for withdraw, targets, settings */}
+            <TreasuryManagement
+              treasuryAddress={connectedUserTreasury}
+            />
+
             {/* Token Portfolio — shows all tokens the treasury holds */}
-            {firstTreasuryAddress && treasuryTokens.data && (
+            {connectedUserTreasury && treasuryTokens.data && (
               <TokenPortfolio
                 tokens={treasuryTokens.data.tokens}
                 ethBalance={treasuryTokens.data.eth}
-                treasuryAddress={firstTreasuryAddress}
+                treasuryAddress={connectedUserTreasury}
               />
             )}
-
-            <TreasuryRing
-              principal={aggregateStats.principal}
-              yieldAvailable={aggregateStats.availableYield}
-              yieldDeployed={aggregateStats.yieldWithdrawn}
-            />
-
-            {/* Yield Analytics — cumulative volume + distribution charts */}
-            <YieldAnalytics
-              records={activityRecords}
-              stats={activityStats}
-            />
-
-            <YieldChart data={yieldChartData} />
           </div>
         </div>
       </div>

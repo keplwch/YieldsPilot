@@ -140,7 +140,7 @@ export interface AgentLogsData {
 }
 
 export interface YieldHistoryData {
-  history: Array<{ date: string; yield: number; balance: number }>;
+  history: Array<{ date: string; yield: number; balance: number; user?: string | null; cycle?: number | null }>;
   updatedAt: string;
 }
 

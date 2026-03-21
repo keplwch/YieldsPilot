@@ -63,16 +63,39 @@ interface RiskInput {
   protocolStats: ProtocolStats;
 }
 
+const IS_MAINNET = config.chain.chainId === 1;
+
 export async function assessRisk(portfolioState: RiskInput): Promise<RiskAssessment> {
+  const protocolStatsNote = IS_MAINNET
+    ? `- Protocol liquidity stats and exchange rates are live mainnet data — factor them into your assessment. A stETH exchange rate significantly below 1.0 (e.g. < 0.97) is a genuine risk signal.`
+    : `- Protocol liquidity stats and exchange rates are from a testnet mock and will often be zero or missing — treat any zero/null protocol stat as "data unavailable" and do NOT use it as a risk factor.`;
+
   const raw = await askBankr<Omit<RiskAssessment, "model" | "provider" | "task">>(
     config.bankr.models.risk,
-    `You are a DeFi risk analyst. Evaluate the risk of the given portfolio state and proposed actions. Respond in JSON:
+    `You are a DeFi risk analyst for YieldPilot, an autonomous stETH yield management agent.
+
+Your job is to assess whether it is safe to swap staking yield this cycle.
+
+WHAT TO EVALUATE (these are the ONLY relevant risk factors):
+- Is availableYield sufficient (> 0.001 stETH)? If zero or near-zero → risk is low, just hold
+- Does swap_amount stay within dailySpendRemaining? If it exceeds it → high risk
+- Is the proposed swap_amount a reasonable fraction of availableYield (not 100% in one shot)?
+${protocolStatsNote}
+
+EXPLICITLY IGNORE — these are NOT risk factors in this system:
+- ETH balance in the agent wallet (gas is paid externally by the protocol operator, always available)
+
+"abort" recommendation should be RARE — only use it when swap_amount would clearly exceed available yield or daily limits.
+"caution" when the swap is large relative to available yield.
+"proceed" when yield is available, daily limit has room, and amount is reasonable.
+
+Respond with valid JSON only:
 {
   "risk_score": 0-100,
   "risk_level": "low" | "medium" | "high" | "critical",
   "factors": ["factor1", "factor2"],
   "recommendation": "proceed" | "caution" | "abort",
-  "max_safe_amount": "amount in ETH",
+  "max_safe_amount": "amount in stETH",
   "reasoning": "brief explanation"
 }`,
     portfolioState
@@ -125,29 +148,31 @@ export async function synthesizeStrategy(
 ): Promise<StrategyResult> {
   const raw = await askBankr<Omit<StrategyResult, "model" | "provider" | "task">>(
     config.bankr.models.strategy,
-    `You are a DeFi yield management strategy engine. You receive risk assessment, market analysis, and treasury state. You MUST output exactly ONE of two actions:
+    `You are a DeFi yield management strategy engine for YieldPilot. You receive risk assessment, market analysis, and treasury state. Synthesize the final action for this cycle.
 
-1. "swap_yield" — spend some yield via a swap (stETH → USDC, stETH → ETH, etc.)
-   Use this when: there's actionable yield, market conditions favor a swap, gas buffer is needed, or diversification is prudent.
+OUTPUT — EXACTLY ONE of two actions:
+1. "swap_yield" — deploy some yield by swapping stETH → USDC (preferred target for diversification)
+2. "hold" — do nothing this cycle
 
-2. "hold" — do nothing this cycle, wait for better conditions.
-   Use this when: yield is too small to justify gas, market is volatile, risk is too high, or daily limit is already exhausted.
-
-IMPORTANT RULES:
-- There are ONLY two valid actions: "swap_yield" or "hold". Do NOT use "rebalance", "compound", or any other action name.
-- If action is "swap_yield", you MUST provide swap_amount (string, in ETH units) and swap_path (array of two token names).
-- swap_amount MUST be <= the treasury's dailySpendRemaining.
-- swap_amount MUST be <= availableYield.
-- Valid swap paths: ["stETH", "USDC"], ["stETH", "ETH"], ["stETH", "DAI"]
-- If the treasury has 0 ETH for gas, prioritize ["stETH", "ETH"] to establish a gas buffer.
-- If risk recommendation is "abort", you MUST output "hold".
+RULES:
+- ONLY valid actions: "swap_yield" or "hold". Do NOT output "rebalance", "compound", "abort", or anything else.
+- If action is "swap_yield": provide swap_amount (string, stETH units) and swap_path (two token names).
+- swap_amount MUST be ≤ dailySpendRemaining AND ≤ availableYield. Use at most 50% of available yield per cycle.
+- Preferred swap path: ["stETH", "USDC"]. Only use ["stETH", "ETH"] if the user explicitly wants ETH exposure — NOT for gas.
+- Gas is paid externally. NEVER swap to ETH for gas purposes.
+- If risk recommendation is "abort", output "hold".
+- If availableYield is 0 or below 0.001, output "hold".
+${IS_MAINNET
+    ? "- Protocol stats are live mainnet data. Use them to inform swap timing (e.g. avoid swapping during high slippage or stETH de-peg)."
+    : "- Protocol stats are from a testnet mock and may be zero — treat zero/null protocol stats as unavailable data, not a real risk signal."
+  }
 
 Respond with valid JSON only:
 {
   "action": "swap_yield" | "hold",
   "urgency": "immediate" | "next_cycle" | "no_rush",
-  "swap_amount": "0.01" (required if action=swap_yield, null if hold),
-  "swap_path": ["stETH", "USDC"] (required if action=swap_yield, null if hold),
+  "swap_amount": "0.01",
+  "swap_path": ["stETH", "USDC"],
   "slippage_tolerance": 0.005,
   "reasoning": "brief explanation of why this action was chosen",
   "expected_outcome": "what this achieves"

@@ -2,7 +2,7 @@
 
 > **Private cognition. Trusted onchain action.**
 
-YieldPilot is an autonomous AI agent that manages staking yield on behalf of a user. You deposit ETH, it earns yield via Lido stETH, the agent privately reasons about how to manage that yield (swap, rebalance, compound), and every action is executed and verified onchain. **The agent can never touch your principal.**
+YieldPilot is an autonomous AI agent that manages staking yield on behalf of a user. You deposit ETH, it earns yield via Lido stETH (or wstETH), the agent privately reasons about how to manage that yield (swap, rebalance, compound), and every action is executed and verified onchain. **The agent can never touch your principal.**
 
 ## How It Works
 
@@ -144,7 +144,7 @@ npm install @modelcontextprotocol/sdk ethers dotenv tsx
 
 # 2. Download the two files you need from the repo
 curl -O https://raw.githubusercontent.com/keplwch/yield-pilot/main/mcp/lido-mcp-server.ts
-curl -O https://raw.githubusercontent.com/keplwch/yield-pilot/main/lido.skill.md
+curl -O https://raw.githubusercontent.com/keplwch/yield-pilot/main/mcp/lido.skill.md
 
 # 3. Create a .env (optional — only needed for write operations)
 cat > .env << 'EOF'
@@ -256,6 +256,39 @@ Once connected, you can talk to Claude naturally:
 
 See `lido.skill.md` for the full agent mental model (rebasing mechanics, stETH vs wstETH, safe patterns).
 
+## wstETH Support
+
+The treasury supports both **stETH** (rebasing) and **wstETH** (non-rebasing wrapped stETH). This matters because many DeFi protocols and wallets handle wstETH better than stETH due to its non-rebasing nature.
+
+**How it works:**
+
+- **Deposit as wstETH**: Call `depositWstETH(amount)` — the contract unwraps wstETH → stETH internally and tracks it as principal. You approve wstETH spending to the treasury address first.
+- **Withdraw as wstETH**: Call `withdrawPrincipalAsWstETH(stETHAmount)` — the contract wraps your stETH → wstETH before sending it back to you. Useful if you want to move funds into DeFi protocols that prefer wstETH.
+- **Emergency withdraw**: Sends back both stETH and any residual wstETH balance to the owner.
+
+The dashboard's **Treasury Management** panel includes a toggle to withdraw principal as wstETH directly from the UI.
+
+**Contract addresses (Sepolia):**
+
+| Token | Address |
+|-------|---------|
+| stETH | `0x6df25A1734E181AFbBD9c8A50b1D00e39D482704` |
+| wstETH | `0xB82381A3fBD3FaFA77B3a7bE693342AA3d14232a` |
+
+## Treasury Management UI
+
+The dashboard includes a full **Treasury Management** panel (visible to the connected owner) with:
+
+- **Withdraw Principal** — withdraw stETH or wstETH back to your wallet
+- **Emergency Withdraw** — pull all funds instantly (with confirmation safeguard)
+- **Daily Spend Limit** — adjust the max BPS the agent can spend per day (with presets: 10%, 25%, 50%, 75%)
+- **Allowed Targets** — view, add, and remove addresses the agent can send yield to
+- **Agent Control** — pause/resume agent operations
+- **Transfer Ownership** — hand over treasury ownership to another address
+- **Status Bar** — shows daily limit, remaining allowance, and pause state
+
+Non-owners see a read-only view of the treasury state.
+
 ## Safety Guardrails
 
 - **Principal protection**: Smart contract makes principal mathematically inaccessible to agent
@@ -272,13 +305,16 @@ See `lido.skill.md` for the full agent mental model (rebasing mechanics, stETH v
 ```
 yield-pilot/
 ├── contracts/
-│   ├── YieldPilotTreasury.sol      # Yield-separated treasury (Lido bounty)
+│   ├── YieldPilotTreasury.sol      # Yield-separated treasury with wstETH support
+│   ├── YieldPilotRegistry.sol     # Multi-user factory (per-user treasuries)
 │   └── mocks/
-│       └── MockStETH.sol           # Test mock for stETH rebasing
+│       ├── MockStETH.sol           # Test mock for stETH rebasing
+│       └── MockWstETH.sol          # Test mock for wstETH wrap/unwrap
 ├── test/
-│   └── Treasury.test.ts            # 25 tests covering all safety invariants
+│   └── Treasury.test.ts            # 60 tests covering all safety invariants
 ├── scripts/
 │   ├── deploy-sepolia.ts           # Hardhat deploy to Ethereum Sepolia
+│   ├── deploy-registry.ts          # Deploy multi-user Registry factory
 │   ├── deploy-status.ts            # Hardhat deploy to Status Network (gasless)
 │   ├── deploy.sh                   # Unified deploy CLI (compile/test/deploy/verify)
 │   ├── dev.sh                      # Local development runner
@@ -294,11 +330,12 @@ yield-pilot/
 │   └── utils/
 │       └── logger.ts               # Structured agent_log.json writer
 ├── mcp/
-│   └── lido-mcp-server.ts          # Lido MCP server (Lido $5K bounty)
+│   ├── lido-mcp-server.ts          # Lido MCP server (Lido $5K bounty)
+│   └── lido.skill.md               # Lido agent guide (exposed via MCP resources)
 ├── frontend/                       # React + Vite + Tailwind dashboard
 │   ├── src/
 │   │   ├── App.tsx                 # Main layout
-│   │   ├── components/             # StatCard, ReasoningPanel, ActivityFeed, etc.
+│   │   ├── components/             # StatCard, ReasoningPanel, ActivityFeed, TreasuryManagement, etc.
 │   │   ├── hooks/                  # useAnimatedValue, useLiveYield
 │   │   └── data/mock.ts            # Demo data
 │   └── ...
@@ -313,7 +350,6 @@ yield-pilot/
 │   ├── frontend.Dockerfile
 │   └── nginx.conf
 ├── agent.json                      # ERC-8004 agent manifest
-├── lido.skill.md                   # Lido guide for AI agents
 ├── hardhat.config.ts               # Multi-chain Hardhat config
 ├── docker-compose.yml
 ├── .env.example
@@ -328,7 +364,7 @@ yield-pilot/
 - **Frontend**: React 18 + Vite + Tailwind CSS
 - **Fonts**: Space Grotesk, JetBrains Mono, Inter
 - **Runtime**: Node.js 18+ with tsx
-- **Testing**: Hardhat + Chai + Mocha (25 tests)
+- **Testing**: Hardhat + Chai + Mocha (60 tests)
 - **Deployment**: Ethereum Sepolia (Treasury) + Base Mainnet (ERC-8004) + Status Sepolia (Gasless)
 
 ## Chains

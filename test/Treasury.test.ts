@@ -21,6 +21,11 @@ describe("YieldPilotTreasury", function () {
     const stETH = await MockERC20.deploy();
     await stETH.waitForDeployment();
 
+    // Deploy MockWstETH (wraps/unwraps stETH)
+    const MockWstETH = await ethers.getContractFactory("MockWstETH");
+    const wstETH = await MockWstETH.deploy(await stETH.getAddress());
+    await wstETH.waitForDeployment();
+
     // Mint 100 stETH to owner for testing
     const mintAmount = ethers.parseEther("100");
     await stETH.mint(owner.address, mintAmount);
@@ -30,6 +35,7 @@ describe("YieldPilotTreasury", function () {
     const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
     const treasury = await Treasury.deploy(
       await stETH.getAddress(),
+      await wstETH.getAddress(),
       agent.address,
       maxDailyBps
     );
@@ -40,10 +46,15 @@ describe("YieldPilotTreasury", function () {
       .connect(owner)
       .approve(await treasury.getAddress(), ethers.MaxUint256);
 
+    // Approve Treasury to spend owner's wstETH (for depositWstETH tests)
+    await wstETH
+      .connect(owner)
+      .approve(await treasury.getAddress(), ethers.MaxUint256);
+
     // Add target1 as an allowed target
     await treasury.connect(owner).addTarget(target1.address);
 
-    return { treasury, stETH, owner, agent, target1, target2, stranger };
+    return { treasury, stETH, wstETH, owner, agent, target1, target2, stranger };
   }
 
   // ────────────────────────────────────────────────────────────────
@@ -73,26 +84,36 @@ describe("YieldPilotTreasury", function () {
 
     it("reverts on zero stETH address", async function () {
       const [, agent] = await ethers.getSigners();
+      const { wstETH } = await loadFixture(deployTreasuryFixture);
       const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
       await expect(
-        Treasury.deploy(ethers.ZeroAddress, agent.address, 5000)
+        Treasury.deploy(ethers.ZeroAddress, await wstETH.getAddress(), agent.address, 5000)
       ).to.be.revertedWith("YP: zero stETH");
     });
 
-    it("reverts on zero agent address", async function () {
+    it("reverts on zero wstETH address", async function () {
+      const [, agent] = await ethers.getSigners();
       const { stETH } = await loadFixture(deployTreasuryFixture);
       const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
       await expect(
-        Treasury.deploy(await stETH.getAddress(), ethers.ZeroAddress, 5000)
+        Treasury.deploy(await stETH.getAddress(), ethers.ZeroAddress, agent.address, 5000)
+      ).to.be.revertedWith("YP: zero wstETH");
+    });
+
+    it("reverts on zero agent address", async function () {
+      const { stETH, wstETH } = await loadFixture(deployTreasuryFixture);
+      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      await expect(
+        Treasury.deploy(await stETH.getAddress(), await wstETH.getAddress(), ethers.ZeroAddress, 5000)
       ).to.be.revertedWith("YP: zero agent");
     });
 
     it("reverts on bps > 10000", async function () {
       const [, agent] = await ethers.getSigners();
-      const { stETH } = await loadFixture(deployTreasuryFixture);
+      const { stETH, wstETH } = await loadFixture(deployTreasuryFixture);
       const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
       await expect(
-        Treasury.deploy(await stETH.getAddress(), agent.address, 10001)
+        Treasury.deploy(await stETH.getAddress(), await wstETH.getAddress(), agent.address, 10001)
       ).to.be.revertedWith("YP: bps > 100%");
     });
   });
@@ -425,6 +446,79 @@ describe("YieldPilotTreasury", function () {
       expect(
         await stETH.balanceOf(await treasury.getAddress())
       ).to.equal(depositAmount);
+    });
+  });
+
+  // ────────────────────────────────────────────────────────────────
+  //  wstETH DEPOSIT & WITHDRAW
+  // ────────────────────────────────────────────────────────────────
+
+  describe("wstETH Support", function () {
+    it("owner can deposit wstETH (unwraps to stETH internally)", async function () {
+      const { treasury, stETH, wstETH, owner } =
+        await loadFixture(deployTreasuryFixture);
+
+      // Seed MockWstETH with stETH so unwrap() can return stETH
+      await stETH.mint(await wstETH.getAddress(), ethers.parseEther("100"));
+
+      // Give owner some wstETH via free mint (no stETH backing needed for mock)
+      const wstETHAmount = ethers.parseEther("5");
+      await wstETH.mint(owner.address, wstETHAmount);
+
+      // Deposit wstETH into treasury
+      await expect(treasury.connect(owner).depositWstETH(wstETHAmount))
+        .to.emit(treasury, "DepositedWstETH");
+
+      // Principal should increase by the stETH equivalent
+      expect(await treasury.principal()).to.be.gt(0);
+
+      // Treasury should hold stETH (wstETH was unwrapped)
+      expect(await stETH.balanceOf(await treasury.getAddress())).to.be.gt(0);
+    });
+
+    it("owner can withdraw principal as wstETH", async function () {
+      const { treasury, stETH, wstETH, owner } =
+        await loadFixture(deployTreasuryFixture);
+
+      // Deposit stETH normally
+      const depositAmount = ethers.parseEther("10");
+      await treasury.connect(owner).deposit(depositAmount);
+
+      // Fund the wstETH contract with stETH so it can fulfil the wrap
+      // (In real Lido, wstETH contract holds stETH; in mock we need to seed it)
+      await stETH.mint(await wstETH.getAddress(), ethers.parseEther("20"));
+
+      // Approve treasury to move stETH to wstETH contract for wrapping
+      const treasuryAddr = await treasury.getAddress();
+      await stETH.connect(owner).approve(treasuryAddr, ethers.MaxUint256);
+
+      // Treasury needs to approve wstETH contract to pull stETH for wrapping
+      // This is handled internally by the contract
+
+      const wstETHBalBefore = await wstETH.balanceOf(owner.address);
+
+      // Withdraw 5 stETH worth as wstETH
+      const withdrawAmount = ethers.parseEther("5");
+      await treasury.connect(owner).withdrawPrincipalAsWstETH(withdrawAmount);
+
+      expect(await treasury.principal()).to.equal(depositAmount - withdrawAmount);
+      expect(await wstETH.balanceOf(owner.address)).to.be.gt(wstETHBalBefore);
+    });
+
+    it("non-owner cannot deposit wstETH", async function () {
+      const { treasury, stranger } =
+        await loadFixture(deployTreasuryFixture);
+
+      await expect(
+        treasury.connect(stranger).depositWstETH(ethers.parseEther("1"))
+      ).to.be.revertedWith("YP: not owner");
+    });
+
+    it("cannot deposit zero wstETH", async function () {
+      const { treasury, owner } = await loadFixture(deployTreasuryFixture);
+      await expect(
+        treasury.connect(owner).depositWstETH(0)
+      ).to.be.revertedWith("YP: zero amount");
     });
   });
 });

@@ -848,7 +848,7 @@ app.get("/api/yield-history", (_req, res) => {
     const d = getActivityDb();
     if (d) {
       const rows = sqlQueryAll(d, `
-        SELECT timestamp, available_yield, treasury_balance
+        SELECT timestamp, available_yield, treasury_balance, user, cycle
         FROM activities
         WHERE available_yield IS NOT NULL
         ORDER BY timestamp ASC
@@ -859,6 +859,8 @@ app.get("/api/yield-history", (_req, res) => {
         date: row.timestamp,
         yield: parseFloat(row.available_yield ?? "0"),
         balance: parseFloat(row.treasury_balance ?? "0"),
+        user: row.user ?? null,
+        cycle: row.cycle ?? null,
       }));
 
       return res.json({

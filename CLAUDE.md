@@ -35,16 +35,19 @@ npx hardhat test                   # Run all 55 tests (Hardhat + Chai)
 ```
 
 ### Deployment (deploy.sh)
+
+All deployment logic lives in `scripts/deploy.ts`. Use `deploy.sh` as the CLI.
+
 ```bash
-./scripts/deploy.sh fresh          # ⭐ Deploy everything fresh (MockUSDC + MockRouter + Registry)
-./scripts/deploy.sh compile        # Compile contracts only
-./scripts/deploy.sh test           # Run all 55 contract tests
-./scripts/deploy.sh sepolia        # Deploy single Treasury to Ethereum Sepolia
-./scripts/deploy.sh registry       # Deploy multi-user Registry to Ethereum Sepolia
-./scripts/deploy.sh status         # Deploy to Status Network Sepolia (gasless bounty)
-./scripts/deploy.sh verify <addr>  # Verify contract on Etherscan
-./scripts/deploy.sh all            # Deploy to all networks (Registry + Treasury + Status)
-./scripts/deploy.sh history        # Show deployment history
+./scripts/deploy.sh fresh             # ⭐ Full setup: MockUSDC + MockRouter + Registry
+./scripts/deploy.sh registry          # Deploy Registry only (multi-user factory)
+./scripts/deploy.sh treasury          # Deploy single-user Treasury directly
+./scripts/deploy.sh mocks             # Deploy MockUSDC + MockRouter only
+./scripts/deploy.sh status            # Deploy to Status Network Sepolia (gasless)
+./scripts/deploy.sh verify <addr>     # Verify contract on Etherscan
+./scripts/deploy.sh compile           # Compile contracts only
+./scripts/deploy.sh test              # Run all 55 contract tests
+./scripts/deploy.sh history           # Show deployment history
 ```
 
 **`deploy.sh fresh` is the recommended starting point.** It deploys MockUSDC + MockRouter + Registry in one command, configures default targets, and prints a ready-to-paste `.env` block. After running it:
@@ -116,12 +119,8 @@ Single source of truth for: LLM model names, agent loop interval, gas limits, co
 #### `scripts/` — Operational Scripts
 - `dev.sh` — Local development process manager (wraps individual service starts)
 - `prod.sh` — Docker Compose wrapper for production
-- `deploy.sh` — Main deploy runner. Use `./deploy.sh fresh` for a full clean deploy
-- `deploy-fresh.ts` — Deploys MockUSDC + MockRouter + Registry in one shot (called by `deploy.sh fresh`)
-- `deploy-sepolia.ts` — Single Treasury deploy to Sepolia
-- `deploy-registry.ts` — Registry-only deploy to Sepolia
-- `deploy-mock-router.ts` — MockRouter + MockUSDC standalone deploy
-- `deploy-status.ts` — Status Network Sepolia deploy (gasless bounty)
+- `deploy.sh` — CLI deploy runner. Use `./deploy.sh fresh` for a full clean deploy
+- `deploy.ts` — Unified deploy script. All commands (`fresh`, `registry`, `treasury`, `mocks`, `status`, `verify`) live here. Do not call directly — use `deploy.sh`
 
 #### `test/` — Contract Tests
 Hardhat + Chai tests for all contract behaviour. **55 tests** covering treasury invariants, registry, atomic swaps (`swapYield`), slippage protection, withdrawal tokens, and mock stETH. Run with `npx hardhat test`.
