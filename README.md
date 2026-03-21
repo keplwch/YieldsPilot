@@ -197,6 +197,8 @@ All three models receive **live market data**: ETH prices from CoinGecko, gas co
 
 The multi-model approach provides natural redundancy: if the risk model says "abort" but the market model says "swap_now", the strategy synthesizer must reconcile the conflict and explain its reasoning. This produces more robust decisions than any single model alone.
 
+**Path to self-sustaining economics:** Today, the team covers inference costs during the hackathon phase. The roadmap toward self-sustaining inference is straightforward: the treasury contract can be extended with a small performance fee (a percentage of yield successfully swapped). As the agent manages more treasuries and generates fee revenue, that revenue flows back to fund Bankr multi-model inference costs. The agent pays for its own intelligence from the value it creates, not from user principal, not from external subsidies. Zero fees at launch to prove value first, then protocol fees fund inference as usage scales.
+
 ### Protocol Labs: "Let the Agent Cook" + "Agents With Receipts"
 
 Protocol Labs' ERC-8004 gives YieldsPilot a verifiable onchain identity and a structured audit trail where every cycle is logged.
