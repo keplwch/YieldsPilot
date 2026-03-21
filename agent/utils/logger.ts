@@ -36,7 +36,7 @@ function loadLog(): AgentLog {
     if (!log.operator) log.operator = agentOperator;
     return log;
   }
-  return { agent: "YieldPilot", version: "1.0.0", did: agentDid, operator: agentOperator, cycles: [] };
+  return { agent: "YieldsPilot", version: "1.0.0", did: agentDid, operator: agentOperator, cycles: [] };
 }
 
 function saveLog(log: AgentLog): void {

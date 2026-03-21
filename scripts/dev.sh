@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════════╗
-# ║              🛫 YieldPilot — Local Dev Runner                   ║
+# ║              🛫 YieldsPilot — Local Dev Runner                   ║
 # ║                                                                 ║
 # ║  Services                                                       ║
 # ║    ./dev.sh                  Start everything (default)         ║
@@ -9,7 +9,7 @@
 # ║    ./dev.sh api              API server only                    ║
 # ║    ./dev.sh agent            Agent only                         ║
 # ║    ./dev.sh monitor          Vault monitor only                 ║
-# ║    ./dev.sh stop             Kill all running YieldPilot procs  ║
+# ║    ./dev.sh stop             Kill all running YieldsPilot procs  ║
 # ║    ./dev.sh restart          Stop + start all                   ║
 # ║    ./dev.sh restart cleanup-logs  Stop + delete logs + start    ║
 # ║    ./dev.sh status           Show which services are running    ║
@@ -54,7 +54,7 @@ err()  { echo -e "${RED}  ✗${NC} $1"; }
 banner() {
   echo -e "${PURPLE}${BOLD}"
   echo "  ╔══════════════════════════════════════════╗"
-  echo "  ║         🛫 YieldPilot Dev Mode           ║"
+  echo "  ║         🛫 YieldsPilot Dev Mode           ║"
   echo "  ║   Private Cognition → Trusted Action     ║"
   echo "  ╚══════════════════════════════════════════╝"
   echo -e "${NC}"
@@ -411,7 +411,7 @@ start_all() {
   start_monitor
 
   echo ""
-  echo -e "${GREEN}${BOLD}  ✅ YieldPilot is running!${NC}"
+  echo -e "${GREEN}${BOLD}  ✅ YieldsPilot is running!${NC}"
 
   show_status
 
@@ -501,7 +501,7 @@ case "$CMD" in
     ;;
   help|-h|--help)
     echo ""
-    echo -e "  ${BOLD}🛫 YieldPilot Dev Runner${NC}"
+    echo -e "  ${BOLD}🛫 YieldsPilot Dev Runner${NC}"
     echo ""
     echo -e "  ${BOLD}Usage:${NC} ./dev.sh [command]"
     echo ""

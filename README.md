@@ -1,15 +1,15 @@
-# YieldPilot — Autonomous DeFi Agent with Privacy-Preserving Yield Management
+# YieldsPilot — Autonomous DeFi Agent with Privacy-Preserving Yield Management
 
 > **Private cognition. Trusted onchain action.**
 
-YieldPilot is an autonomous AI agent that manages staking yield on behalf of a user. You deposit ETH, it earns yield via Lido stETH (or wstETH), the agent privately reasons about how to manage that yield (swap, rebalance, compound), and every action is executed and verified onchain. **The agent can never touch your principal.**
+YieldsPilot is an autonomous AI agent that manages staking yield on behalf of a user. You deposit ETH, it earns yield via Lido stETH (or wstETH), the agent privately reasons about how to manage that yield (swap, rebalance, compound), and every action is executed and verified onchain. **The agent can never touch your principal.**
 
 ## How It Works
 
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    HUMAN (You)                          │
-│   Deposit 32 ETH → stETH → YieldPilot Treasury         │
+│   Deposit 32 ETH → stETH → YieldsPilot Treasury         │
 │   Principal: LOCKED    |  Yield: AGENT-MANAGED          │
 └─────────────────────────┬───────────────────────────────┘
                           │ yield accrues daily (rebasing)
@@ -305,8 +305,8 @@ Non-owners see a read-only view of the treasury state.
 ```
 yield-pilot/
 ├── contracts/
-│   ├── YieldPilotTreasury.sol      # Yield-separated treasury with wstETH support
-│   ├── YieldPilotRegistry.sol     # Multi-user factory (per-user treasuries)
+│   ├── YieldsPilotTreasury.sol      # Yield-separated treasury with wstETH support
+│   ├── YieldsPilotRegistry.sol     # Multi-user factory (per-user treasuries)
 │   └── mocks/
 │       ├── MockStETH.sol           # Test mock for stETH rebasing
 │       └── MockWstETH.sol          # Test mock for wstETH wrap/unwrap
@@ -371,9 +371,9 @@ yield-pilot/
 
 | Chain | Purpose | Contract |
 |-------|---------|----------|
-| **Ethereum Sepolia** | Treasury + Lido + Uniswap | YieldPilotTreasury |
+| **Ethereum Sepolia** | Treasury + Lido + Uniswap | YieldsPilotTreasury |
 | **Base Mainnet** | ERC-8004 agent identity | via synthesis.devfolio.co |
-| **Status Sepolia** | Gasless bounty proof | YieldPilotTreasury (copy) |
+| **Status Sepolia** | Gasless bounty proof | YieldsPilotTreasury (copy) |
 
 ## License
 

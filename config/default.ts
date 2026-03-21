@@ -1,5 +1,5 @@
 /**
- * YieldPilot Configuration
+ * YieldsPilot Configuration
  * Copy .env.example to .env and fill in your keys
  */
 
@@ -11,7 +11,7 @@ dotenv.config();
 const config: AppConfig = {
   // === Agent Identity (ERC-8004) ===
   agent: {
-    name: "YieldPilot",
+    name: "YieldsPilot",
     version: "1.0.0",
     did: process.env.AGENT_DID ?? "",
     apiKey: process.env.SYNTHESIS_API_KEY ?? "",

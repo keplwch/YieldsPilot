@@ -92,7 +92,7 @@ async function monitorCycle(): Promise<void> {
       previousState = currentState;
       console.log("  📋 Baseline established");
       await sendAlert(
-        `🛫 *YieldPilot Monitor Started*\n\n` +
+        `🛫 *YieldsPilot Monitor Started*\n\n` +
           `💰 Treasury Balance: ${currentState.totalBalance} stETH\n` +
           `🔒 Principal: ${currentState.principal} stETH\n` +
           `✨ Available Yield: ${currentState.availableYield} stETH\n` +
@@ -137,7 +137,7 @@ async function monitorCycle(): Promise<void> {
 
     if (changes.length > 0) {
       const alert =
-        `🔔 *YieldPilot Vault Update*\n\n` +
+        `🔔 *YieldsPilot Vault Update*\n\n` +
         changes.join("\n\n") +
         `\n\n---\n` +
         `💰 Balance: ${currentState.totalBalance} stETH\n` +
@@ -177,7 +177,7 @@ async function monitorCycle(): Promise<void> {
 
 async function main(): Promise<void> {
   console.log("╔══════════════════════════════════════════════════╗");
-  console.log("║         🔍 YieldPilot Vault Monitor 🔍          ║");
+  console.log("║         🔍 YieldsPilot Vault Monitor 🔍          ║");
   console.log("╚══════════════════════════════════════════════════╝\n");
 
   const interval = config.loop.intervalMs * 5; // Check every 5 minutes

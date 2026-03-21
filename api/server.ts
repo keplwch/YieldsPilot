@@ -1,5 +1,5 @@
 /**
- * YieldPilot API Server (Multi-User)
+ * YieldsPilot API Server (Multi-User)
  *
  * Serves real on-chain data from Ethereum Sepolia and agent logs
  * to the React dashboard. Supports both single-treasury and
@@ -230,7 +230,7 @@ function readAgentLogs(): Record<string, unknown> {
       return JSON.parse(fs.readFileSync(AGENT_LOG_PATH, "utf-8"));
     }
   } catch { /* ignore */ }
-  return { agent: "YieldPilot", version: "1.0.0", cycles: [] };
+  return { agent: "YieldsPilot", version: "1.0.0", cycles: [] };
 }
 
 // ── Helper: read a single treasury's state ───────────────────────
@@ -761,7 +761,7 @@ app.get("/api/logs", (_req, res) => {
       });
 
       return res.json({
-        agent: "YieldPilot",
+        agent: "YieldsPilot",
         totalCycles,
         cycles,
         source: "sqlite",
@@ -774,7 +774,7 @@ app.get("/api/logs", (_req, res) => {
     const cycles = agentLog.cycles ?? [];
 
     res.json({
-      agent: "YieldPilot",
+      agent: "YieldsPilot",
       totalCycles: cycles.length,
       cycles: cycles.slice(-limit),
       source: "json",
@@ -1064,7 +1064,7 @@ app.get("/api/health", (_req, res) => {
 
 // ── Start Server ─────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`\n🚀 YieldPilot API running on http://localhost:${PORT}`);
+  console.log(`\n🚀 YieldsPilot API running on http://localhost:${PORT}`);
   console.log(`   Mode:     ${REGISTRY_ADDRESS ? "Multi-User (Registry)" : "Single-User"}`);
   console.log(`   RPC:      ${RPC_URL.substring(0, 50)}...`);
   console.log(`   Treasury: ${TREASURY_ADDRESS || "via registry"}`);

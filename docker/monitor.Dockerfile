@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════
-# YieldPilot Vault Monitor — Docker Build
+# YieldsPilot Vault Monitor — Docker Build
 # ═══════════════════════════════════════════════════════
 
 FROM node:20-alpine AS base

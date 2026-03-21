@@ -1,5 +1,5 @@
 /**
- * YieldPilot — Autonomous Agent Core (Multi-User)
+ * YieldsPilot — Autonomous Agent Core (Multi-User)
  *
  * The main agent loop: for each registered user treasury:
  *   discover → plan → execute → verify → log
@@ -300,7 +300,7 @@ async function runCycleForTreasury(
             swapCalldata: swapCalldata.calldata,
             tokenOut: swapCalldata.tokenOut,
             minAmountOut: swapCalldata.minAmountOut,
-            reason: `YieldPilot auto-swap for ${shortUser}: ${strategy.reasoning}`,
+            reason: `YieldsPilot auto-swap for ${shortUser}: ${strategy.reasoning}`,
           });
 
           console.log(`      ✅ Step 3/3: Swap confirmed!`);
@@ -366,7 +366,7 @@ async function runCycleForTreasury(
               swapCalldata: calldata,
               tokenOut: mockTokenOut,
               minAmountOut: "0", // mock router always succeeds
-              reason: `YieldPilot testnet atomic swap for ${shortUser}: ${strategy.reasoning}`,
+              reason: `YieldsPilot testnet atomic swap for ${shortUser}: ${strategy.reasoning}`,
             });
 
             console.log(`      ✅ Step 3/3: Atomic swap confirmed!`);
@@ -426,7 +426,7 @@ async function runCycleForTreasury(
               treasuryAddress,
               config.uniswap.routerAddress,
               swapAmount,
-              `YieldPilot testnet yield-spend for ${shortUser}: ${strategy.reasoning}`
+              `YieldsPilot testnet yield-spend for ${shortUser}: ${strategy.reasoning}`
             );
 
             console.log(`      ✅ Step 3/3: Yield spent!`);
@@ -628,7 +628,7 @@ async function runCycle(): Promise<CycleResult[]> {
 
 async function main(): Promise<void> {
   console.log("╔══════════════════════════════════════════════════╗");
-  console.log("║          🛫  YieldPilot Agent (Multi-User)  🛫   ║");
+  console.log("║          🛫  YieldsPilot Agent (Multi-User)  🛫   ║");
   console.log("║   Private Cognition → Trusted Onchain Action     ║");
   console.log("╚══════════════════════════════════════════════════╝\n");
 

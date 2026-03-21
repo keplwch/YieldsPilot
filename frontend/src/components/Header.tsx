@@ -28,13 +28,13 @@ export default function Header({ cycleCount, connected, running }: HeaderProps) 
         {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="relative w-9 h-9 flex-shrink-0">
-            <img src="/logo.svg" alt="YieldPilot" className="w-full h-full object-contain" />
+            <img src="/logo.svg" alt="YieldsPilot" className="w-full h-full object-contain" />
             {running && (
               <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent-green border-2 border-bg-primary animate-pulse-glow" />
             )}
           </div>
           <div>
-            <div className="font-display text-[20px] font-bold text-text-primary leading-none tracking-tight">YieldPilot</div>
+            <div className="font-display text-[20px] font-bold text-text-primary leading-none tracking-tight">YieldsPilot</div>
             <div className="text-[9px] text-text-muted font-mono tracking-[3px] uppercase mt-0.5">Autonomous DeFi Agent</div>
           </div>
         </div>

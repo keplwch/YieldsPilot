@@ -4,13 +4,13 @@ import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { time } from "@nomicfoundation/hardhat-network-helpers";
 
 /**
- * YieldPilotTreasury — Comprehensive Test Suite
+ * YieldsPilotTreasury — Comprehensive Test Suite
  *
  * Tests the yield-separation mechanism: principal stays locked,
  * only rebasing yield is spendable by the agent, with daily limits
  * and target whitelisting.
  */
-describe("YieldPilotTreasury", function () {
+describe("YieldsPilotTreasury", function () {
   // ── Fixture: deploys a mock stETH + Treasury ────────────────────
   async function deployTreasuryFixture() {
     const [owner, agent, target1, target2, stranger] =
@@ -32,7 +32,7 @@ describe("YieldPilotTreasury", function () {
 
     // Deploy Treasury: 50% max daily spend
     const maxDailyBps = 5000;
-    const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+    const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
     const treasury = await Treasury.deploy(
       await stETH.getAddress(),
       await wstETH.getAddress(),
@@ -85,7 +85,7 @@ describe("YieldPilotTreasury", function () {
     it("reverts on zero stETH address", async function () {
       const [, agent] = await ethers.getSigners();
       const { wstETH } = await loadFixture(deployTreasuryFixture);
-      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
       await expect(
         Treasury.deploy(ethers.ZeroAddress, await wstETH.getAddress(), agent.address, 5000)
       ).to.be.revertedWith("YP: zero stETH");
@@ -94,7 +94,7 @@ describe("YieldPilotTreasury", function () {
     it("reverts on zero wstETH address", async function () {
       const [, agent] = await ethers.getSigners();
       const { stETH } = await loadFixture(deployTreasuryFixture);
-      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
       await expect(
         Treasury.deploy(await stETH.getAddress(), ethers.ZeroAddress, agent.address, 5000)
       ).to.be.revertedWith("YP: zero wstETH");
@@ -102,7 +102,7 @@ describe("YieldPilotTreasury", function () {
 
     it("reverts on zero agent address", async function () {
       const { stETH, wstETH } = await loadFixture(deployTreasuryFixture);
-      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
       await expect(
         Treasury.deploy(await stETH.getAddress(), await wstETH.getAddress(), ethers.ZeroAddress, 5000)
       ).to.be.revertedWith("YP: zero agent");
@@ -111,7 +111,7 @@ describe("YieldPilotTreasury", function () {
     it("reverts on bps > 10000", async function () {
       const [, agent] = await ethers.getSigners();
       const { stETH, wstETH } = await loadFixture(deployTreasuryFixture);
-      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
       await expect(
         Treasury.deploy(await stETH.getAddress(), await wstETH.getAddress(), agent.address, 10001)
       ).to.be.revertedWith("YP: bps > 100%");

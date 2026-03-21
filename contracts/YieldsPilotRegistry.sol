@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import "./YieldPilotTreasury.sol";
+import "./YieldsPilotTreasury.sol";
 
 /**
- * @title YieldPilotRegistry
+ * @title YieldsPilotRegistry
  * @notice Factory + registry that deploys per-user Treasury contracts.
  *         Each user gets their own isolated treasury where their principal
  *         is locked and only yield is spendable by the agent.
  *
  * @dev The agent address is shared across all treasuries. When a user
- *      deposits, a new YieldPilotTreasury is created with the user as owner
+ *      deposits, a new YieldsPilotTreasury is created with the user as owner
  *      and the global agent as the authorized spender.
  *
  * Bounty targets:
  *   - Lido "stETH Agent Treasury" ($3,000)
  *   - Protocol Labs "Let the Agent Cook" ($8,000)
  */
-contract YieldPilotRegistry {
+contract YieldsPilotRegistry {
 
     // ══════════════════════════════════════════════════════════════════
     //                          STATE
@@ -114,7 +114,7 @@ contract YieldPilotRegistry {
         require(amount > 0, "Registry: zero amount");
 
         // Deploy a new Treasury contract with msg.sender as owner
-        YieldPilotTreasury treasury = new YieldPilotTreasury(
+        YieldsPilotTreasury treasury = new YieldsPilotTreasury(
             address(stETH),
             wstETHAddress,
             agent,

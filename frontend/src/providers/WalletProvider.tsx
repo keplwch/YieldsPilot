@@ -10,7 +10,7 @@ import { IS_MAINNET, NETWORK } from "@/config/network";
 const activeChain = IS_MAINNET ? mainnet : sepolia;
 
 const config = getDefaultConfig({
-  appName: "YieldPilot",
+  appName: "YieldsPilot",
   projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || "b2c5e57fb6f2b0e6a35f3e8d6a0e5c4a",
   chains: [activeChain],
   // Use /rpc which Vite proxies to the RPC URL in .env (avoids CORS blocks

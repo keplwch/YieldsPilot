@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════════════════════╗
-# ║  YieldPilot — Deploy Script                                                ║
+# ║  YieldsPilot — Deploy Script                                                ║
 # ║                                                                              ║
 # ║  All deployment logic lives in scripts/deploy.ts — this script provides     ║
 # ║  the CLI interface, pre-flight checks, and Etherscan verification.           ║
@@ -44,6 +44,9 @@
 # ║                                                                              ║
 # ║    ./deploy.sh simulate:yield   Simulate yield accrual into a treasury       ║
 # ║                                    TREASURY=0x... [YIELD=0.1]                ║
+# ║                                                                              ║
+# ║    ./deploy.sh fork:test       Test real Uniswap swap on forked mainnet     ║
+# ║                                    FORK_RPC=<mainnet-rpc> (zero gas cost)    ║
 # ║                                                                              ║
 # ║  ─── Other ─────────────────────────────────────────────────────────────── ║
 # ║                                                                              ║
@@ -90,7 +93,7 @@ fail() { echo -e "${RED}  ✗${NC} $*"; exit 1; }
 banner() {
   echo -e "${PURPLE}${BOLD}"
   echo "  ╔══════════════════════════════════════╗"
-  echo "  ║     🚀 YieldPilot Deployer           ║"
+  echo "  ║     🚀 YieldsPilot Deployer           ║"
   echo "  ╚══════════════════════════════════════╝"
   echo -e "${NC}"
 }
@@ -200,7 +203,7 @@ cmd_verify() {
     fail "Usage: ./deploy.sh verify <contract-address> [ContractName]"
   fi
 
-  local contract_name="${2:-YieldPilotRegistry}"
+  local contract_name="${2:-YieldsPilotRegistry}"
 
   preflight
   banner
@@ -294,6 +297,40 @@ cmd_mint() {
   npx hardhat run scripts/mint-mock.ts --network sepolia
 }
 
+# ── Fork test (mainnet fork — real Uniswap swap) ─────────────────────────────
+
+cmd_fork_test() {
+  banner
+
+  set -a; source "$ENV_FILE" 2>/dev/null || true; set +a
+
+  local fork_rpc="${FORK_RPC:-${RPC_URL:-}}"
+
+  if [ -z "$fork_rpc" ] || [[ "$fork_rpc" == *"sepolia"* ]]; then
+    echo -e "${RED}  ✗${NC} Need a mainnet RPC endpoint for fork testing"
+    echo ""
+    echo -e "  Usage: ${BOLD}FORK_RPC=https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY ./deploy.sh fork:test${NC}"
+    echo ""
+    echo "  This forks Ethereum Mainnet locally and tests the real Uniswap swap flow."
+    echo "  No gas costs — everything runs on a local fork."
+    echo ""
+    echo "  If your RPC_URL already points to mainnet, just run:"
+    echo -e "  ${BOLD}FORK_RPC=\$RPC_URL ./deploy.sh fork:test${NC}"
+    echo ""
+    exit 1
+  fi
+
+  log "Compiling contracts..."
+  npx hardhat compile --quiet
+  echo ""
+
+  log "Starting mainnet fork test..."
+  log "Fork RPC: ${fork_rpc:0:45}..."
+  echo ""
+
+  FORK_RPC="$fork_rpc" npx hardhat test test/fork-swap.test.ts
+}
+
 # ── Simulate yield ────────────────────────────────────────────────────────────
 
 cmd_simulate_yield() {
@@ -320,7 +357,7 @@ cmd_simulate_yield() {
 
 cmd_help() {
   echo ""
-  echo -e "  ${BOLD}🚀 YieldPilot Deploy Script${NC}"
+  echo -e "  ${BOLD}🚀 YieldsPilot Deploy Script${NC}"
   echo ""
   echo -e "  ${BOLD}Usage:${NC}  ./deploy.sh <command> [args]"
   echo ""
@@ -354,7 +391,7 @@ cmd_help() {
   echo "    status           Deploy to Status Network Sepolia (gasless, chainId=2020)"
   echo ""
   echo "    verify <addr>    Verify contract on Etherscan"
-  echo "      [ContractName]   Optional: YieldPilotRegistry (default), YieldPilotTreasury"
+  echo "      [ContractName]   Optional: YieldsPilotRegistry (default), YieldsPilotTreasury"
   echo "      [network]        Optional: sepolia (default) or mainnet"
   echo "                       Requires ETHERSCAN_API_KEY in .env"
   echo ""
@@ -366,6 +403,10 @@ cmd_help() {
   echo ""
   echo "    simulate:yield   Simulate yield accrual into a treasury"
   echo "                       TREASURY=0x... [YIELD=0.1] ./deploy.sh simulate:yield"
+  echo ""
+  echo "    fork:test        Test real Uniswap swap on a forked mainnet (zero gas cost)"
+  echo "                       FORK_RPC=https://...mainnet... ./deploy.sh fork:test"
+  echo "                       Deploys Treasury, injects yield, swaps stETH → USDC via Uniswap V3"
   echo ""
   echo -e "  ${BOLD}Other commands:${NC}"
   echo ""
@@ -420,6 +461,7 @@ case "$CMD" in
   status)         cmd_status ;;
   verify)         cmd_verify "${1:-}" "${2:-}" "${3:-sepolia}" ;;
   mint)           cmd_mint ;;
+  fork:test|fork-test)  cmd_fork_test ;;
   simulate:yield|simulate-yield) cmd_simulate_yield ;;
   compile)        cmd_compile ;;
   test)           cmd_test ;;

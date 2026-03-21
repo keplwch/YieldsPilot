@@ -1,5 +1,5 @@
 /**
- * YieldPilot — Unified Deploy Script
+ * YieldsPilot — Unified Deploy Script
  *
  * All deployment logic lives here. Controlled via DEPLOY_CMD env var,
  * set automatically by deploy.sh. Do not call this directly — use deploy.sh.
@@ -55,7 +55,7 @@
  *
  *  For verification (verify command only):
  *    VERIFY_ADDRESS         Contract address to verify on Etherscan
- *    VERIFY_CONTRACT        Contract name, e.g. "YieldPilotRegistry"
+ *    VERIFY_CONTRACT        Contract name, e.g. "YieldsPilotRegistry"
  *    ETHERSCAN_API_KEY      Etherscan API key
  *
  * ─── First-Time Setup ────────────────────────────────────────────────────────
@@ -141,7 +141,7 @@ function saveManifest(data: Record<string, unknown>) {
 
 async function cmdFresh() {
   console.log("╔══════════════════════════════════════════════════════════╗");
-  console.log("║   🚀 YieldPilot — Fresh Full Deploy                     ║");
+  console.log("║   🚀 YieldsPilot — Fresh Full Deploy                     ║");
   console.log("║   MockUSDC + MockRouter + Registry                      ║");
   console.log("╚══════════════════════════════════════════════════════════╝\n");
 
@@ -179,8 +179,8 @@ async function cmdFresh() {
   console.log(`     tx: ${router.deploymentTransaction()?.hash}`);
 
   // Step 3 — Registry
-  sep("Step 3/4: Deploying YieldPilotRegistry");
-  const Registry = await ethers.getContractFactory("YieldPilotRegistry");
+  sep("Step 3/4: Deploying YieldsPilotRegistry");
+  const Registry = await ethers.getContractFactory("YieldsPilotRegistry");
   const registry = await Registry.deploy(STETH, WSTETH, AGENT, DEFAULT_MAX_DAILY_BPS);
   await registry.waitForDeployment();
   const registryAddress = await registry.getAddress();
@@ -203,7 +203,7 @@ async function cmdFresh() {
 
   // Output
   const envBlock = [
-    `# ═══ YieldPilot Deploy — ${new Date().toISOString()} ═══`,
+    `# ═══ YieldsPilot Deploy — ${new Date().toISOString()} ═══`,
     `REGISTRY_CONTRACT=${registryAddress}`,
     `MOCK_ROUTER_ADDRESS=${routerAddress}`,
     `MOCK_TOKEN_OUT_ADDRESS=${usdcAddress}`,
@@ -259,7 +259,7 @@ ${envBlock}
 
 async function cmdRegistry() {
   console.log("╔══════════════════════════════════════════════════════════╗");
-  console.log("║   🏭 Deploying YieldPilotRegistry                       ║");
+  console.log("║   🏭 Deploying YieldsPilotRegistry                       ║");
   console.log("╚══════════════════════════════════════════════════════════╝\n");
 
   const { deployer } = await deployerInfo();
@@ -273,7 +273,7 @@ async function cmdRegistry() {
   console.log(`  Agent:         ${AGENT}`);
   console.log(`  Daily limit:   ${DEFAULT_MAX_DAILY_BPS} bps (${DEFAULT_MAX_DAILY_BPS / 100}%)\n`);
 
-  const Registry = await ethers.getContractFactory("YieldPilotRegistry");
+  const Registry = await ethers.getContractFactory("YieldsPilotRegistry");
   const registry = await Registry.deploy(STETH, WSTETH, AGENT, DEFAULT_MAX_DAILY_BPS);
   await registry.waitForDeployment();
   const registryAddress = await registry.getAddress();
@@ -322,7 +322,7 @@ async function cmdRegistry() {
 
 async function cmdTreasury() {
   console.log("╔══════════════════════════════════════════════════════════╗");
-  console.log("║   🏦 Deploying YieldPilotTreasury (single-user)         ║");
+  console.log("║   🏦 Deploying YieldsPilotTreasury (single-user)         ║");
   console.log("╚══════════════════════════════════════════════════════════╝\n");
 
   const { deployer } = await deployerInfo();
@@ -336,7 +336,7 @@ async function cmdTreasury() {
   console.log(`  Agent:        ${AGENT}`);
   console.log(`  Daily limit:  ${DEFAULT_MAX_DAILY_BPS} bps (${DEFAULT_MAX_DAILY_BPS / 100}%)\n`);
 
-  const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+  const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
   const treasury = await Treasury.deploy(STETH, WSTETH, AGENT, DEFAULT_MAX_DAILY_BPS);
   await treasury.waitForDeployment();
   const treasuryAddress = await treasury.getAddress();
@@ -499,7 +499,7 @@ async function cmdMocksAll() {
   console.log(`     tx: ${router.deploymentTransaction()?.hash}`);
 
   const envBlock = [
-    `# ═══ YieldPilot Mocks-All Deploy — ${new Date().toISOString()} ═══`,
+    `# ═══ YieldsPilot Mocks-All Deploy — ${new Date().toISOString()} ═══`,
     `STETH_ADDRESS=${stETHAddress}`,
     `WSTETH_ADDRESS=${wstETHAddress}`,
     `MOCK_ROUTER_ADDRESS=${routerAddress}`,
@@ -565,8 +565,8 @@ async function cmdStatus() {
   const WSTETH = envVal("WSTETH_ADDRESS", deployer.address); // placeholder on Status
   const AGENT  = deployer.address;
 
-  console.log("\n  Deploying YieldPilotTreasury...");
-  const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+  console.log("\n  Deploying YieldsPilotTreasury...");
+  const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
   const treasury = await Treasury.deploy(STETH, WSTETH, AGENT, DEFAULT_MAX_DAILY_BPS);
   await treasury.waitForDeployment();
   const treasuryAddress = await treasury.getAddress();
@@ -613,7 +613,7 @@ async function cmdStatus() {
 
 async function cmdMainnet() {
   console.log("╔══════════════════════════════════════════════════════════╗");
-  console.log("║   🚀 YieldPilot — MAINNET Deploy                        ║");
+  console.log("║   🚀 YieldsPilot — MAINNET Deploy                        ║");
   console.log("║   Registry + Uniswap Router (real Lido stETH/wstETH)    ║");
   console.log("╚══════════════════════════════════════════════════════════╝\n");
 
@@ -642,8 +642,8 @@ async function cmdMainnet() {
   console.log("  ⚠️  Double-check all addresses above before proceeding\n");
 
   // Step 1 — Registry
-  sep("Step 1/2: Deploying YieldPilotRegistry");
-  const Registry = await ethers.getContractFactory("YieldPilotRegistry");
+  sep("Step 1/2: Deploying YieldsPilotRegistry");
+  const Registry = await ethers.getContractFactory("YieldsPilotRegistry");
   const registry = await Registry.deploy(STETH, WSTETH, AGENT, BPS);
   await registry.waitForDeployment();
   const registryAddress = await registry.getAddress();
@@ -661,7 +661,7 @@ async function cmdMainnet() {
   for (const t of targets) console.log(`    • ${t}`);
 
   const envBlock = [
-    `# ═══ YieldPilot MAINNET Deploy — ${new Date().toISOString()} ═══`,
+    `# ═══ YieldsPilot MAINNET Deploy — ${new Date().toISOString()} ═══`,
     `REGISTRY_CONTRACT=${registryAddress}`,
     `STETH_ADDRESS=${STETH}`,
     `WSTETH_ADDRESS=${WSTETH}`,
@@ -714,7 +714,7 @@ ${envBlock}
 
 async function cmdVerify() {
   const address = envVal("VERIFY_ADDRESS");
-  const contractName = envVal("VERIFY_CONTRACT", "YieldPilotRegistry");
+  const contractName = envVal("VERIFY_CONTRACT", "YieldsPilotRegistry");
 
   if (!address) {
     console.error("❌ VERIFY_ADDRESS not set. Usage: VERIFY_ADDRESS=0x... ./deploy.sh verify");
@@ -728,7 +728,7 @@ async function cmdVerify() {
 
   // Determine constructor args based on contract type
   let constructorArgs: string[];
-  if (contractName === "YieldPilotRegistry" || contractName === "YieldPilotTreasury") {
+  if (contractName === "YieldsPilotRegistry" || contractName === "YieldsPilotTreasury") {
     constructorArgs = [STETH, WSTETH, AGENT, String(DEFAULT_MAX_DAILY_BPS)];
   } else {
     constructorArgs = []; // MockUSDC, MockRouter have simple constructors

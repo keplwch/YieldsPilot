@@ -3,12 +3,12 @@ import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
 /**
- * YieldPilotRegistry — Test Suite
+ * YieldsPilotRegistry — Test Suite
  *
  * Tests the multi-user factory pattern: each user gets their own
  * Treasury, the agent is shared, and the registry tracks everything.
  */
-describe("YieldPilotRegistry", function () {
+describe("YieldsPilotRegistry", function () {
   async function deployRegistryFixture() {
     const [admin, agent, user1, user2, user3, target1] =
       await ethers.getSigners();
@@ -31,7 +31,7 @@ describe("YieldPilotRegistry", function () {
 
     // Deploy Registry
     const maxDailyBps = 5000; // 50%
-    const Registry = await ethers.getContractFactory("YieldPilotRegistry");
+    const Registry = await ethers.getContractFactory("YieldsPilotRegistry");
     const registry = await Registry.connect(admin).deploy(
       await stETH.getAddress(),
       await wstETH.getAddress(),
@@ -115,7 +115,7 @@ describe("YieldPilotRegistry", function () {
       await registry.connect(user1).createTreasuryAndDeposit(depositAmount);
 
       const treasuryAddr = await registry.userTreasury(user1.address);
-      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
       const treasury = Treasury.attach(treasuryAddr);
 
       expect(await treasury.owner()).to.equal(user1.address);
@@ -129,7 +129,7 @@ describe("YieldPilotRegistry", function () {
       await registry.connect(user1).createTreasuryAndDeposit(depositAmount);
 
       const treasuryAddr = await registry.userTreasury(user1.address);
-      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
       const treasury = Treasury.attach(treasuryAddr);
 
       expect(await treasury.agent()).to.equal(agent.address);
@@ -143,7 +143,7 @@ describe("YieldPilotRegistry", function () {
       await registry.connect(user1).createTreasuryAndDeposit(depositAmount);
 
       const treasuryAddr = await registry.userTreasury(user1.address);
-      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
       const treasury = Treasury.attach(treasuryAddr);
 
       expect(await treasury.isAllowedTarget(target1.address)).to.be.true;
@@ -259,7 +259,7 @@ describe("YieldPilotRegistry", function () {
       await registry.connect(user1).createTreasuryAndDeposit(depositAmount);
 
       const treasuryAddr = await registry.userTreasury(user1.address);
-      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
       const treasury = Treasury.attach(treasuryAddr);
 
       // Simulate yield accrual by minting stETH directly to the treasury
@@ -296,7 +296,7 @@ describe("YieldPilotRegistry", function () {
       await registry.connect(user1).createTreasuryAndDeposit(depositAmount);
 
       const treasuryAddr = await registry.userTreasury(user1.address);
-      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
       const treasury = Treasury.attach(treasuryAddr);
 
       // Add the mock router as an allowed target on the user's treasury
@@ -499,7 +499,7 @@ describe("YieldPilotRegistry", function () {
       await registry.connect(user1).createTreasuryAndDeposit(depositAmount);
 
       const treasuryAddr = await registry.userTreasury(user1.address);
-      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
       const treasury = Treasury.attach(treasuryAddr);
 
       // Simulate: USDC sitting in treasury after a swap
@@ -523,7 +523,7 @@ describe("YieldPilotRegistry", function () {
       await registry.connect(user1).createTreasuryAndDeposit(depositAmount);
 
       const treasuryAddr = await registry.userTreasury(user1.address);
-      const Treasury = await ethers.getContractFactory("YieldPilotTreasury");
+      const Treasury = await ethers.getContractFactory("YieldsPilotTreasury");
       const treasury = Treasury.attach(treasuryAddr);
 
       await expect(

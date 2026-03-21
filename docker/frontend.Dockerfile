@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════
-# YieldPilot Dashboard — Multi-stage Build
+# YieldsPilot Dashboard — Multi-stage Build
 # Build with Vite, serve with nginx
 # ═══════════════════════════════════════════════════════
 

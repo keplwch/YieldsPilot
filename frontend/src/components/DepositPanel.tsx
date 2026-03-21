@@ -238,7 +238,7 @@ export default function DepositPanel({ registryAddress, registryMode }: DepositP
             <p className="text-[12px] text-text-secondary mb-4 font-body leading-relaxed">
               {hasTreasury
                 ? "Add more stETH to your Treasury. New deposits increase your locked principal."
-                : "Deposit stETH into YieldPilot. Principal locked — only yield is agent-spendable."}
+                : "Deposit stETH into YieldsPilot. Principal locked — only yield is agent-spendable."}
             </p>
             <div className="flex items-center justify-between mb-2 text-[11px]">
               <span className="text-text-muted font-mono">Balance</span>

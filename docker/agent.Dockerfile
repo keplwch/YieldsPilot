@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════
-# YieldPilot Agent — Multi-stage Docker Build
+# YieldsPilot Agent — Multi-stage Docker Build
 # ═══════════════════════════════════════════════════════
 
 FROM node:20-alpine AS base

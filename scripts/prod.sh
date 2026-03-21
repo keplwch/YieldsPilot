@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════╗
-# ║           🛫 YieldPilot — Production (Docker)               ║
+# ║           🛫 YieldsPilot — Production (Docker)               ║
 # ║  Builds & runs agent + monitor + dashboard via Compose      ║
 # ╚══════════════════════════════════════════════════════════════╝
 
@@ -26,7 +26,7 @@ err()  { echo -e "${RED}  ✗${NC} $1"; exit 1; }
 # ── Banner ─────────────────────────────────────────────────────
 echo -e "${PURPLE}${BOLD}"
 echo "  ╔══════════════════════════════════════════╗"
-echo "  ║       🛫 YieldPilot Production Mode      ║"
+echo "  ║       🛫 YieldsPilot Production Mode      ║"
 echo "  ║        Docker Compose Deployment         ║"
 echo "  ╚══════════════════════════════════════════╝"
 echo -e "${NC}"
@@ -71,7 +71,7 @@ case "$CMD" in
     $COMPOSE up --build -d
 
     echo ""
-    echo -e "${GREEN}${BOLD}  ✅ YieldPilot is running in production!${NC}"
+    echo -e "${GREEN}${BOLD}  ✅ YieldsPilot is running in production!${NC}"
     echo ""
     echo -e "  ${CYAN}Dashboard${NC}   → http://localhost:3000"
     echo -e "  ${CYAN}Agent${NC}       → docker compose logs -f agent"

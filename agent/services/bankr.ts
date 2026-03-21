@@ -72,7 +72,7 @@ export async function assessRisk(portfolioState: RiskInput): Promise<RiskAssessm
 
   const raw = await askBankr<Omit<RiskAssessment, "model" | "provider" | "task">>(
     config.bankr.models.risk,
-    `You are a DeFi risk analyst for YieldPilot, an autonomous stETH yield management agent.
+    `You are a DeFi risk analyst for YieldsPilot, an autonomous stETH yield management agent.
 
 Your job is to assess whether it is safe to swap staking yield this cycle.
 
@@ -156,7 +156,7 @@ export async function synthesizeStrategy(
 ): Promise<StrategyResult> {
   const raw = await askBankr<Omit<StrategyResult, "model" | "provider" | "task">>(
     config.bankr.models.strategy,
-    `You are a DeFi yield management strategy engine for YieldPilot. You receive risk assessment, market analysis, and treasury state. Synthesize the final action for this cycle.
+    `You are a DeFi yield management strategy engine for YieldsPilot. You receive risk assessment, market analysis, and treasury state. Synthesize the final action for this cycle.
 
 OUTPUT — EXACTLY ONE of two actions:
 1. "swap_yield" — deploy some yield by swapping stETH into the best output token

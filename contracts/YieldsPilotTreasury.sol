@@ -21,7 +21,7 @@ interface IWstETH {
 }
 
 /**
- * @title YieldPilotTreasury
+ * @title YieldsPilotTreasury
  * @notice A yield-separated treasury where humans deposit stETH or wstETH, and an
  *         AI agent can ONLY spend the accrued staking yield — never the principal.
  *
@@ -37,7 +37,7 @@ interface IWstETH {
  *   - Protocol Labs "Let the Agent Cook" ($8,000)
  *   - Venice "Private Agents, Trusted Actions" ($11,500)
  */
-contract YieldPilotTreasury is ReentrancyGuard {
+contract YieldsPilotTreasury is ReentrancyGuard {
     using SafeERC20 for IERC20;
 
     // ══════════════════════════════════════════════════════════════════

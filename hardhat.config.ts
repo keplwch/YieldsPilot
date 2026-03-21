@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // ╔══════════════════════════════════════════════════════════════╗
-// ║  YieldPilot — Hardhat Configuration                        ║
+// ║  YieldsPilot — Hardhat Configuration                        ║
 // ║                                                             ║
 // ║  CHAINS:                                                    ║
 // ║    • Ethereum Sepolia  → Treasury + Lido + Uniswap          ║
@@ -40,7 +40,7 @@ const config: HardhatUserConfig = {
         ? {
             forking: {
               url: process.env.FORK_RPC,
-              blockNumber: 19_500_000,
+              // No pinned block — forks at latest for up-to-date pool state
             },
           }
         : {}),

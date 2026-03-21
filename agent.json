@@ -1,11 +1,11 @@
 {
   "$schema": "https://erc8004.org/agent.schema.json",
-  "name": "YieldPilot",
+  "name": "YieldsPilot",
   "version": "1.0.0",
   "description": "Autonomous DeFi agent that manages staking yield with privacy-preserving reasoning. Deposits earn yield via Lido stETH; the agent can only spend the yield, never the principal. Reasoning is private (Venice), execution is public (onchain).",
   "did": "did:synthesis:34520",
   "operator": {
-    "name": "YieldPilot Team",
+    "name": "YieldsPilot Team",
     "contact": "keplwchoom@gmail.com"
   },
   "capabilities": [

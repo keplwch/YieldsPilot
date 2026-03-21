@@ -1,8 +1,8 @@
-# YieldPilot — Claude Code Context
+# YieldsPilot — Claude Code Context
 
 ## Project Overview
 
-**YieldPilot** is an autonomous DeFi agent that accepts ETH deposits, stakes via Lido to earn stETH yield, and uses multi-model AI to manage that yield on-chain — while mathematically locking the original principal in a smart contract.
+**YieldsPilot** is an autonomous DeFi agent that accepts ETH deposits, stakes via Lido to earn stETH yield, and uses multi-model AI to manage that yield on-chain — while mathematically locking the original principal in a smart contract.
 
 Key architectural guarantee: the agent can only spend yield, never principal.
 
@@ -77,8 +77,8 @@ bun run mcp                        # Lido MCP server (9 tools)
 
 #### `contracts/` — Solidity Smart Contracts
 The on-chain layer. Start here when touching treasury logic, principal protection, or spend limits.
-- `YieldPilotTreasury.sol` — Core single-user treasury. Look here for: principal tracking, `maxDailySpendBps`, `allowedTargets` whitelist, `swapYield()` (atomic DEX swap — funds never leave contract), `withdrawToken()` (move swap output tokens), events (`Deposited`, `YieldSpent`, `YieldSwapped`, `PrincipalWithdrawn`)
-- `YieldPilotRegistry.sol` — Multi-user factory. Look here for: per-user treasury deployment, registry lookup, default target management
+- `YieldsPilotTreasury.sol` — Core single-user treasury. Look here for: principal tracking, `maxDailySpendBps`, `allowedTargets` whitelist, `swapYield()` (atomic DEX swap — funds never leave contract), `withdrawToken()` (move swap output tokens), events (`Deposited`, `YieldSpent`, `YieldSwapped`, `PrincipalWithdrawn`)
+- `YieldsPilotRegistry.sol` — Multi-user factory. Look here for: per-user treasury deployment, registry lookup, default target management
 - `mocks/MockStETH.sol` — Test-only stETH mock with simulated rebasing
 - `mocks/MockRouter.sol` — Simulates Uniswap router for testnet `swapYield()` testing. Also deploys `MockUSDC` (6 decimal ERC-20)
 
@@ -139,8 +139,8 @@ Nginx config + Dockerfiles for agent, frontend, and monitor services.
 |---|---|
 | How the agent makes decisions | `agent/index.ts` + `agent/services/venice.ts` |
 | Which LLM models are used | `config/default.ts` |
-| Treasury principal/yield logic | `contracts/YieldPilotTreasury.sol` |
-| Atomic swap logic (swapYield) | `contracts/YieldPilotTreasury.sol` + `agent/services/lido.ts` |
+| Treasury principal/yield logic | `contracts/YieldsPilotTreasury.sol` |
+| Atomic swap logic (swapYield) | `contracts/YieldsPilotTreasury.sol` + `agent/services/lido.ts` |
 | Uniswap API / calldata building | `agent/services/uniswap.ts` |
 | A Lido staking operation | `agent/services/lido.ts` |
 | Dashboard layout or new page | `frontend/src/App.tsx` |
@@ -167,8 +167,8 @@ Nginx config + Dockerfiles for agent, frontend, and monitor services.
 4. **VERIFY** — Confirm on-chain state matches intent; log to `agent_log.json` (ERC-8004)
 
 ### Smart Contracts
-- `YieldPilotTreasury.sol` — Single-user treasury. Tracks `principal` (locked) and `yieldWithdrawn`. Enforces `maxDailySpendBps`. `swapYield()` executes atomic DEX swaps — treasury approves router, calls it, verifies output, resets approval. Funds never leave the contract.
-- `YieldPilotRegistry.sol` — Factory: each user gets their own treasury instance. Manages default targets (Uniswap Router + MockRouter are added on deploy).
+- `YieldsPilotTreasury.sol` — Single-user treasury. Tracks `principal` (locked) and `yieldWithdrawn`. Enforces `maxDailySpendBps`. `swapYield()` executes atomic DEX swaps — treasury approves router, calls it, verifies output, resets approval. Funds never leave the contract.
+- `YieldsPilotRegistry.sol` — Factory: each user gets their own treasury instance. Manages default targets (Uniswap Router + MockRouter are added on deploy).
 - `mocks/MockRouter.sol` — Testnet Uniswap simulator. Pulls stETH, mints MockUSDC at configurable rate (default 2000 USDC/stETH).
 
 ---
