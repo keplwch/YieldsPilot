@@ -109,7 +109,7 @@
   },
   "autonomy": {
     "loop": "discover → plan → execute → verify",
-    "interval": "60s",
+    "interval": "300s (configurable via AGENT_INTERVAL_MS)",
     "human_intervention": "none (fully autonomous after deposit)"
   },
   "repository": "https://github.com/keplwch/yield-pilot",

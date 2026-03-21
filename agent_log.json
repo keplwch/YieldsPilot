@@ -31009,6 +31009,3336 @@
       "gasUsed": null,
       "duration": null,
       "status": "success"
+    },
+    {
+      "id": "5de69244-fcd8-4ae3-bd0a-1557d69c3ce4",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:05:17.901Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 193,
+        "timestamp": "2026-03-21T15:05:17.896Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "77159324-0ecc-4720-8320-c292c398fbaf",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:05:18.007Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 193,
+        "timestamp": "2026-03-21T15:05:18.003Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "a33d2e99-7067-4b11-94d2-461adee2e027",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:06:19.787Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 194,
+        "timestamp": "2026-03-21T15:06:19.780Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "97b1f8ff-aa07-498d-a153-b331aa639c6a",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:06:19.895Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 194,
+        "timestamp": "2026-03-21T15:06:19.891Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "b8c54aa5-6dbe-4060-8109-c66d5ad0acdb",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:07:20.681Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 195,
+        "timestamp": "2026-03-21T15:07:20.675Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "19a5877a-fed6-4d09-840a-4a46b0384861",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:07:20.797Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 195,
+        "timestamp": "2026-03-21T15:07:20.790Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "11e46db0-e47c-409d-a1da-98986bdcab66",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:08:21.573Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 196,
+        "timestamp": "2026-03-21T15:08:21.558Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "1d7df9f3-f116-460a-81d1-693bffc00ee4",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:08:21.691Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 196,
+        "timestamp": "2026-03-21T15:08:21.687Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "83db2e7f-6296-4b39-8192-d77316e626e9",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:09:22.675Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 197,
+        "timestamp": "2026-03-21T15:09:22.494Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "fee20bdf-b9a3-4cbe-9517-ff8b1051c012",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:09:22.851Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 197,
+        "timestamp": "2026-03-21T15:09:22.833Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "25e6c192-e37b-4fb8-9aeb-90eb6ce07816",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:10:23.763Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 198,
+        "timestamp": "2026-03-21T15:10:23.755Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "e247fc36-e98f-48f2-83f5-bd76e7ce366b",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:10:23.875Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 198,
+        "timestamp": "2026-03-21T15:10:23.870Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "1ffdb700-b89a-4f55-b820-3817fe749a86",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:11:24.780Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 199,
+        "timestamp": "2026-03-21T15:11:24.773Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "dc7ad97e-6d38-45ca-a1c8-a82c3b6d4f7d",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:11:24.900Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504370128826924809",
+          "totalShares": "7464552.221240302349141348",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 199,
+        "timestamp": "2026-03-21T15:11:24.896Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "e55d5860-58be-4dd5-bb1d-ddd32018af51",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:12:25.732Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504400148826924809",
+          "totalShares": "7464552.221264710835702241",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 200,
+        "timestamp": "2026-03-21T15:12:25.720Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "b52cfdd7-4466-4a78-af3b-a5ffe02d6f45",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:12:25.855Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504400148826924809",
+          "totalShares": "7464552.221264710835702241",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 200,
+        "timestamp": "2026-03-21T15:12:25.850Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "051df5b7-8d14-49e6-b8c2-a9f7443e6684",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:13:26.505Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504400148826924809",
+          "totalShares": "7464552.221264710835702241",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 201,
+        "timestamp": "2026-03-21T15:13:26.498Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "fc516c66-2450-4efd-ae41-6ee3ac8bb2a3",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:13:26.622Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504400148826924809",
+          "totalShares": "7464552.221264710835702241",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 201,
+        "timestamp": "2026-03-21T15:13:26.617Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "136b98a6-8f3d-453d-a214-75eaebde1eff",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:14:27.294Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504400148826924809",
+          "totalShares": "7464552.221264710835702241",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 202,
+        "timestamp": "2026-03-21T15:14:27.288Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "916b2ae8-9783-4045-a96a-de29e80c2c70",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:14:27.411Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180653.504400148826924809",
+          "totalShares": "7464552.221264710835702241",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 202,
+        "timestamp": "2026-03-21T15:14:27.397Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "bde20771-de07-4331-8a6e-9846ce292d35",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:15:28.057Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.573241689672928961",
+          "totalShares": "7464553.090312158719243248",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 203,
+        "timestamp": "2026-03-21T15:15:28.050Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "f108bad6-bac1-4d69-ba4e-4abebc1b9ab1",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:15:28.165Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.573241689672928961",
+          "totalShares": "7464553.090312158719243248",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 203,
+        "timestamp": "2026-03-21T15:15:28.161Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "6aa05a57-5120-4121-829c-1648e507af6c",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:16:29.033Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.573241689672928961",
+          "totalShares": "7464553.090312158719243248",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 204,
+        "timestamp": "2026-03-21T15:16:29.026Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "919cc793-cd6a-43bd-9277-ecad61a0987f",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:16:29.154Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.573241689672928961",
+          "totalShares": "7464553.090312158719243248",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 204,
+        "timestamp": "2026-03-21T15:16:29.150Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "fdbf95c0-ebf7-4bae-83b6-c079bac2a7a0",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:17:29.889Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.699164658790348026",
+          "totalShares": "7464553.192696872223915882",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 205,
+        "timestamp": "2026-03-21T15:17:29.883Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "3a62543a-37af-4223-85d6-caf022f6d02c",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:17:29.997Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.699164658790348026",
+          "totalShares": "7464553.192696872223915882",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 205,
+        "timestamp": "2026-03-21T15:17:29.993Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "84fbc23c-093e-4e6c-a2eb-124570ab836a",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:18:30.692Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 206,
+        "timestamp": "2026-03-21T15:18:30.686Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "a83d8715-6a51-4b07-9ea1-723be6e55dd3",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:18:30.806Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 206,
+        "timestamp": "2026-03-21T15:18:30.798Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "6eb1f864-2ec0-4f87-af6e-5c9dfbe4db3f",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:19:31.469Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 207,
+        "timestamp": "2026-03-21T15:19:31.463Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "9358bf4b-d3c2-4363-9cc8-98ed77aacf60",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:19:31.581Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 207,
+        "timestamp": "2026-03-21T15:19:31.576Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "d29a527c-b49d-49a0-932d-57587f0d4fb3",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:20:32.269Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 208,
+        "timestamp": "2026-03-21T15:20:32.256Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "31bd4682-6664-43a6-a72f-5d26c2d2d113",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:20:32.379Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 208,
+        "timestamp": "2026-03-21T15:20:32.375Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "b60edf35-f55d-4bf9-a545-3da388954f45",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:21:33.054Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 209,
+        "timestamp": "2026-03-21T15:21:33.050Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "1ca2f24f-4eb8-4684-96e1-d80bd0bdfd31",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:21:33.170Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 209,
+        "timestamp": "2026-03-21T15:21:33.163Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "854aa26f-0ede-44c6-b6d6-91cd361581f6",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:22:33.921Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 210,
+        "timestamp": "2026-03-21T15:22:33.915Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "d9f535ea-1d74-4c75-a978-ae8ce922e716",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:22:34.041Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 210,
+        "timestamp": "2026-03-21T15:22:34.034Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "88b0aca2-0044-48c2-9cc1-254311aae66c",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:23:34.686Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 211,
+        "timestamp": "2026-03-21T15:23:34.681Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "0bfb7819-e274-4a9c-95b9-44fd14ba5385",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:23:34.788Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 211,
+        "timestamp": "2026-03-21T15:23:34.783Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "0eb7305d-189a-422e-97aa-3f3ab485b172",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:24:35.581Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 212,
+        "timestamp": "2026-03-21T15:24:35.572Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "5fc1e6fa-6a1e-431e-a856-12752536f481",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:24:35.689Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180654.999143744955736913",
+          "totalShares": "7464553.436602118500293954",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 212,
+        "timestamp": "2026-03-21T15:24:35.684Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "e50cc26c-f51c-4e0f-b104-a3e3414bd9ba",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:25:36.404Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.061788144955736913",
+          "totalShares": "7464553.48753666198847543",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 213,
+        "timestamp": "2026-03-21T15:25:36.399Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "01edf946-f283-4a81-bed0-96e063760ed7",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:25:36.516Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.061788144955736913",
+          "totalShares": "7464553.48753666198847543",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 213,
+        "timestamp": "2026-03-21T15:25:36.509Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "69ecb877-e46b-42f4-95e4-f4268a85e61f",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:26:37.246Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.061788144955736913",
+          "totalShares": "7464553.48753666198847543",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 214,
+        "timestamp": "2026-03-21T15:26:37.239Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "da65d922-3726-4f50-9e79-545c61654baf",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:26:37.373Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.061788144955736913",
+          "totalShares": "7464553.48753666198847543",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 214,
+        "timestamp": "2026-03-21T15:26:37.369Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "0dd4633c-9580-4c87-9f6d-df736d55a1c9",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:27:38.038Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.061788144955736913",
+          "totalShares": "7464553.48753666198847543",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 215,
+        "timestamp": "2026-03-21T15:27:38.030Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "784dda83-81f5-4f7c-b55e-efb5697475e7",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:27:38.138Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.061788144955736913",
+          "totalShares": "7464553.48753666198847543",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 215,
+        "timestamp": "2026-03-21T15:27:38.134Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "4bec721f-d195-4332-ba9a-ed99844e829e",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:28:38.808Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.061788144955736913",
+          "totalShares": "7464553.48753666198847543",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 216,
+        "timestamp": "2026-03-21T15:28:38.798Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "e0352a72-b639-4d9d-8d56-72d08e85eefa",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:28:38.920Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.061788144955736913",
+          "totalShares": "7464553.48753666198847543",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 216,
+        "timestamp": "2026-03-21T15:28:38.914Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "f24fdac8-1371-4aab-8489-ff2bde793ae6",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:29:40.200Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.061788144955736913",
+          "totalShares": "7464553.48753666198847543",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 217,
+        "timestamp": "2026-03-21T15:29:40.191Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "c02ce3c0-9aa0-475e-a9d5-7b9abb899827",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:29:40.904Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.061788144955736913",
+          "totalShares": "7464553.48753666198847543",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 217,
+        "timestamp": "2026-03-21T15:29:40.897Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "d657d620-f1b8-4feb-808c-3264ac9ced1a",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:30:41.651Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.148948446772853251",
+          "totalShares": "7464553.558404451980029903",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 218,
+        "timestamp": "2026-03-21T15:30:41.641Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "9e76d02e-1d1d-43de-81eb-79063895b62b",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:30:41.772Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.148948446772853251",
+          "totalShares": "7464553.558404451980029903",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 218,
+        "timestamp": "2026-03-21T15:30:41.766Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "a0fff8cc-9995-4db1-bb42-241469ab9058",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:31:42.521Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.148948446772853251",
+          "totalShares": "7464553.558404451980029903",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 219,
+        "timestamp": "2026-03-21T15:31:42.517Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "1069cc4d-ed97-4397-ab1e-4f6c2564ebf5",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:31:42.624Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.148948446772853251",
+          "totalShares": "7464553.558404451980029903",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 219,
+        "timestamp": "2026-03-21T15:31:42.620Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "c5200f42-3649-46ad-99c7-d7183f04a06b",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:32:43.381Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.148948446772853251",
+          "totalShares": "7464553.558404451980029903",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 220,
+        "timestamp": "2026-03-21T15:32:43.372Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "be5dcd3a-7739-4d14-a54a-de251743307c",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:32:43.501Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.148948446772853251",
+          "totalShares": "7464553.558404451980029903",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 220,
+        "timestamp": "2026-03-21T15:32:43.487Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "048be247-e789-4b6c-80b0-b3e2a8e057cd",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:33:44.234Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.148948446772853251",
+          "totalShares": "7464553.558404451980029903",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 221,
+        "timestamp": "2026-03-21T15:33:44.228Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "f36aad7e-8c57-4cf2-a0e1-2027be068864",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:33:44.345Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.148948446772853251",
+          "totalShares": "7464553.558404451980029903",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 221,
+        "timestamp": "2026-03-21T15:33:44.338Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "ef6764e2-5fa4-48d8-ad8e-0ebde1324fb9",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:34:45.081Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.148948446772853251",
+          "totalShares": "7464553.558404451980029903",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 222,
+        "timestamp": "2026-03-21T15:34:45.073Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "b76cef2c-0f0e-4f61-8a19-233a1985498a",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:34:45.190Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.148948446772853251",
+          "totalShares": "7464553.558404451980029903",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 222,
+        "timestamp": "2026-03-21T15:34:45.184Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "d1736e96-9fba-4ce8-b6fe-095dd6b3fe02",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:35:46.406Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.152948446772853251",
+          "totalShares": "7464553.561656748657030974",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 223,
+        "timestamp": "2026-03-21T15:35:46.395Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "4b871143-df07-467b-8b88-85dfe25268d4",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:35:46.546Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.152948446772853251",
+          "totalShares": "7464553.561656748657030974",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 223,
+        "timestamp": "2026-03-21T15:35:46.540Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "97e1613a-e4da-45d4-ac10-ac58a389a539",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:36:47.716Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.157992786772853251",
+          "totalShares": "7464553.565758171211946869",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 224,
+        "timestamp": "2026-03-21T15:36:47.706Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "9a3cc9f9-605c-42b6-b523-0e3c68eeb21c",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:36:47.958Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.157992786772853251",
+          "totalShares": "7464553.565758171211946869",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 224,
+        "timestamp": "2026-03-21T15:36:47.901Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "00d140e5-18a7-4200-84e7-f87a19e1d3f8",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:37:49.207Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.157992786772853251",
+          "totalShares": "7464553.565758171211946869",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 225,
+        "timestamp": "2026-03-21T15:37:49.199Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "55e2d75b-ee98-4821-b833-2c256a5f3566",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:37:49.348Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180655.157992786772853251",
+          "totalShares": "7464553.565758171211946869",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 225,
+        "timestamp": "2026-03-21T15:37:49.342Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "6233309c-f452-4d5a-942c-45f6f359ce0d",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:38:50.133Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180855.291154696772853251",
+          "totalShares": "7464716.288862530614536443",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 226,
+        "timestamp": "2026-03-21T15:38:50.125Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "d1affa82-bbca-415e-8589-81cf721ad94e",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:38:50.390Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180855.291154696772853251",
+          "totalShares": "7464716.288862530614536443",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 226,
+        "timestamp": "2026-03-21T15:38:50.272Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "8d7309f7-afc7-4fa2-ba3c-056a494e43cb",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:39:51.334Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180855.906384765954757193",
+          "totalShares": "7464716.789090208012397778",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 227,
+        "timestamp": "2026-03-21T15:39:51.310Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "81dc785e-0959-435e-8961-246757e58e74",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:39:51.497Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180855.906384765954757193",
+          "totalShares": "7464716.789090208012397778",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 227,
+        "timestamp": "2026-03-21T15:39:51.486Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "b083a0ee-4c7e-4499-b4f3-1e484bc86ffb",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:40:52.174Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180855.906384765954757193",
+          "totalShares": "7464716.789090208012397778",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 228,
+        "timestamp": "2026-03-21T15:40:52.160Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "c7706617-0a5c-4909-a18c-536016b29167",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:40:52.297Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180855.906384765954757193",
+          "totalShares": "7464716.789090208012397778",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 228,
+        "timestamp": "2026-03-21T15:40:52.291Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "177bb182-b92b-4628-9b25-22531509b611",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:41:53.060Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+          "eth": "n/a",
+          "stETH": "0.014149889420005431",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.014149099397859138",
+            "availableYield": "0.000000790022146293",
+            "totalBalance": "0.014149889420005431",
+            "yieldWithdrawn": "0.00000026334071543",
+            "maxDailySpendBps": "2500",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180855.906384765954757193",
+          "totalShares": "7464716.789090208012397778",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xec13cF54C3Bd9E43861523d973F62Cbf56DeA175",
+        "treasuryAddress": "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
+        "cycleNumber": 229,
+        "timestamp": "2026-03-21T15:41:53.048Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
+    },
+    {
+      "id": "10cb20f9-6bbc-4342-8905-21f9b864276a",
+      "did": "did:synthesis:34520",
+      "timestamp": "2026-03-21T15:41:53.162Z",
+      "phase": "discover",
+      "action": "check_balances",
+      "inputs": {
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6"
+      },
+      "outputs": {
+        "balances": {
+          "address": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+          "eth": "n/a",
+          "stETH": "0.074758801169474056",
+          "wstETH": "n/a",
+          "treasury": {
+            "principal": "0.074758801169474056",
+            "availableYield": "0.0",
+            "totalBalance": "0.074758801169474056",
+            "yieldWithdrawn": "0.0",
+            "maxDailySpendBps": "5000",
+            "dailySpendRemaining": "0.0",
+            "paused": false
+          }
+        },
+        "protocolStats": {
+          "totalPooledEther": "9180855.906384765954757193",
+          "totalShares": "7464716.789090208012397778",
+          "stEthPerWstEth": "1.229900097456171436",
+          "exchangeRate": "1.229900"
+        },
+        "user": "0xEB326C579Bb5C5BdD816b9bB8EA4D8434Fd652C6",
+        "treasuryAddress": "0xe16Ebc9A472Da83A186d0a6b4C9666fD931a4C22",
+        "cycleNumber": 229,
+        "timestamp": "2026-03-21T15:41:53.157Z"
+      },
+      "reasoning": null,
+      "txHash": null,
+      "provider": "lido",
+      "model": null,
+      "gasUsed": null,
+      "duration": null,
+      "status": "success"
     }
   ]
 }

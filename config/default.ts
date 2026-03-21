@@ -76,7 +76,7 @@ const config: AppConfig = {
 
   // === Agent Loop ===
   loop: {
-    intervalMs: 60_000, // 1 minute between cycles
+    intervalMs: parseInt(process.env.AGENT_INTERVAL_MS ?? "300000", 10), // 5 minutes between cycles (override with AGENT_INTERVAL_MS)
     maxGasPerCycleGwei: 50,
     computeBudgetUsd: 5.0, // max spend on inference per day
     minYieldThreshold: parseFloat(process.env.MIN_YIELD_THRESHOLD ?? "0.001"), // min stETH yield to act on
