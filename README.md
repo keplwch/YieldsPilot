@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="banner.png" alt="YieldsPilot Banner" width="100%">
+  <img src="images/git-banner.png" alt="YieldsPilot Banner" width="100%">
 
   <h1>YieldsPilot</h1>
   <h3>Autonomous DeFi Agent with Privacy-Preserving Yield Management</h3>
