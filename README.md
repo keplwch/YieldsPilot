@@ -22,7 +22,7 @@ YieldsPilot is an autonomous AI agent that manages staking yield on behalf of us
 
 ## Live
 
-🌐 **[yieldspilot.com](https://yieldspilot.com)**
+🌐 Live on **[yieldspilot.com](https://yieldspilot.com)**
 
 **Mainnet Registry Contract**: [`0xe916C0519fE874dCa9D4051f16ddCd35a45b7917`](https://etherscan.io/address/0xe916C0519fE874dCa9D4051f16ddCd35a45b7917)
 
