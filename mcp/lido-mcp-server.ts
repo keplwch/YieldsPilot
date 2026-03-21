@@ -29,9 +29,16 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
+  ListPromptsRequestSchema,
+  GetPromptRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { ethers } from "ethers";
 import dotenv from "dotenv";
+import { readFileSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -148,8 +155,91 @@ const aragonVoting = addresses.aragonVoting !== ethers.ZeroAddress
 
 const server = new Server(
   { name: "lido-mcp", version: "1.0.0" },
-  { capabilities: { tools: {} } }
+  { capabilities: { tools: {}, resources: {}, prompts: {} } }
 );
+
+// ── Load skill documentation ─────────────────────────────────
+
+let skillContent = "";
+try {
+  // Same directory as this server file
+  const thisDir = typeof __dirname !== "undefined"
+    ? __dirname
+    : dirname(fileURLToPath(import.meta.url));
+  const skillPath = resolve(thisDir, "lido.skill.md");
+  skillContent = readFileSync(skillPath, "utf-8");
+} catch {
+  // Fallback: try repo root (standalone install puts it next to the server)
+  try {
+    const altPath = resolve(process.cwd(), "lido.skill.md");
+    skillContent = readFileSync(altPath, "utf-8");
+  } catch {
+    skillContent = "# Lido Skill Documentation\n\nSkill file not found. See https://github.com/keplwch/yield-pilot/blob/main/lido.skill.md";
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+//                     RESOURCE: lido.skill.md
+// ════════════════════════════════════════════════════════════════
+
+server.setRequestHandler(ListResourcesRequestSchema, async () => ({
+  resources: [
+    {
+      uri: "lido://skill",
+      name: "Lido Protocol Skill Guide",
+      description:
+        "Essential mental model for interacting with Lido: rebasing mechanics, stETH vs wstETH, withdrawal queue, governance, safe agent patterns, and contract addresses.",
+      mimeType: "text/markdown",
+    },
+  ],
+}));
+
+server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+  if (request.params.uri === "lido://skill") {
+    return {
+      contents: [
+        {
+          uri: "lido://skill",
+          mimeType: "text/markdown",
+          text: skillContent,
+        },
+      ],
+    };
+  }
+  throw new Error(`Unknown resource: ${request.params.uri}`);
+});
+
+// ════════════════════════════════════════════════════════════════
+//                     PROMPT: lido-agent-guide
+// ════════════════════════════════════════════════════════════════
+
+server.setRequestHandler(ListPromptsRequestSchema, async () => ({
+  prompts: [
+    {
+      name: "lido-agent-guide",
+      description:
+        "Injects the full Lido protocol mental model into conversation context. Use this before performing any Lido operations.",
+    },
+  ],
+}));
+
+server.setRequestHandler(GetPromptRequestSchema, async (request) => {
+  if (request.params.name === "lido-agent-guide") {
+    return {
+      description: "Lido protocol mental model for AI agents",
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: `Please read and internalize this Lido protocol guide before using any Lido tools:\n\n${skillContent}`,
+          },
+        },
+      ],
+    };
+  }
+  throw new Error(`Unknown prompt: ${request.params.name}`);
+});
 
 // ════════════════════════════════════════════════════════════════
 //                     TOOL DEFINITIONS
