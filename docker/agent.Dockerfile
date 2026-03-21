@@ -7,8 +7,8 @@ WORKDIR /app
 
 # ── Install deps ──────────────────────────────────────
 FROM base AS deps
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile
+COPY package.json bun.lock ./
+RUN bun install
 
 # ── Production image ──────────────────────────────────
 FROM base AS runner
@@ -26,4 +26,4 @@ COPY agent.json ./
 HEALTHCHECK --interval=120s --timeout=10s --start-period=30s --retries=3 \
   CMD test $(find agent_log.json -mmin -5 | wc -l) -gt 0 || exit 1
 
-CMD ["bun", "run", "agent"]
+CMD ["bun", "agent/index.ts"]

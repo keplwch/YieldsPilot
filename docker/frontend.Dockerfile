@@ -7,8 +7,8 @@
 FROM oven/bun:1-alpine AS builder
 WORKDIR /app
 
-COPY frontend/package.json frontend/bun.lockb ./
-RUN bun install --frozen-lockfile
+COPY frontend/package.json ./
+RUN bun install
 
 COPY frontend/ .
 RUN bun run build
@@ -23,6 +23,6 @@ COPY docker/serve.ts ./
 EXPOSE 3000
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=5s --retries=3 \
-  CMD wget -qO- http://localhost:3000 || exit 1
+  CMD wget -qO- http://127.0.0.1:3000 || exit 1
 
 CMD ["bun", "serve.ts"]

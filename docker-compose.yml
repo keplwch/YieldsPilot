@@ -99,7 +99,7 @@ services:
       api:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000"]
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -120,16 +120,9 @@ services:
     depends_on:
       dashboard:
         condition: service_healthy
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN:-}
-    command: >
-      sh -c '
-        if [ -n "$$TUNNEL_TOKEN" ]; then
-          cloudflared tunnel --no-autoupdate run --token $$TUNNEL_TOKEN
-        else
-          cloudflared tunnel --no-autoupdate --url http://dashboard:3000
-        fi
-      '
+    env_file: .env
+    entrypoint: ["cloudflared", "--no-autoupdate"]
+    command: ["tunnel", "run", "--token", "${CLOUDFLARE_TUNNEL_TOKEN}"]
     logging:
       driver: json-file
       options:
