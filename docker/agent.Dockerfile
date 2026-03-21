@@ -2,11 +2,12 @@
 # YieldsPilot Agent — Multi-stage Docker Build
 # ═══════════════════════════════════════════════════════
 
-FROM oven/bun:1-alpine AS base
+FROM node:22-alpine AS base
 WORKDIR /app
 
-# ── Install deps ──────────────────────────────────────
+# ── Install deps (use bun for speed) ────────────────
 FROM base AS deps
+RUN npm i -g bun
 COPY package.json bun.lock ./
 RUN bun install
 
@@ -26,4 +27,4 @@ COPY agent.json ./
 HEALTHCHECK --interval=120s --timeout=10s --start-period=30s --retries=3 \
   CMD test $(find agent_log.json -mmin -5 | wc -l) -gt 0 || exit 1
 
-CMD ["bun", "agent/index.ts"]
+CMD ["npx", "tsx", "agent/index.ts"]

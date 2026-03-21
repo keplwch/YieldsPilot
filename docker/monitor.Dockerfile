@@ -2,11 +2,12 @@
 # YieldsPilot Vault Monitor — Docker Build
 # ═══════════════════════════════════════════════════════
 
-FROM oven/bun:1-alpine AS base
+FROM node:22-alpine AS base
 WORKDIR /app
 
-# ── Install deps ──────────────────────────────────────
+# ── Install deps (use bun for speed) ────────────────
 FROM base AS deps
+RUN npm i -g bun
 COPY package.json bun.lock ./
 RUN bun install
 
@@ -20,4 +21,4 @@ COPY types/ ./types/
 COPY config/ ./config/
 COPY agent/services/ ./agent/services/
 
-CMD ["bun", "agent/services/vaultMonitor.ts"]
+CMD ["npx", "tsx", "agent/services/vaultMonitor.ts"]

@@ -37,7 +37,10 @@ const PORT = parseInt(process.env.API_PORT ?? "3001", 10);
 
 // ── Chain Connection ─────────────────────────────────────────────
 const RPC_URL = process.env.RPC_URL || "https://eth-sepolia.g.alchemy.com/v2/demo";
-const provider = new ethers.JsonRpcProvider(RPC_URL);
+const provider = new ethers.JsonRpcProvider(RPC_URL, undefined, {
+  staticNetwork: true,
+  batchMaxCount: 1,
+});
 
 const TREASURY_ADDRESS = process.env.TREASURY_CONTRACT || "";
 const REGISTRY_ADDRESS = process.env.REGISTRY_CONTRACT || "";
@@ -233,6 +236,16 @@ function readAgentLogs(): Record<string, unknown> {
   return { agent: "YieldsPilot", version: "1.0.0", cycles: [] };
 }
 
+// ── Helper: timeout wrapper ──────────────────────────────────────
+function withTimeout<T>(promise: Promise<T>, ms: number, label = "RPC"): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms)
+    ),
+  ]);
+}
+
 // ── Helper: read a single treasury's state ───────────────────────
 async function readTreasuryState(treasuryAddr: string) {
   const treasury = new ethers.Contract(treasuryAddr, TREASURY_ABI, provider);
@@ -247,7 +260,7 @@ async function readTreasuryState(treasuryAddr: string) {
     paused,
     owner,
     agent,
-  ] = await Promise.all([
+  ] = await withTimeout(Promise.all([
     treasury.principal(),
     treasury.availableYield(),
     treasury.totalBalance(),
@@ -257,7 +270,7 @@ async function readTreasuryState(treasuryAddr: string) {
     treasury.paused(),
     treasury.owner(),
     treasury.agent(),
-  ]);
+  ]), 15_000, `readTreasuryState(${treasuryAddr})`);
 
   return {
     address: treasuryAddr,
