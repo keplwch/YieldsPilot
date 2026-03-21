@@ -7,8 +7,8 @@ WORKDIR /app
 
 # ── Install deps ──────────────────────────────────────
 FROM base AS deps
-COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile
+COPY package.json bun.lock ./
+RUN bun install
 
 # ── Production image ──────────────────────────────────
 FROM base AS runner
@@ -20,4 +20,4 @@ COPY types/ ./types/
 COPY config/ ./config/
 COPY agent/services/ ./agent/services/
 
-CMD ["bun", "run", "monitor"]
+CMD ["bun", "agent/services/vaultMonitor.ts"]
