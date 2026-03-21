@@ -9,20 +9,17 @@ YieldsPilot is an autonomous AI agent that manages staking yield on behalf of us
 ## Demo Videos
 
 ### Application Demo
-<!-- Replace with your video link -->
-> 📹 **[App Demo Video — Coming Soon]**
+> 📹 **[Watch App Demo on YouTube](https://youtu.be/m_G9j7chDsc)**
 >
 > Full walkthrough: connect wallet → deposit stETH → treasury creation → agent monitoring dashboard → treasury management (withdraw, pause, daily limits, allowed targets) → deposit more stETH and wstETH to existing treasury
 
 ### Lido MCP Server Demo
-<!-- Replace with your video link -->
-> 📹 **[MCP Demo Video — Coming Soon]**
+> 📹 **[Watch MCP Demo on YouTube](https://youtu.be/4Mxcwr_oTcI)**
 >
 > Standalone Lido MCP server in action: Claude Desktop integration → query staking positions → check balances → stake ETH → wrap/unwrap stETH ↔ wstETH → governance delegation — all via natural language
 
 ### Uniswap Swap Simulation (Mainnet Fork)
-<!-- Replace with your video link -->
-> 📹 **[Fork Swap Test Video — Coming Soon]**
+> 📹 **[Watch Uniswap Sim on YouTube](https://youtu.be/2CdfMGWShxc)**
 >
 > Live recording of the mainnet fork test proving real Uniswap V3 swaps work against production contracts
 
