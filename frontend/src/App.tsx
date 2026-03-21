@@ -129,7 +129,7 @@ export default function App() {
   const cycleOptions: CycleOption[] = useMemo(() => {
     return loopCycles.map((cycle, i) => {
       const ts = getCycleTimestamp(cycle);
-      let timeAgo = "—";
+      let timeAgo = "-";
       if (ts) {
         const diff = Date.now() - new Date(ts).getTime();
         const secs = Math.floor(diff / 1000);
@@ -144,7 +144,7 @@ export default function App() {
     });
   }, [loopCycles]);
 
-  // Effective option index — clamp when cycles array grows
+  // Effective option index - clamp when cycles array grows
   const effectiveOptIdx = useMemo(() => {
     if (cycleOptions.length === 0) return 0;
     if (pinnedCycleIdx === null) return cycleOptions.length - 1;
@@ -170,7 +170,7 @@ export default function App() {
     return apiYieldToChartData(yieldHist.data?.history);
   }, [yieldHist.data]);
 
-  // ── Activity data — scoped to connected wallet ───────────────
+  // ── Activity data - scoped to connected wallet ───────────────
   const activityRecords = useMemo(() => {
     const all = activityApi.data?.records ?? [];
     if (!connectedAddress) return all;
@@ -187,7 +187,7 @@ export default function App() {
 
   return (
     <div className="relative z-[1]">
-      {/* Atmospheric background glows — body level, not on cards */}
+      {/* Atmospheric background glows - body level, not on cards */}
       <div className="glow-top" />
       <div className="glow-br" />
       <div className="glow-tl" />
@@ -240,13 +240,13 @@ export default function App() {
           <StatCard
             label="Locked Principal"
             value={aggregateStats.principal.toFixed(6)}
-            sub={registryMode ? `stETH — across ${totalUsers} treasuries` : "stETH — untouchable by agent"}
+            sub={registryMode ? `stETH - across ${totalUsers} treasuries` : "stETH - untouchable by agent"}
             delay={0.1}
           />
           <StatCard
             label="Available Yield"
             value={yieldDisplay}
-            sub="stETH — agent spendable"
+            sub="stETH - agent spendable"
             change={
               apiConnected && aggregateStats.maxDailySpendBps
                 ? `Max daily: ${(parseInt(aggregateStats.maxDailySpendBps) / 100).toFixed(0)}%`
@@ -305,7 +305,7 @@ export default function App() {
               <YieldChart data={yieldChartData} />
             </div>
 
-            {/* Yield Analytics — cumulative volume + distribution charts */}
+            {/* Yield Analytics - cumulative volume + distribution charts */}
             <div className="mt-5">
               <YieldAnalytics
                 records={activityRecords}
@@ -313,7 +313,7 @@ export default function App() {
               />
             </div>
 
-            {/* Yield Deployment History — full activity log with all cycles */}
+            {/* Yield Deployment History - full activity log with all cycles */}
             <div className="mt-5">
               <DeploymentHistory
                 records={activityRecords}
@@ -334,25 +334,25 @@ export default function App() {
             )}
           </div>
 
-          {/* Right sidebar — focused action panel */}
+          {/* Right sidebar - focused action panel */}
           <div className="flex flex-col gap-5">
-            {/* Deposit panel — always first so it's always visible */}
+            {/* Deposit panel - always first so it's always visible */}
             <DepositPanel
               registryAddress={registryAddress}
               registryMode={registryMode}
             />
 
-            {/* wstETH Deposit panel — unwraps wstETH → stETH into treasury */}
+            {/* wstETH Deposit panel - unwraps wstETH → stETH into treasury */}
             <WstETHDepositPanel
               registryAddress={registryAddress}
             />
 
-            {/* Treasury Management — owner controls for withdraw, targets, settings */}
+            {/* Treasury Management - owner controls for withdraw, targets, settings */}
             <TreasuryManagement
               treasuryAddress={connectedUserTreasury}
             />
 
-            {/* Token Portfolio — shows all tokens the treasury holds */}
+            {/* Token Portfolio - shows all tokens the treasury holds */}
             {connectedUserTreasury && treasuryTokens.data && (
               <TokenPortfolio
                 tokens={treasuryTokens.data.tokens}

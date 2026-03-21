@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════
-# YieldsPilot API — Express REST Server
+# YieldsPilot API - Express REST Server
 # ═══════════════════════════════════════════════════════
 
 FROM node:22-alpine AS base

@@ -1,6 +1,6 @@
 /**
  * Transforms raw agent log entries into UI-ready data structures.
- * No mock or fallback data — components handle empty states themselves.
+ * No mock or fallback data - components handle empty states themselves.
  */
 
 export interface FeedItem {
@@ -69,7 +69,7 @@ export function logsToFeedItems(cycles: Array<RawCycleLog | RawLoopLog>): FeedIt
   const items: FeedItem[] = [];
 
   for (const entry of cycles) {
-    // Handle LoopLogEntry — supports new `phases` key and old top-level format
+    // Handle LoopLogEntry - supports new `phases` key and old top-level format
     if ((entry as RawLoopLog).type === "autonomous_loop" || (entry as RawLoopLog).discover || (entry as RawLoopLog).phases) {
       const loop = entry as RawLoopLog;
       const phaseData = loop.phases ?? loop;
@@ -185,7 +185,7 @@ export function logsToReasoningLines(
         const strategyReasoning = (phaseData.execute.inputs?.strategy as Record<string, unknown> | undefined)?.reasoning as string | undefined;
         lines.push({
           prefix: "[execute ]",
-          text: strategyReasoning ? `${action.toUpperCase()} — ${strategyReasoning.slice(0, 90)}` : `Action: ${action}. Status: ${phaseData.execute.status}`,
+          text: strategyReasoning ? `${action.toUpperCase()} - ${strategyReasoning.slice(0, 90)}` : `Action: ${action}. Status: ${phaseData.execute.status}`,
         });
       }
 
@@ -227,7 +227,7 @@ export function logsToReasoningLines(
           const action = log.outputs?.action as string ?? log.action ?? "hold";
           const strategyReasoning = (log.inputs?.strategy as Record<string, unknown> | undefined)?.reasoning as string | undefined;
           prefix = "[execute ]";
-          text = strategyReasoning ? `${action.toUpperCase()} — ${strategyReasoning.slice(0, 90)}` : `Action: ${action}. Status: ${log.status}`;
+          text = strategyReasoning ? `${action.toUpperCase()} - ${strategyReasoning.slice(0, 90)}` : `Action: ${action}. Status: ${log.status}`;
           break;
         }
         case "verify": {

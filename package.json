@@ -1,7 +1,7 @@
 {
   "name": "yield-pilot",
   "version": "1.0.0",
-  "description": "Privacy-preserving autonomous DeFi agent that manages staking yield via Lido, swaps on Uniswap, with private reasoning through Venice — all with onchain receipts.",
+  "description": "Privacy-preserving autonomous DeFi agent that manages staking yield via Lido, swaps on Uniswap, with private reasoning through Venice - all with onchain receipts.",
   "main": "dist/agent/index.js",
   "scripts": {
     "build": "tsc",

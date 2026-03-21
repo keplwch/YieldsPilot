@@ -138,7 +138,7 @@ export default function YieldChart({ data }: YieldChartProps) {
                 </span>
               </div>
 
-              {/* Legend — only when multi-user */}
+              {/* Legend - only when multi-user */}
               {multiUser && (
                 <div className="flex flex-wrap gap-x-3 gap-y-1 mt-2 flex-shrink-0">
                   {users.map((u, i) => {

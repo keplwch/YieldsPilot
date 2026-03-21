@@ -1,5 +1,5 @@
 /**
- * Uniswap Trading API — Real Swap Execution
+ * Uniswap Trading API - Real Swap Execution
  *
  * Converts stETH yield into USDC or other tokens via Uniswap.
  * Uses the official Uniswap Trading API with real TxIDs.

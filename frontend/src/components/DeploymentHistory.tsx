@@ -127,7 +127,7 @@ function HistoryRow({ record, index }: { record: ActivityRecord; index: number }
           <span className="text-text-muted">Final:</span> {record.finalAction}
         </div>
         <div className="text-[10px] text-text-muted mt-1 line-clamp-1 font-body">
-          {record.strategyReasoning || record.veniceReasoning || "—"}
+          {record.strategyReasoning || record.veniceReasoning || "-"}
         </div>
 
         {/* Tx hash */}
@@ -195,7 +195,7 @@ export default function DeploymentHistory({ records, total, stats }: DeploymentH
               </div>
               <div className="text-[10px] font-mono text-text-muted">
                 Success rate: <span className="text-text-primary font-semibold">
-                  {stats.totalSwaps > 0 ? ((stats.totalSwaps / (stats.totalSwaps + stats.totalErrors)) * 100).toFixed(0) : "—"}%
+                  {stats.totalSwaps > 0 ? ((stats.totalSwaps / (stats.totalSwaps + stats.totalErrors)) * 100).toFixed(0) : "-"}%
                 </span>
               </div>
             </div>
@@ -205,7 +205,7 @@ export default function DeploymentHistory({ records, total, stats }: DeploymentH
         <div className="max-h-[600px] overflow-y-auto">
           {records.length === 0 ? (
             <div className="px-6 py-10 text-center">
-              <div className="text-[11px] font-mono text-text-muted">No activity recorded yet — waiting for agent cycles</div>
+              <div className="text-[11px] font-mono text-text-muted">No activity recorded yet - waiting for agent cycles</div>
             </div>
           ) : (
             records.map((record, i) => (

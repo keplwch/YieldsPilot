@@ -27,7 +27,7 @@ async function main() {
     process.exit(1);
   }
   if (!TREASURY) {
-    console.error("❌ TREASURY env var required — set it to your treasury contract address");
+    console.error("❌ TREASURY env var required - set it to your treasury contract address");
     console.error("   Find it on the dashboard under Treasury Overview, or in the UserList");
     process.exit(1);
   }
@@ -67,7 +67,7 @@ async function main() {
   console.log("After:");
   console.log(`  availableYield: ${ethers.formatEther(yieldAfter)} stETH  (+${YIELD_AMOUNT})`);
   console.log(`  totalBalance:   ${ethers.formatEther(balanceAfter)} stETH`);
-  console.log(`\n✅ Yield simulated — agent will pick this up on next cycle`);
+  console.log(`\n✅ Yield simulated - agent will pick this up on next cycle`);
   console.log(`   tx: ${tx.hash}`);
   console.log(`\n   Run again to accumulate more yield:`);
   console.log(`   TREASURY=${TREASURY} YIELD=0.5 npx hardhat run scripts/simulate-yield.ts --network sepolia`);

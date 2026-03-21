@@ -1,5 +1,5 @@
 /**
- * Lido Protocol Service — stETH Operations
+ * Lido Protocol Service - stETH Operations
  *
  * Handles all Lido interactions: stake, unstake, wrap/unwrap,
  * balance queries, and reward tracking.
@@ -302,8 +302,8 @@ export async function getProtocolStats(): Promise<ProtocolStats> {
       ).toFixed(6),
     };
   } catch {
-    // MockStETH doesn't implement Lido-specific view functions — return sensible defaults
-    console.log("  ⚠️ Protocol stats unavailable (using MockStETH) — returning defaults");
+    // MockStETH doesn't implement Lido-specific view functions - return sensible defaults
+    console.log("  ⚠️ Protocol stats unavailable (using MockStETH) - returning defaults");
     return {
       totalPooledEther: "0",
       totalShares: "0",
@@ -482,7 +482,7 @@ export async function spendYield(
 }
 
 // ════════════════════════════════════════════════════════════════
-//                  ATOMIC SWAP (Secure — no agent custody)
+//                  ATOMIC SWAP (Secure - no agent custody)
 // ════════════════════════════════════════════════════════════════
 
 export interface SwapYieldParams {
@@ -498,7 +498,7 @@ export interface SwapYieldParams {
 /**
  * Execute an atomic swap from a user's treasury.
  * The treasury approves the router, calls it with swap calldata,
- * and verifies output — funds NEVER pass through the agent wallet.
+ * and verifies output - funds NEVER pass through the agent wallet.
  */
 export async function swapYieldFromTreasury(
   params: SwapYieldParams,

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════
-// YieldsPilot Dashboard — Node static file server
+// YieldsPilot Dashboard - Node static file server
 // Serves dist/ and proxies /api/* to the API container
 // ═══════════════════════════════════════════════════════
 

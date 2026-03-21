@@ -1,8 +1,8 @@
 /**
- * YieldsPilot — Mainnet Fork Swap Test
+ * YieldsPilot - Mainnet Fork Swap Test
  *
  * Proves the full swapYield flow works against REAL Uniswap V3 on a
- * forked mainnet. No mocks, no fakes — actual Lido stETH → wstETH → Uniswap V3.
+ * forked mainnet. No mocks, no fakes - actual Lido stETH → wstETH → Uniswap V3.
  *
  * Why the helper? stETH is a rebasing token with virtually no Uniswap V3 pool
  * liquidity. All V3 pools use wstETH. In production, the Uniswap Trading API
@@ -46,18 +46,18 @@ async function mintStETH(signer: any, amountETH: bigint): Promise<bigint> {
   return balAfter - balBefore;
 }
 
-describe("Mainnet Fork — Real Uniswap Swap", function () {
+describe("Mainnet Fork - Real Uniswap Swap", function () {
   this.timeout(180_000);
 
   before(async function () {
     const chainId = (await ethers.provider.getNetwork()).chainId;
     if (Number(chainId) !== 1 && Number(chainId) !== 31337) {
-      console.log("  ⚠ Skipping fork tests — not on mainnet fork");
+      console.log("  ⚠ Skipping fork tests - not on mainnet fork");
       this.skip();
     }
     const code = await ethers.provider.getCode(STETH);
     if (code === "0x") {
-      console.log("  ⚠ Skipping — stETH not found (run with FORK_RPC)");
+      console.log("  ⚠ Skipping - stETH not found (run with FORK_RPC)");
       this.skip();
     }
   });
@@ -66,7 +66,7 @@ describe("Mainnet Fork — Real Uniswap Swap", function () {
     const [deployer] = await ethers.getSigners();
 
     console.log("\n  ╔══════════════════════════════════════════════════════════╗");
-    console.log("  ║  🧪 Mainnet Fork — Real Uniswap V3 Swap Test            ║");
+    console.log("  ║  🧪 Mainnet Fork - Real Uniswap V3 Swap Test            ║");
     console.log("  ╚══════════════════════════════════════════════════════════╝\n");
 
     const steth = new ethers.Contract(STETH, LIDO_ABI, deployer);

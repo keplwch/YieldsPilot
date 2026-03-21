@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════
-# YieldsPilot Dashboard — Multi-stage Build
+# YieldsPilot Dashboard - Multi-stage Build
 # Build with Bun (Vite), serve with Node
 # ═══════════════════════════════════════════════════════
 

@@ -96,7 +96,7 @@ export default function ActivityFeed({
         <div className="max-h-[560px] overflow-y-auto">
           {items.length === 0 ? (
             <div className="px-6 py-10 text-center">
-              <div className="text-[11px] font-mono text-text-muted">No activity yet — waiting for agent cycles</div>
+              <div className="text-[11px] font-mono text-text-muted">No activity yet - waiting for agent cycles</div>
             </div>
           ) : (
             items.map((item, i) => (

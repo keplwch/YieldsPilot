@@ -4,7 +4,7 @@ import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { time } from "@nomicfoundation/hardhat-network-helpers";
 
 /**
- * YieldsPilotTreasury — Comprehensive Test Suite
+ * YieldsPilotTreasury - Comprehensive Test Suite
  *
  * Tests the yield-separation mechanism: principal stays locked,
  * only rebasing yield is spendable by the agent, with daily limits
@@ -279,7 +279,7 @@ describe("YieldsPilotTreasury", function () {
         ethers.parseEther("1")
       );
 
-      // Should succeed — new 24h window
+      // Should succeed - new 24h window
       await expect(
         treasury
           .connect(agent)
@@ -425,7 +425,7 @@ describe("YieldsPilotTreasury", function () {
   // ────────────────────────────────────────────────────────────────
 
   describe("Principal Protection", function () {
-    it("agent can NEVER touch principal — only yield", async function () {
+    it("agent can NEVER touch principal - only yield", async function () {
       const { treasury, stETH, owner, agent, target1 } =
         await loadFixture(deployTreasuryFixture);
 

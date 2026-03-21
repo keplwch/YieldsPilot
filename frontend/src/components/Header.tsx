@@ -17,9 +17,9 @@ export default function Header({ cycleCount, connected, running }: HeaderProps) 
   const statusDot = running ? "bg-accent-green animate-pulse-glow" : connected ? "bg-accent-orange" : "bg-text-muted";
 
   const statusText = running
-    ? `Active — Cycle #${cycleCount}`
+    ? `Active - Cycle #${cycleCount}`
     : connected
-      ? `Idle — ${cycleCount} cycles`
+      ? `Idle - ${cycleCount} cycles`
       : "Offline";
 
   return (

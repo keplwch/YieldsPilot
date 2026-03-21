@@ -1,5 +1,5 @@
 /**
- * Lido MCP Server — Reference MCP Server for the Lido Protocol
+ * Lido MCP Server - Reference MCP Server for the Lido Protocol
  *
  * A standalone, general-purpose MCP server that lets any AI agent
  * interact with Lido's staking protocol on Ethereum mainnet (or Holesky testnet).
@@ -8,15 +8,15 @@
  *          and stake ETH from conversation without custom integration code."
  *
  * Tools:
- *   - lido_stake        — Stake ETH → stETH via Lido
- *   - lido_unstake      — Request stETH withdrawal (Lido Withdrawal Queue)
- *   - lido_wrap          — Wrap stETH → wstETH (non-rebasing)
- *   - lido_unwrap        — Unwrap wstETH → stETH (rebasing)
- *   - lido_balances      — Query ETH, stETH, wstETH balances for any address
- *   - lido_rewards       — Protocol stats: total pooled, APR, exchange rates
- *   - lido_withdrawal_status — Check status of pending withdrawal requests
- *   - lido_delegate_vote — Delegate LDO governance voting power (Aragon)
- *   - lido_position_summary — Full staking position summary with P&L
+ *   - lido_stake        - Stake ETH → stETH via Lido
+ *   - lido_unstake      - Request stETH withdrawal (Lido Withdrawal Queue)
+ *   - lido_wrap          - Wrap stETH → wstETH (non-rebasing)
+ *   - lido_unwrap        - Unwrap wstETH → stETH (rebasing)
+ *   - lido_balances      - Query ETH, stETH, wstETH balances for any address
+ *   - lido_rewards       - Protocol stats: total pooled, APR, exchange rates
+ *   - lido_withdrawal_status - Check status of pending withdrawal requests
+ *   - lido_delegate_vote - Delegate LDO governance voting power (Aragon)
+ *   - lido_position_summary - Full staking position summary with P&L
  *
  * All write operations support dry_run.
  * See lido.skill.md for the agent mental model.
@@ -46,7 +46,7 @@ dotenv.config();
 //                  LIDO PROTOCOL ADDRESSES
 // ════════════════════════════════════════════════════════════════
 
-// Mainnet (default) — https://docs.lido.fi/deployed-contracts
+// Mainnet (default) - https://docs.lido.fi/deployed-contracts
 const MAINNET = {
   stETH: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
   wstETH: "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0",
@@ -250,7 +250,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     {
       name: "lido_stake",
       description:
-        "Stake ETH to receive stETH via Lido. stETH is a rebasing token — your balance grows daily as staking rewards are distributed. Supports dry_run to preview without executing.",
+        "Stake ETH to receive stETH via Lido. stETH is a rebasing token - your balance grows daily as staking rewards are distributed. Supports dry_run to preview without executing.",
       inputSchema: {
         type: "object" as const,
         properties: {
@@ -422,7 +422,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             walletETHBalance: ethers.formatEther(ethBal),
             hasSufficientBalance: ethBal >= amount,
             lidoContract: addresses.stETH,
-            note: "stETH is rebasing — your balance will grow daily as staking rewards accrue.",
+            note: "stETH is rebasing - your balance will grow daily as staking rewards accrue.",
           };
         } else {
           if (ethBal < amount) throw new Error(`Insufficient ETH: have ${ethers.formatEther(ethBal)}, need ${args.amount_eth}`);
@@ -501,7 +501,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             expectedWstETH: ethers.formatEther(expectedWstETH),
             walletStETHBalance: ethers.formatEther(stEthBal),
             hasSufficientBalance: stEthBal >= amount,
-            note: "wstETH is non-rebasing — use for DeFi (Uniswap, Aave, Morpho). Value increases over time instead of balance.",
+            note: "wstETH is non-rebasing - use for DeFi (Uniswap, Aave, Morpho). Value increases over time instead of balance.",
           };
         } else {
           if (stEthBal < amount) throw new Error(`Insufficient stETH: have ${ethers.formatEther(stEthBal)}, need ${args.amount_steth}`);

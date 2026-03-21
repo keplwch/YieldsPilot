@@ -1,5 +1,5 @@
 /**
- * Market Data Service — Real-Time ETH Prices, Gas, and Uniswap Pool Liquidity
+ * Market Data Service - Real-Time ETH Prices, Gas, and Uniswap Pool Liquidity
  *
  * Feeds live market context into Venice and Bankr reasoning prompts so the agent
  * makes informed decisions based on actual market conditions, not just on-chain
@@ -49,7 +49,7 @@ export interface MarketSnapshot {
 }
 
 // ════════════════════════════════════════════════════════════════
-//                    COINGECKO — ETH + stETH PRICE
+//                    COINGECKO - ETH + stETH PRICE
 // ════════════════════════════════════════════════════════════════
 
 const COINGECKO_BASE = "https://api.coingecko.com/api/v3";
@@ -111,7 +111,7 @@ async function fetchGas(rpcUrl: string, ethPriceUsd: number): Promise<GasData> {
 }
 
 // ════════════════════════════════════════════════════════════════
-//              UNISWAP V3 SUBGRAPH — POOL LIQUIDITY
+//              UNISWAP V3 SUBGRAPH - POOL LIQUIDITY
 // ════════════════════════════════════════════════════════════════
 
 // The Graph hosted service for Uniswap V3 on Ethereum mainnet
@@ -246,7 +246,7 @@ export async function getMarketSnapshot(rpcUrl: string): Promise<MarketSnapshot>
 
   const errors: string[] = [];
 
-  // Fetch all data concurrently — each source is independent
+  // Fetch all data concurrently - each source is independent
   let prices: MarketPriceData = {
     ethPriceUsd: 0,
     ethChange24h: 0,
@@ -266,7 +266,7 @@ export async function getMarketSnapshot(rpcUrl: string): Promise<MarketSnapshot>
 
   const [priceResult, gasResult, poolResult] = await Promise.allSettled([
     fetchPrices(),
-    fetchGas(rpcUrl, 0), // placeholder — we'll recalculate after prices
+    fetchGas(rpcUrl, 0), // placeholder - we'll recalculate after prices
     fetchPoolLiquidity(),
   ]);
 
@@ -369,7 +369,7 @@ export function getLiquidityGuidance(
   ethPriceUsd: number,
   pools: PoolLiquidity[]
 ): string {
-  if (pools.length === 0) return "Pool liquidity data unavailable — proceed with caution.";
+  if (pools.length === 0) return "Pool liquidity data unavailable - proceed with caution.";
 
   const swapValueUsd = swapAmountStEth * ethPriceUsd;
 
@@ -381,10 +381,10 @@ export function getLiquidityGuidance(
     const pctOfTvl = (ratioToTvl * 100).toFixed(3);
     const pctOfVol = (ratioToVolume * 100).toFixed(3);
 
-    let verdict = "✓ Swap size is negligible — no slippage concern";
-    if (ratioToTvl > 0.01) verdict = "⚠ Swap is >1% of pool TVL — consider splitting across 2-3 cycles";
-    if (ratioToTvl > 0.05) verdict = "🛑 Swap is >5% of pool TVL — STRONGLY recommend splitting across 5+ cycles to avoid price impact";
-    if (ratioToTvl > 0.10) verdict = "🚫 Swap is >10% of pool TVL — DO NOT execute in a single transaction. Split into at least 10 cycles.";
+    let verdict = "✓ Swap size is negligible - no slippage concern";
+    if (ratioToTvl > 0.01) verdict = "⚠ Swap is >1% of pool TVL - consider splitting across 2-3 cycles";
+    if (ratioToTvl > 0.05) verdict = "🛑 Swap is >5% of pool TVL - STRONGLY recommend splitting across 5+ cycles to avoid price impact";
+    if (ratioToTvl > 0.10) verdict = "🚫 Swap is >10% of pool TVL - DO NOT execute in a single transaction. Split into at least 10 cycles.";
 
     lines.push(`  ${pool.pair} (${pool.feeTier}): swap is ${pctOfTvl}% of TVL, ${pctOfVol}% of 24h volume → ${verdict}`);
   }

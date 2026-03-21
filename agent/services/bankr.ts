@@ -1,5 +1,5 @@
 /**
- * Bankr LLM Gateway — Multi-Model Reasoning
+ * Bankr LLM Gateway - Multi-Model Reasoning
  *
  * Uses multiple models through Bankr's gateway for different
  * reasoning tasks: risk assessment, market analysis, strategy.
@@ -67,8 +67,8 @@ const IS_MAINNET = config.chain.chainId === 1;
 
 export async function assessRisk(portfolioState: RiskInput): Promise<RiskAssessment> {
   const protocolStatsNote = IS_MAINNET
-    ? `- Protocol liquidity stats and exchange rates are live mainnet data — factor them into your assessment. A stETH exchange rate significantly below 1.0 (e.g. < 0.97) is a genuine risk signal.`
-    : `- Protocol liquidity stats and exchange rates are from a testnet mock and will often be zero or missing — treat any zero/null protocol stat as "data unavailable" and do NOT use it as a risk factor.`;
+    ? `- Protocol liquidity stats and exchange rates are live mainnet data - factor them into your assessment. A stETH exchange rate significantly below 1.0 (e.g. < 0.97) is a genuine risk signal.`
+    : `- Protocol liquidity stats and exchange rates are from a testnet mock and will often be zero or missing - treat any zero/null protocol stat as "data unavailable" and do NOT use it as a risk factor.`;
 
   const raw = await askBankr<Omit<RiskAssessment, "model" | "provider" | "task">>(
     config.bankr.models.risk,
@@ -82,10 +82,10 @@ WHAT TO EVALUATE (these are the ONLY relevant risk factors):
 - Is the proposed swap_amount a reasonable fraction of availableYield (not 100% in one shot)?
 ${protocolStatsNote}
 
-EXPLICITLY IGNORE — these are NOT risk factors in this system:
+EXPLICITLY IGNORE - these are NOT risk factors in this system:
 - ETH balance in the agent wallet (gas is paid externally by the protocol operator, always available)
 
-"abort" recommendation should be RARE — only use it when swap_amount would clearly exceed available yield or daily limits.
+"abort" recommendation should be RARE - only use it when swap_amount would clearly exceed available yield or daily limits.
 "caution" when the swap is large relative to available yield.
 "proceed" when yield is available, daily limit has room, and amount is reasonable.
 
@@ -129,10 +129,10 @@ export async function analyzeMarket(marketData: MarketInput): Promise<MarketAnal
 You receive LIVE market data including ETH prices, gas costs, and Uniswap V3 pool liquidity (TVL, 24h volume, fee tiers). Use this data to make informed recommendations.
 
 AVAILABLE OUTPUT TOKENS (from stETH):
-- USDC   — stablecoin, best for capital preservation when bearish or uncertain
-- DAI    — decentralized stablecoin, good USDC alternative
-- WETH   — ETH exposure, best when bullish on ETH price trend
-- wstETH — wrapped stETH, best when yield compounding > diversification (bullish on staking APR)
+- USDC   - stablecoin, best for capital preservation when bearish or uncertain
+- DAI    - decentralized stablecoin, good USDC alternative
+- WETH   - ETH exposure, best when bullish on ETH price trend
+- wstETH - wrapped stETH, best when yield compounding > diversification (bullish on staking APR)
 
 LIQUIDITY-AWARE ANALYSIS:
 - Check pool TVL and 24h volume for each potential swap route
@@ -184,15 +184,15 @@ export async function synthesizeStrategy(
     config.bankr.models.strategy,
     `You are a DeFi yield management strategy engine for YieldsPilot. You receive risk assessment, market analysis, treasury state, and pool liquidity guidance. Synthesize the final action for this cycle.
 
-OUTPUT — EXACTLY ONE of two actions:
-1. "swap_yield" — deploy some yield by swapping stETH into the best output token
-2. "hold" — do nothing this cycle
+OUTPUT - EXACTLY ONE of two actions:
+1. "swap_yield" - deploy some yield by swapping stETH into the best output token
+2. "hold" - do nothing this cycle
 
-AVAILABLE OUTPUT TOKENS — choose based on market analysis:
-- USDC   — capital preservation, use when bearish or market is uncertain
-- DAI    — decentralized stablecoin alternative to USDC
-- WETH   — ETH exposure, use when market_sentiment is bullish and eth_trend is "up"
-- wstETH — compound staking yield, use when staking APR is the best available return
+AVAILABLE OUTPUT TOKENS - choose based on market analysis:
+- USDC   - capital preservation, use when bearish or market is uncertain
+- DAI    - decentralized stablecoin alternative to USDC
+- WETH   - ETH exposure, use when market_sentiment is bullish and eth_trend is "up"
+- wstETH - compound staking yield, use when staking APR is the best available return
 
 Use the market analysis "optimal_pairs" as your primary signal for which token to target.
 
@@ -205,7 +205,7 @@ RULES:
 - If availableYield is 0 or below ${config.loop.minYieldThreshold}, output "hold".
 ${IS_MAINNET
     ? "- Protocol stats are live mainnet data. Use them to inform swap timing (e.g. avoid swapping during high slippage or stETH de-peg)."
-    : "- Protocol stats are from a testnet mock and may be zero — treat zero/null protocol stats as unavailable data, not a real risk signal."
+    : "- Protocol stats are from a testnet mock and may be zero - treat zero/null protocol stats as unavailable data, not a real risk signal."
   }
 
 LIQUIDITY-AWARE SIZING:

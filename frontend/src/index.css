@@ -26,7 +26,7 @@ body::before {
   -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 20%, transparent 100%);
 }
 
-/* ═══ Atmospheric background glows — NOT on cards, body only ═══ */
+/* ═══ Atmospheric background glows - NOT on cards, body only ═══ */
 
 /* Top-center indigo glow */
 .glow-top {
@@ -66,10 +66,10 @@ body::before {
 }
 
 /* ═══════════════════════════════════════════════
-   TWO-LAYER CARD SYSTEM — border follows clip-path
+   TWO-LAYER CARD SYSTEM - border follows clip-path
    ═══════════════════════════════════════════════
 
-   OUTER (.card-wrap): the "border" — shown as a 1px strip
+   OUTER (.card-wrap): the "border" - shown as a 1px strip
      - Has clip-path
      - Background = border color
      - padding: 1px so inner shows through

@@ -13,11 +13,11 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
  * conversion math.
  *
  * Key testing helpers:
- *   drip(to)            — faucet: gives 10 wstETH per call, no limit
- *   mint(to, amount)    — free mint any amount (no stETH backing needed)
- *   setRate(newRate)     — change the stETH/wstETH exchange rate
- *   wrap(stETHAmount)   — wrap stETH → wstETH (caller must approve stETH first)
- *   unwrap(wstETHAmount)— unwrap wstETH → stETH
+ *   drip(to)            - faucet: gives 10 wstETH per call, no limit
+ *   mint(to, amount)    - free mint any amount (no stETH backing needed)
+ *   setRate(newRate)     - change the stETH/wstETH exchange rate
+ *   wrap(stETHAmount)   - wrap stETH → wstETH (caller must approve stETH first)
+ *   unwrap(wstETHAmount)- unwrap wstETH → stETH
  */
 contract MockWstETH is ERC20 {
     IERC20 public immutable stETH;
@@ -72,7 +72,7 @@ contract MockWstETH is ERC20 {
 
     // ── Testing helpers ──────────────────────────────────────────
 
-    /// @notice Free mint — use in scripts or tests (no stETH backing)
+    /// @notice Free mint - use in scripts or tests (no stETH backing)
     function mint(address to, uint256 amount) external {
         _mint(to, amount);
     }

@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => {
           target: "http://localhost:3001",
           changeOrigin: true,
         },
-        // Ethereum RPC — proxied through localhost to avoid CORS blocks
+        // Ethereum RPC - proxied through localhost to avoid CORS blocks
         // from public nodes like Thirdweb that restrict browser origins
         "/rpc": {
           target: rpcUrl,

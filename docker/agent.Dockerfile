@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════
-# YieldsPilot Agent — Multi-stage Docker Build
+# YieldsPilot Agent - Multi-stage Docker Build
 # ═══════════════════════════════════════════════════════
 
 FROM node:22-alpine AS base
@@ -23,7 +23,7 @@ COPY agent/ ./agent/
 COPY mcp/ ./mcp/
 COPY agent.json ./
 
-# Healthcheck — agent writes to agent_log.json on each cycle
+# Healthcheck - agent writes to agent_log.json on each cycle
 HEALTHCHECK --interval=120s --timeout=10s --start-period=30s --retries=3 \
   CMD test $(find agent_log.json -mmin -5 | wc -l) -gt 0 || exit 1
 

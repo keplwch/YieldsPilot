@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════════════════════╗
-# ║  YieldsPilot — Deploy Script                                                ║
+# ║  YieldsPilot - Deploy Script                                                ║
 # ║                                                                              ║
-# ║  All deployment logic lives in scripts/deploy.ts — this script provides     ║
+# ║  All deployment logic lives in scripts/deploy.ts - this script provides     ║
 # ║  the CLI interface, pre-flight checks, and Etherscan verification.           ║
 # ║                                                                              ║
 # ║  ─── Commands ─────────────────────────────────────────────────────────── ║
@@ -105,7 +105,7 @@ preflight() {
 
   # Node.js >= 18
   if ! command -v node &>/dev/null; then
-    fail "Node.js not found — install from https://nodejs.org"
+    fail "Node.js not found - install from https://nodejs.org"
   fi
   local ver
   ver=$(node -v | sed 's/v//' | cut -d. -f1)
@@ -116,7 +116,7 @@ preflight() {
 
   # Dependencies
   if [ ! -d "node_modules" ]; then
-    warn "node_modules missing — installing..."
+    warn "node_modules missing - installing..."
     bun install
   fi
   ok "Dependencies"
@@ -143,10 +143,10 @@ preflight() {
   fi
   ok "Private key set"
 
-  # RPC URL (warn only — hardhat has a built-in default)
+  # RPC URL (warn only - hardhat has a built-in default)
   local rpc="${RPC_URL:-}"
   if [ -z "$rpc" ] || [[ "$rpc" == *"YOUR_KEY"* ]]; then
-    warn "RPC_URL not set — deployment may fail or be rate-limited"
+    warn "RPC_URL not set - deployment may fail or be rate-limited"
     warn "Get a free key at: https://alchemy.com"
   else
     ok "RPC URL: ${rpc:0:45}..."
@@ -233,7 +233,7 @@ cmd_verify() {
       const { ethers } = require('ethers');
       const w = new ethers.Wallet(process.env.AGENT_PRIVATE_KEY);
       process.stdout.write(w.address);
-    " 2>/dev/null) || fail "Could not derive agent address — set AGENT_WALLET in .env"
+    " 2>/dev/null) || fail "Could not derive agent address - set AGENT_WALLET in .env"
   fi
 
   log "Verifying ${contract_name} at ${address}..."
@@ -297,7 +297,7 @@ cmd_mint() {
   npx hardhat run scripts/mint-mock.ts --network sepolia
 }
 
-# ── Fork test (mainnet fork — real Uniswap swap) ─────────────────────────────
+# ── Fork test (mainnet fork - real Uniswap swap) ─────────────────────────────
 
 cmd_fork_test() {
   banner
@@ -312,7 +312,7 @@ cmd_fork_test() {
     echo -e "  Usage: ${BOLD}FORK_RPC=https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY ./deploy.sh fork:test${NC}"
     echo ""
     echo "  This forks Ethereum Mainnet locally and tests the real Uniswap swap flow."
-    echo "  No gas costs — everything runs on a local fork."
+    echo "  No gas costs - everything runs on a local fork."
     echo ""
     echo "  If your RPC_URL already points to mainnet, just run:"
     echo -e "  ${BOLD}FORK_RPC=\$RPC_URL ./deploy.sh fork:test${NC}"
@@ -363,7 +363,7 @@ cmd_help() {
   echo ""
   echo -e "  ${BOLD}Deploy commands:${NC}"
   echo ""
-  echo "    fresh            ⭐ Full setup — MockUSDC + MockRouter + Registry"
+  echo "    fresh            ⭐ Full setup - MockUSDC + MockRouter + Registry"
   echo "                        Recommended starting point for any new environment."
   echo "                        Prints a ready-to-paste .env block when done."
   echo ""
@@ -383,7 +383,7 @@ cmd_help() {
   echo -e "  ${BOLD}Mainnet:${NC}"
   echo ""
   echo "    mainnet          Deploy Registry to Ethereum Mainnet (production)"
-  echo "                        Uses real Lido stETH/wstETH — no mocks deployed."
+  echo "                        Uses real Lido stETH/wstETH - no mocks deployed."
   echo "                        Point RPC_URL at a mainnet endpoint first."
   echo ""
   echo -e "  ${BOLD}Other networks:${NC}"
@@ -429,7 +429,7 @@ cmd_help() {
   echo "    ETHERSCAN_API_KEY      Required for verify command"
   echo "    VITE_NETWORK           Frontend network: sepolia (default) or mainnet"
   echo ""
-  echo -e "  ${DIM}Set by 'fresh' — paste into .env after running:${NC}"
+  echo -e "  ${DIM}Set by 'fresh' - paste into .env after running:${NC}"
   echo ""
   echo "    REGISTRY_CONTRACT      Deployed Registry address"
   echo "    MOCK_ROUTER_ADDRESS    Deployed MockRouter address"

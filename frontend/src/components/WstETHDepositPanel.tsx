@@ -141,7 +141,7 @@ export default function WstETHDepositPanel({ registryAddress }: WstETHDepositPan
     clipPath: "polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%)",
   };
 
-  // Wrap badge colours — teal/cyan to visually distinguish from stETH (purple)
+  // Wrap badge colours - teal/cyan to visually distinguish from stETH (purple)
   const wstBadgeStyle = { background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.2)", color: "#06b6d4" };
 
   if (!registryAddr) {
@@ -159,7 +159,7 @@ export default function WstETHDepositPanel({ registryAddress }: WstETHDepositPan
           </div>
           <div className="p-6 text-center">
             <p className="text-[12px] text-text-muted font-mono">
-              Registry not configured — set <span style={{ color: "#818cf8" }}>REGISTRY_CONTRACT</span> in your .env
+              Registry not configured - set <span style={{ color: "#818cf8" }}>REGISTRY_CONTRACT</span> in your .env
             </p>
           </div>
         </div>
@@ -212,7 +212,7 @@ export default function WstETHDepositPanel({ registryAddress }: WstETHDepositPan
               </ConnectButton.Custom>
             </div>
           ) : !treasuryAddr ? (
-            /* No treasury — wstETH deposits require an existing treasury */
+            /* No treasury - wstETH deposits require an existing treasury */
             <div className="text-center py-3">
               <div className="w-9 h-9 flex items-center justify-center mx-auto mb-3"
                 style={{ background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.22)" }}>
@@ -282,7 +282,7 @@ export default function WstETHDepositPanel({ registryAddress }: WstETHDepositPan
                 style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.22)" }}>
                 <Lock size={16} className="text-accent-purple" strokeWidth={1.75} />
               </div>
-              <div className="text-[13px] font-display font-semibold text-text-primary mb-1.5">Step 1/2 — Approving</div>
+              <div className="text-[13px] font-display font-semibold text-text-primary mb-1.5">Step 1/2 - Approving</div>
               <p className="text-[11px] text-text-muted font-body mb-3">
                 {isApprovePending ? "Confirm in wallet..." : approveTxHash ? "Waiting for block..." : "Preparing..."}
               </p>
@@ -303,7 +303,7 @@ export default function WstETHDepositPanel({ registryAddress }: WstETHDepositPan
                 style={{ background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.22)" }}>
                 <Loader2 size={16} className="text-accent-blue animate-spin" strokeWidth={1.75} />
               </div>
-              <div className="text-[13px] font-display font-semibold text-text-primary mb-1.5">Step 2/2 — Depositing</div>
+              <div className="text-[13px] font-display font-semibold text-text-primary mb-1.5">Step 2/2 - Depositing</div>
               <p className="text-[11px] text-text-muted font-body mb-3">
                 {isDepositPending ? "Confirm in wallet..." : depositTxHash ? "Unwrapping wstETH → stETH..." : "Preparing..."}
               </p>

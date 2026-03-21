@@ -145,7 +145,7 @@ export default function TreasuryManagement({ treasuryAddress, registryAddress }:
   const { address, isConnected } = useAccount();
   const registryAddr = registryAddress as `0x${string}` | undefined;
 
-  // Read the connected user's treasury directly from Registry — most reliable source
+  // Read the connected user's treasury directly from Registry - most reliable source
   const { data: registryTreasury } = useReadContract({
     address: registryAddr,
     abi: REGISTRY_ABI,
@@ -249,7 +249,7 @@ export default function TreasuryManagement({ treasuryAddress, registryAddress }:
   return (
     <div className="card-wrap">
       <div className="card-body">
-        {/* Header — always visible */}
+        {/* Header - always visible */}
         <button
           onClick={() => setExpanded(!expanded)}
           className="panel-header w-full cursor-pointer hover:bg-white/[0.01] transition-colors"
@@ -401,7 +401,7 @@ export default function TreasuryManagement({ treasuryAddress, registryAddress }:
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-[11px] font-mono text-text-primary">
-                      Agent: <span className="text-accent-purple">{agentAddr ? `${(agentAddr as string).slice(0, 8)}...${(agentAddr as string).slice(-4)}` : "—"}</span>
+                      Agent: <span className="text-accent-purple">{agentAddr ? `${(agentAddr as string).slice(0, 8)}...${(agentAddr as string).slice(-4)}` : "-"}</span>
                     </div>
                     <div className="text-[10px] text-text-muted font-mono mt-0.5">
                       Status: {isPaused ? <span style={{ color: "#f43f5e" }}>Paused</span> : <span style={{ color: "#00e5a0" }}>Active</span>}

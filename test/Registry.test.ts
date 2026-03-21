@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
 /**
- * YieldsPilotRegistry — Test Suite
+ * YieldsPilotRegistry - Test Suite
  *
  * Tests the multi-user factory pattern: each user gets their own
  * Treasury, the agent is shared, and the registry tracks everything.
@@ -327,7 +327,7 @@ describe("YieldsPilotRegistry", function () {
         stETHAddr, amountIn, usdcAddr, treasuryAddr
       ]);
 
-      // Agent calls swapYield — funds stay in treasury
+      // Agent calls swapYield - funds stay in treasury
       await treasury.connect(agent).swapYield(
         routerAddr, amountIn, calldata, usdcAddr, minAmountOut, "Swap stETH→USDC"
       );

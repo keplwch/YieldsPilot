@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════════╗
-# ║              🛫 YieldsPilot — Local Dev Runner                   ║
+# ║              🛫 YieldsPilot - Local Dev Runner                   ║
 # ║                                                                 ║
 # ║  Services                                                       ║
 # ║    ./dev.sh                  Start everything (default)         ║
@@ -71,7 +71,7 @@ check_env() {
   if [ ! -f .env ]; then
     if [ -f .env.example ]; then
       cp .env.example .env
-      warn ".env created from .env.example — edit it: ${BOLD}nano .env${NC}"
+      warn ".env created from .env.example - edit it: ${BOLD}nano .env${NC}"
     else
       err ".env.example missing!"; exit 1
     fi
@@ -105,7 +105,7 @@ check_env() {
   echo ""
 
   if [ "$missing" -eq 1 ]; then
-    warn "Some keys missing — frontend works fine, agent/monitor need them"
+    warn "Some keys missing - frontend works fine, agent/monitor need them"
   else
     ok "All keys configured"
   fi
@@ -163,7 +163,7 @@ typecheck() {
 
   local has_errors=0
 
-  # Backend — use frontend's tsc since it's reliably installed
+  # Backend - use frontend's tsc since it's reliably installed
   local tsc="./frontend/node_modules/.bin/tsc"
   if [ -x "$tsc" ]; then
     local be_out
@@ -173,10 +173,10 @@ typecheck() {
       echo "$be_out" | head -20
       has_errors=1
     else
-      ok "Backend — 0 errors"
+      ok "Backend - 0 errors"
     fi
   else
-    warn "tsc not found — run ./dev.sh install first"
+    warn "tsc not found - run ./dev.sh install first"
   fi
 
   # Frontend
@@ -187,7 +187,7 @@ typecheck() {
     echo "$fe_out" | head -20
     has_errors=1
   else
-    ok "Frontend — 0 errors"
+    ok "Frontend - 0 errors"
   fi
 
   return $has_errors
@@ -290,7 +290,7 @@ start_agent() {
   set -a; source .env 2>/dev/null || true; set +a
 
   if [ -z "${VENICE_API_KEY:-}" ]; then
-    warn "Skipping agent — VENICE_API_KEY not set in .env"
+    warn "Skipping agent - VENICE_API_KEY not set in .env"
     return
   fi
 
@@ -322,7 +322,7 @@ start_monitor() {
 
   local rpc="${RPC_URL:-}"
   if [ -z "$rpc" ] || [ "$rpc" = "https://eth-sepolia.g.alchemy.com/v2/YOUR_KEY" ]; then
-    warn "Skipping monitor — RPC_URL not set in .env"
+    warn "Skipping monitor - RPC_URL not set in .env"
     return
   fi
 
@@ -425,7 +425,7 @@ start_all() {
 }
 
 # ══════════════════════════════════════════════════════════════
-#  MAIN — parse command
+#  MAIN - parse command
 # ══════════════════════════════════════════════════════════════
 
 CMD="${1:-start}"

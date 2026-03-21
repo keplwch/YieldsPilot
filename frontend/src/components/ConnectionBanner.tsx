@@ -25,7 +25,7 @@ export default function ConnectionBanner({ connected, network }: ConnectionBanne
           <Zap size={12} strokeWidth={2} style={{ color: "#f59e0b", flexShrink: 0 }} />
           <div className="font-body">
             <span className="font-semibold text-amber-300">Demo Mode</span>
-            <span className="text-amber-400/70"> — API not connected. Run </span>
+            <span className="text-amber-400/70"> - API not connected. Run </span>
             <code className="px-1.5 py-0.5 text-[11px] font-mono"
               style={{ background: "rgba(0,0,0,0.3)", color: "#818cf8", border: "1px solid rgba(99,102,241,0.18)" }}>
               ./scripts/dev.sh start

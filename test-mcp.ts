@@ -28,7 +28,7 @@ const results: TestResult[] = [];
 const LIDO_TREASURY = "0x3e40D73EB977Dc6a537aF587D48316feE66E9C8c";
 
 async function runTest(): Promise<void> {
-  console.log("=== Lido MCP Server — Integration Test Suite ===\n");
+  console.log("=== Lido MCP Server - Integration Test Suite ===\n");
 
   const proc: ChildProcess = spawn("npx", ["tsx", MCP_SCRIPT], {
     cwd: path.resolve(__dirname),
@@ -88,14 +88,14 @@ async function runTest(): Promise<void> {
       if (response.error) {
         results.push({
           tool: toolName, status: expectError ? "PASS" : "FAIL",
-          message: `${description} — RPC error: ${response.error.message ?? JSON.stringify(response.error)}`,
+          message: `${description} - RPC error: ${response.error.message ?? JSON.stringify(response.error)}`,
           response: response.error, durationMs: elapsed,
         });
       } else if (response.result?.isError) {
         const text = response.result.content?.[0]?.text ?? "unknown";
         results.push({
           tool: toolName, status: expectError ? "PASS" : "FAIL",
-          message: `${description}${expectError ? " (expected error)" : ""} — ${text}`,
+          message: `${description}${expectError ? " (expected error)" : ""} - ${text}`,
           response: text, durationMs: elapsed,
         });
       } else {
@@ -110,7 +110,7 @@ async function runTest(): Promise<void> {
     } catch (err) {
       results.push({
         tool: toolName, status: "ERROR",
-        message: `${description} — ${(err as Error).message}`, durationMs: Date.now() - start,
+        message: `${description} - ${(err as Error).message}`, durationMs: Date.now() - start,
       });
     }
   }
@@ -197,7 +197,7 @@ async function runTest(): Promise<void> {
 
   for (const r of results) {
     const icon = r.status === "PASS" ? "✅" : r.status === "FAIL" ? "❌" : "⚠️";
-    console.log(`${icon} ${r.tool} (${r.durationMs}ms) — ${r.status}`);
+    console.log(`${icon} ${r.tool} (${r.durationMs}ms) - ${r.status}`);
     console.log(`   ${r.message}`);
     if (r.response) {
       const s = JSON.stringify(r.response);

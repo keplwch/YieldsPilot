@@ -1,5 +1,5 @@
 /**
- * YieldsPilot — Autonomous Agent Core (Multi-User)
+ * YieldsPilot - Autonomous Agent Core (Multi-User)
  *
  * The main agent loop: for each registered user treasury:
  *   discover → plan → execute → verify → log
@@ -8,12 +8,12 @@
  * + real swaps (Uniswap) + yield management (Lido Treasury)
  *
  * Bounties targeted:
- *   - Protocol Labs "Let the Agent Cook" ($8,000) — autonomous loop
- *   - Protocol Labs "Agents With Receipts" ($8,004) — ERC-8004
- *   - Venice "Private Agents" ($11,500) — private cognition
- *   - Bankr "Best LLM Gateway" ($5,000) — multi-model
- *   - Uniswap "Agentic Finance" ($5,000) — real swaps
- *   - Lido "stETH Agent Treasury" ($3,000) — yield separation
+ *   - Protocol Labs "Let the Agent Cook" ($8,000) - autonomous loop
+ *   - Protocol Labs "Agents With Receipts" ($8,004) - ERC-8004
+ *   - Venice "Private Agents" ($11,500) - private cognition
+ *   - Bankr "Best LLM Gateway" ($5,000) - multi-model
+ *   - Uniswap "Agentic Finance" ($5,000) - real swaps
+ *   - Lido "stETH Agent Treasury" ($3,000) - yield separation
  *   - Synthesis Open Track ($14,500)
  */
 
@@ -65,7 +65,7 @@ function loadPersistedState(): void {
       state.cycleCount = saved.cycleCount ?? 0;
       state.totalYieldManaged = saved.totalYieldManaged ?? 0;
     }
-  } catch { /* non-critical — start fresh if file is corrupt */ }
+  } catch { /* non-critical - start fresh if file is corrupt */ }
 }
 
 function persistState(): void {
@@ -133,7 +133,7 @@ async function runCycleForTreasury(
   // Use the treasury info we already fetched from the registry
   const balancesForTreasury = {
     address: treasuryAddress,
-    eth: "n/a", // gas is paid externally — not a decision factor
+    eth: "n/a", // gas is paid externally - not a decision factor
     stETH: treasuryInfo.totalBalance,
     wstETH: "n/a", // treasury holds stETH only
     treasury: {
@@ -176,7 +176,7 @@ async function runCycleForTreasury(
       treasuryBalance: treasuryInfo.totalBalance, principal: treasuryInfo.principal,
       availableYield: treasuryInfo.availableYield, dailySpendRemaining: treasuryInfo.dailySpendRemaining,
       veniceAction: "", veniceReasoning: "Treasury paused", riskLevel: "", riskScore: 0,
-      marketSentiment: "", finalAction: "skip_paused", strategyReasoning: "Treasury paused — skipping cycle",
+      marketSentiment: "", finalAction: "skip_paused", strategyReasoning: "Treasury paused - skipping cycle",
       durationMs: Date.now() - cycleStart,
     });
     return { loopId, action: "skip_paused", duration: Date.now() - cycleStart, user, treasuryAddress };
@@ -212,7 +212,7 @@ async function runCycleForTreasury(
   if (marketPromptContext) {
     console.log(`    📊 Market data injected into Venice prompt (${marketPromptContext.split("\n").length} lines)`);
   } else {
-    console.log("    ⚠ No market data available — Venice will reason on treasury state only");
+    console.log("    ⚠ No market data available - Venice will reason on treasury state only");
   }
 
   if (liquidityGuidance) {
@@ -224,7 +224,7 @@ async function runCycleForTreasury(
       console.log(`       ${pool.pair} (${pool.feeTier}): TVL $${(pool.tvlUsd / 1e6).toFixed(1)}M | Vol $${(pool.volume24hUsd / 1e6).toFixed(1)}M | swap = ${pctOfTvl}% of TVL`);
     }
   } else {
-    console.log("    ⚠ No pool liquidity data — skipping liquidity-aware sizing");
+    console.log("    ⚠ No pool liquidity data - skipping liquidity-aware sizing");
   }
 
   console.log("    🔒 Sending to Venice (private, no-data-retention)...");
@@ -365,7 +365,7 @@ async function runCycleForTreasury(
             console.log(`         Impact:   ${swapCalldata.priceImpact}%`);
             console.log(`         Calldata: ${swapCalldata.calldata.slice(0, 20)}...${swapCalldata.calldata.slice(-8)}`);
 
-            console.log(`      🔒 Step 2/3: Calling treasury.swapYield() (atomic — funds stay in contract)...`);
+            console.log(`      🔒 Step 2/3: Calling treasury.swapYield() (atomic - funds stay in contract)...`);
             const swapResult = await lido.swapYieldFromTreasury({
               treasuryAddress,
               routerAddress: swapCalldata.router,
@@ -393,7 +393,7 @@ async function runCycleForTreasury(
             console.error(`      ❌ Mainnet swap failed: ${err.message}`);
             console.error(`         Stack: ${err.stack?.split("\n")[1]?.trim()}`);
 
-            // Do NOT fallback to blind transfer — that burns funds
+            // Do NOT fallback to blind transfer - that burns funds
             executeResult = {
               action: "swap_yield",
               status: "failed",
@@ -413,8 +413,8 @@ async function runCycleForTreasury(
         if (!testnetRouter || !testnetTokenOut) {
           console.error(`      ❌ Testnet swap BLOCKED: MockRouter not configured`);
           console.error(`         MOCK_ROUTER_ADDRESS and MOCK_TOKEN_OUT_ADDRESS are required.`);
-          console.error(`         Run: ./scripts/deploy.sh fresh — then paste the env vars into .env`);
-          console.error(`         Refusing to execute — spendYield() sends funds irreversibly.`);
+          console.error(`         Run: ./scripts/deploy.sh fresh - then paste the env vars into .env`);
+          console.error(`         Refusing to execute - spendYield() sends funds irreversibly.`);
 
           executeResult = {
             action: "swap_yield",
@@ -460,7 +460,7 @@ async function runCycleForTreasury(
             console.log(`      ✅ Step 3/3: Atomic swap confirmed!`);
             console.log(`         txHash: ${swapResult.txHash}`);
             console.log(`         Block:  ${swapResult.blockNumber}`);
-            console.log(`         Method: treasury.swapYield() — funds never left contract`);
+            console.log(`         Method: treasury.swapYield() - funds never left contract`);
 
             executeResult = {
               action: "swap_yield",
@@ -491,10 +491,10 @@ async function runCycleForTreasury(
       };
     }
   } else if (finalAction === "hold") {
-    console.log(`      💤 Holding — no action this cycle`);
+    console.log(`      💤 Holding - no action this cycle`);
     console.log(`         Reason: ${strategy.reasoning?.slice(0, 120)}`);
   } else {
-    console.log(`      ⚠ Unrecognized action "${finalAction}" with no swap_amount — treating as hold`);
+    console.log(`      ⚠ Unrecognized action "${finalAction}" with no swap_amount - treating as hold`);
   }
 
   const executeLog = logger.logCycle({
@@ -590,7 +590,7 @@ async function runCycleForTreasury(
  * Run a full multi-user cycle: iterate all registered treasuries.
  */
 async function runCycle(): Promise<CycleResult[]> {
-  console.log(`\n🔄 ═══ Cycle #${state.cycleCount + 1} — Multi-User Sweep ═══`);
+  console.log(`\n🔄 ═══ Cycle #${state.cycleCount + 1} - Multi-User Sweep ═══`);
 
   // Fetch all registered user treasuries
   const userTreasuries = await lido.getAllUserTreasuries();
@@ -698,9 +698,9 @@ async function main(): Promise<void> {
   console.log(`Swap mode:      ${isMainnet ? "Uniswap Trading API" : "MockRouter"}`);
   console.log(`stETH address:  ${config.lido.stETH}`);
   if (isMainnet) {
-    console.log(`Uniswap API:    ${config.uniswap.apiKey ? "configured" : "NOT SET — swaps will be blocked"}`);
+    console.log(`Uniswap API:    ${config.uniswap.apiKey ? "configured" : "NOT SET - swaps will be blocked"}`);
   } else {
-    console.log(`MockRouter:     ${process.env.MOCK_ROUTER_ADDRESS || "NOT SET — swaps will be blocked"}`);
+    console.log(`MockRouter:     ${process.env.MOCK_ROUTER_ADDRESS || "NOT SET - swaps will be blocked"}`);
     console.log(`MockTokenOut:   ${process.env.MOCK_TOKEN_OUT_ADDRESS || "NOT SET"}`);
   }
   console.log(`Venice Model:   ${config.venice.model}`);

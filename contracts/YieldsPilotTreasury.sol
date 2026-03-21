@@ -23,7 +23,7 @@ interface IWstETH {
 /**
  * @title YieldsPilotTreasury
  * @notice A yield-separated treasury where humans deposit stETH or wstETH, and an
- *         AI agent can ONLY spend the accrued staking yield — never the principal.
+ *         AI agent can ONLY spend the accrued staking yield - never the principal.
  *
  * @dev stETH is a rebasing token: balances grow daily as Lido distributes staking
  *      rewards. This contract tracks the deposited principal and lets the agent
@@ -238,12 +238,12 @@ contract YieldsPilotTreasury is ReentrancyGuard {
     }
 
     // ══════════════════════════════════════════════════════════════════
-    //           AGENT SWAP (Atomic — funds never leave contract)
+    //           AGENT SWAP (Atomic - funds never leave contract)
     // ══════════════════════════════════════════════════════════════════
 
     /**
      * @notice Agent swaps yield via an on-chain DEX router (e.g., Uniswap).
-     *         The swap executes atomically — stETH is approved to the router,
+     *         The swap executes atomically - stETH is approved to the router,
      *         the router is called with agent-supplied calldata, and the output
      *         token is verified. Funds NEVER pass through the agent's wallet.
      *
@@ -289,7 +289,7 @@ contract YieldsPilotTreasury is ReentrancyGuard {
         // Approve router for exact amount (no lingering approvals)
         stETH.safeIncreaseAllowance(router, amountIn);
 
-        // Execute the swap — router pulls stETH and sends tokenOut back here
+        // Execute the swap - router pulls stETH and sends tokenOut back here
         (bool success, ) = router.call(swapCalldata);
         require(success, "YP: swap call failed");
 
@@ -345,7 +345,7 @@ contract YieldsPilotTreasury is ReentrancyGuard {
 
     /**
      * @notice Owner withdraws principal as wstETH. stETH is wrapped to wstETH
-     *         before sending — useful for DeFi composability or bridging.
+     *         before sending - useful for DeFi composability or bridging.
      * @param stETHAmount  Amount of stETH principal to withdraw (wrapped to wstETH)
      */
     function withdrawPrincipalAsWstETH(uint256 stETHAmount) external onlyOwner nonReentrant {

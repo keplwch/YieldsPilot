@@ -75,7 +75,7 @@ export default function ReasoningPanel({
           style={{ background: "rgba(0,0,0,0.15)" }}>
           {lines.length === 0 ? (
             <div className="flex items-center justify-center h-full">
-              <span className="text-[11px] text-text-muted">No reasoning data yet — waiting for agent cycles</span>
+              <span className="text-[11px] text-text-muted">No reasoning data yet - waiting for agent cycles</span>
             </div>
           ) : (
             <>

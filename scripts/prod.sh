@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ╔══════════════════════════════════════════════════════════════╗
-# ║           🛫 YieldsPilot — Production (Docker)               ║
+# ║           🛫 YieldsPilot - Production (Docker)               ║
 # ║  Builds & runs agent + monitor + dashboard via Compose      ║
 # ╚══════════════════════════════════════════════════════════════╝
 
@@ -52,7 +52,7 @@ ok "Docker Compose available"
 if [ ! -f .env ]; then
   if [ -f .env.example ]; then
     cp .env.example .env
-    warn ".env created from .env.example — fill in your API keys!"
+    warn ".env created from .env.example - fill in your API keys!"
     warn "Run: nano .env"
     exit 1
   else
@@ -78,10 +78,10 @@ case "$CMD" in
     echo -e "  ${CYAN}Monitor${NC}     → docker compose logs -f monitor"
     echo ""
     echo -e "  ${BOLD}Useful commands:${NC}"
-    echo -e "    ./prod.sh logs      — tail all logs"
-    echo -e "    ./prod.sh stop      — stop all services"
-    echo -e "    ./prod.sh restart   — rebuild & restart"
-    echo -e "    ./prod.sh status    — show running containers"
+    echo -e "    ./prod.sh logs      - tail all logs"
+    echo -e "    ./prod.sh stop      - stop all services"
+    echo -e "    ./prod.sh restart   - rebuild & restart"
+    echo -e "    ./prod.sh status    - show running containers"
     echo ""
     ;;
 

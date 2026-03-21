@@ -1,5 +1,5 @@
 /**
- * Activity Store — SQLite persistence for agent activity.
+ * Activity Store - SQLite persistence for agent activity.
  * Uses sql.js (pure JS/WASM) for cross-platform compatibility (no native addons).
  *
  * Note: agent_log.json and agent_state.json are kept separately
@@ -70,7 +70,7 @@ export interface ActivityStats {
 let db: SqlJsDatabase | null = null;
 let dbReady: Promise<void> | null = null;
 
-/** Initialize the DB eagerly — call at agent startup */
+/** Initialize the DB eagerly - call at agent startup */
 export function initActivityStore(): void {
   dbReady = _initDB();
   dbReady.then(() => {

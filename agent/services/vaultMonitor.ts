@@ -11,7 +11,7 @@ import TelegramBot from "node-telegram-bot-api";
 import config from "../../config/default";
 import * as lido from "./lido";
 
-// Initialize — pass both treasury (single-user fallback) and registry (multi-user)
+// Initialize - pass both treasury (single-user fallback) and registry (multi-user)
 lido.init(
   config.chain.rpcUrl,
   config.chain.agentPrivateKey,
@@ -87,7 +87,7 @@ async function monitorCycle(): Promise<void> {
       timestamp,
     };
 
-    // First run — establish baseline
+    // First run - establish baseline
     if (!previousState) {
       previousState = currentState;
       console.log("  📋 Baseline established");

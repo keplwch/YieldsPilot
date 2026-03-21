@@ -5,7 +5,7 @@
  * Protocol Labs "Agents With Receipts" bounty and ERC-8004 compliance.
  *
  * Every log entry is stamped with the agent's DID (did:synthesis:34520)
- * and operator wallet — making the agent's identity load-bearing in
+ * and operator wallet - making the agent's identity load-bearing in
  * the audit trail, not decorative.
  */
 
@@ -25,7 +25,7 @@ try {
   agentDid = manifest.did ?? "";
   agentOperator = manifest.operator?.contact ?? "";
 } catch {
-  // agent.json not found — DID will be empty
+  // agent.json not found - DID will be empty
 }
 
 function loadLog(): AgentLog {

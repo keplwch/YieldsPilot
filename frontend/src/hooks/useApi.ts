@@ -1,5 +1,5 @@
 /**
- * Core API hook — fetches from the YieldsPilot API server with polling.
+ * Core API hook - fetches from the YieldsPilot API server with polling.
  * Falls back gracefully when API is unavailable.
  */
 import { useState, useEffect, useCallback, useRef } from "react";

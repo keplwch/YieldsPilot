@@ -33,7 +33,7 @@ async function main() {
   if (TOKEN === "wsteth") {
     // ── Mint wstETH ──────────────────────────────────────────
     if (!MOCK_WSTETH) {
-      console.error("❌ WSTETH_ADDRESS not set in .env — deploy mocks first:\n   ./scripts/deploy.sh fresh");
+      console.error("❌ WSTETH_ADDRESS not set in .env - deploy mocks first:\n   ./scripts/deploy.sh fresh");
       process.exit(1);
     }
 
@@ -53,7 +53,7 @@ async function main() {
   } else {
     // ── Mint stETH (default) ─────────────────────────────────
     if (!MOCK_STETH) {
-      console.error("❌ STETH_ADDRESS not set in .env — deploy mocks first:\n   ./scripts/deploy.sh fresh");
+      console.error("❌ STETH_ADDRESS not set in .env - deploy mocks first:\n   ./scripts/deploy.sh fresh");
       process.exit(1);
     }
 

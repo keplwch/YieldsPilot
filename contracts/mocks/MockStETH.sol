@@ -8,9 +8,9 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
  * @notice Test token that simulates stETH for local/Sepolia testing.
  *
  * Key testing helpers:
- *   drip(to)                   — faucet: gives 10 stETH per call, no limit
- *   mint(to, amount)           — free mint any amount
- *   simulateYield(treasury, amount) — mints tokens directly into a treasury
+ *   drip(to)                   - faucet: gives 10 stETH per call, no limit
+ *   mint(to, amount)           - free mint any amount
+ *   simulateYield(treasury, amount) - mints tokens directly into a treasury
  *                                     contract, simulating stETH rebasing so
  *                                     availableYield() grows without a deposit
  */
@@ -24,7 +24,7 @@ contract MockStETH is ERC20 {
         _mint(msg.sender, 1000 ether);
     }
 
-    /// @notice Free mint — use this in scripts or tests
+    /// @notice Free mint - use this in scripts or tests
     function mint(address to, uint256 amount) external {
         _mint(to, amount);
     }

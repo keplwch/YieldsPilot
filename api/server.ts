@@ -6,18 +6,18 @@
  * registry (multi-user) modes.
  *
  * Endpoints:
- *   GET /api/treasury          — Single treasury state (backward compat)
- *   GET /api/treasury/:address — Specific treasury state by address
- *   GET /api/registry          — Registry info + all user treasuries
- *   GET /api/users             — All registered users with their treasury data
- *   GET /api/balances          — Agent wallet balances
- *   GET /api/protocol          — Lido protocol stats
- *   GET /api/logs              — Agent cycle logs
- *   GET /api/status            — Agent runtime status
- *   GET /api/yield-history     — Yield over time for chart
- *   GET /api/activity          — Structured activity history
- *   GET /api/treasury-tokens   — Token balances for an address
- *   GET /api/health            — Health check
+ *   GET /api/treasury          - Single treasury state (backward compat)
+ *   GET /api/treasury/:address - Specific treasury state by address
+ *   GET /api/registry          - Registry info + all user treasuries
+ *   GET /api/users             - All registered users with their treasury data
+ *   GET /api/balances          - Agent wallet balances
+ *   GET /api/protocol          - Lido protocol stats
+ *   GET /api/logs              - Agent cycle logs
+ *   GET /api/status            - Agent runtime status
+ *   GET /api/yield-history     - Yield over time for chart
+ *   GET /api/activity          - Structured activity history
+ *   GET /api/treasury-tokens   - Token balances for an address
+ *   GET /api/health            - Health check
  */
 
 import express from "express";
@@ -122,7 +122,7 @@ function setCache<T>(key: string, data: T): void {
 // ── Agent state files ────────────────────────────────────────────
 const AGENT_STATE_PATH = path.resolve(process.cwd(), "agent_state.json");
 const AGENT_LOG_PATH = path.resolve(process.cwd(), "agent_log.json");
-// ── SQLite Activity DB (sql.js — pure JS/WASM, cross-platform) ──
+// ── SQLite Activity DB (sql.js - pure JS/WASM, cross-platform) ──
 import initSqlJs, { type Database as SqlJsDatabase } from "sql.js";
 
 const SQLITE_PATH = path.resolve(process.cwd(), "yieldpilot.db");
@@ -677,7 +677,7 @@ app.get("/api/protocol", async (_req, res) => {
 
 /**
  * GET /api/logs?limit=50
- * Returns cycle logs — reads from SQLite (primary) with JSON fallback.
+ * Returns cycle logs - reads from SQLite (primary) with JSON fallback.
  * The frontend's ReasoningPanel + ActivityFeed consume this.
  */
 app.get("/api/logs", (_req, res) => {
@@ -801,7 +801,7 @@ app.get("/api/logs", (_req, res) => {
 
 /**
  * GET /api/status
- * Returns agent runtime status — reads from agent_state.json + SQLite for cycle count.
+ * Returns agent runtime status - reads from agent_state.json + SQLite for cycle count.
  */
 app.get("/api/status", (_req, res) => {
   try {
@@ -814,7 +814,7 @@ app.get("/api/status", (_req, res) => {
     }
 
     // Cycle count comes from agent state (resets each session, consistent with UI)
-    // Do NOT use DB row count — that accumulates across sessions and inflates in multi-user mode
+    // Do NOT use DB row count - that accumulates across sessions and inflates in multi-user mode
     const cycleCount = agentState.cycleCount as number ?? 0;
     let lastCycle: Record<string, unknown> | null = null;
 
@@ -853,7 +853,7 @@ app.get("/api/status", (_req, res) => {
 
 /**
  * GET /api/yield-history
- * Returns yield over time for charts — reads from SQLite (primary) with JSON fallback.
+ * Returns yield over time for charts - reads from SQLite (primary) with JSON fallback.
  */
 app.get("/api/yield-history", (_req, res) => {
   try {
@@ -999,7 +999,7 @@ app.get("/api/treasury-tokens/:address", async (req, res) => {
       { address: STETH_ADDRESS, symbol: "stETH", decimals: 18 },
     ];
 
-    // Swap output tokens — mainnet addresses or testnet MockUSDC
+    // Swap output tokens - mainnet addresses or testnet MockUSDC
     const chainId = parseInt(process.env.CHAIN_ID ?? "1", 10);
     if (chainId === 1) {
       tokenList.push(

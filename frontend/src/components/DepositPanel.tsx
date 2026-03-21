@@ -170,7 +170,7 @@ export default function DepositPanel({ registryAddress, registryMode }: DepositP
           </div>
           <div className="p-6 text-center">
             <p className="text-[12px] text-text-muted font-mono">
-              Registry not configured — set <span style={{ color: "#818cf8" }}>REGISTRY_CONTRACT</span> in your .env
+              Registry not configured - set <span style={{ color: "#818cf8" }}>REGISTRY_CONTRACT</span> in your .env
             </p>
           </div>
         </div>
@@ -226,7 +226,7 @@ export default function DepositPanel({ registryAddress, registryMode }: DepositP
                 style={{ background: "rgba(0,229,160,0.05)", border: "1px solid rgba(0,229,160,0.12)" }}>
                 <CheckCircle2 size={12} className="text-accent-green flex-shrink-0" strokeWidth={1.75} />
                 <span className="text-[10px] text-text-secondary font-mono">
-                  Treasury active —{" "}
+                  Treasury active -{" "}
                   <a href={`${NETWORK.explorerBase}/address/${existingTreasury}`} target="_blank" rel="noopener noreferrer"
                     className="text-accent-purple hover:underline inline-flex items-center gap-0.5">
                     {(existingTreasury as string).slice(0, 8)}...{(existingTreasury as string).slice(-4)}
@@ -238,7 +238,7 @@ export default function DepositPanel({ registryAddress, registryMode }: DepositP
             <p className="text-[12px] text-text-secondary mb-4 font-body leading-relaxed">
               {hasTreasury
                 ? "Add more stETH to your Treasury. New deposits increase your locked principal."
-                : "Deposit stETH into YieldsPilot. Principal locked — only yield is agent-spendable."}
+                : "Deposit stETH into YieldsPilot. Principal locked - only yield is agent-spendable."}
             </p>
             <div className="flex items-center justify-between mb-2 text-[11px]">
               <span className="text-text-muted font-mono">Balance</span>
@@ -279,7 +279,7 @@ export default function DepositPanel({ registryAddress, registryMode }: DepositP
               style={{ background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.22)" }}>
               <Lock size={16} className="text-accent-purple" strokeWidth={1.75} />
             </div>
-            <div className="text-[13px] font-display font-semibold text-text-primary mb-1.5">Step 1/2 — Approving</div>
+            <div className="text-[13px] font-display font-semibold text-text-primary mb-1.5">Step 1/2 - Approving</div>
             <p className="text-[11px] text-text-muted font-body mb-3">
               {isApprovePending ? "Confirm in wallet..." : approveTxHash ? "Waiting for block..." : "Preparing..."}
             </p>
@@ -301,7 +301,7 @@ export default function DepositPanel({ registryAddress, registryMode }: DepositP
               <Loader2 size={16} className="text-accent-blue animate-spin" strokeWidth={1.75} />
             </div>
             <div className="text-[13px] font-display font-semibold text-text-primary mb-1.5">
-              Step 2/2 — {hasTreasury ? "Depositing" : "Deploying"}
+              Step 2/2 - {hasTreasury ? "Depositing" : "Deploying"}
             </div>
             <p className="text-[11px] text-text-muted font-body mb-3">
               {(isDepositPending || isDepositExistingPending) ? "Confirm in wallet..." : (depositTxHash || depositExistingHash) ? (hasTreasury ? "Depositing to Treasury..." : "Deploying Treasury contract...") : "Preparing..."}

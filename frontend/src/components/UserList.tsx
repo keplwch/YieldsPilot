@@ -14,7 +14,7 @@ export default function UserList({ users, registryMode, registryAddress }: UserL
   return (
     <div className="card-wrap">
       <div className="card-body">
-        {/* Panel header — matches ActivityFeed / ReasoningPanel */}
+        {/* Panel header - matches ActivityFeed / ReasoningPanel */}
         <div className="panel-header">
           <div className="flex items-center gap-2.5">
             <div
@@ -109,7 +109,7 @@ function UserRow({ user: u, index }: { user: RegistryUser; index: number }) {
         <div className="flex items-center justify-between">
           {/* Left: index + addresses */}
           <div className="flex items-center gap-3">
-            {/* Index badge — dual-notch like stat-wrap */}
+            {/* Index badge - dual-notch like stat-wrap */}
             <div className="stat-wrap flex-shrink-0" style={{ width: 32, height: 32 }}>
               <div
                 className="stat-body w-full h-full flex items-center justify-center font-mono text-[11px] font-bold text-text-primary"
@@ -152,7 +152,7 @@ function UserRow({ user: u, index }: { user: RegistryUser; index: number }) {
               <MiniStat label="Deployed"  value={yieldDeployed.toFixed(4)}  color="text-accent-orange" />
             </div>
 
-            {/* Status badge — matches ActivityFeed phase badge */}
+            {/* Status badge - matches ActivityFeed phase badge */}
             <span
               className="text-[9px] font-mono font-bold px-2 py-0.5 tracking-widest flex-shrink-0"
               style={{

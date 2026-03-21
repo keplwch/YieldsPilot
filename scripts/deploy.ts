@@ -1,8 +1,8 @@
 /**
- * YieldsPilot — Unified Deploy Script
+ * YieldsPilot - Unified Deploy Script
  *
  * All deployment logic lives here. Controlled via DEPLOY_CMD env var,
- * set automatically by deploy.sh. Do not call this directly — use deploy.sh.
+ * set automatically by deploy.sh. Do not call this directly - use deploy.sh.
  *
  * ─── Commands ────────────────────────────────────────────────────────────────
  *
@@ -26,7 +26,7 @@
  *               and WSTETH_ADDRESS). The mock contracts exist for Hardhat unit tests only.
  *
  *  mainnet    Deploy Registry to Ethereum Mainnet with real Lido stETH/wstETH.
- *             → No mocks deployed — uses real Uniswap Router as default target.
+ *             → No mocks deployed - uses real Uniswap Router as default target.
  *             → Point RPC_URL at a mainnet endpoint and fund the deployer wallet.
  *
  *  status     Deploy to Status Network Sepolia (gasless transactions, chainId=2020).
@@ -48,7 +48,7 @@
  *                           Default: 0xB82381A3fBD3FaFA77B3a7bE693342AA3d14232a (Sepolia)
  *    AGENT_WALLET           Agent wallet address (defaults to deployer address)
  *
- *  Set by `fresh` deploy — paste into .env after running:
+ *  Set by `fresh` deploy - paste into .env after running:
  *    REGISTRY_CONTRACT      Deployed Registry address
  *    MOCK_ROUTER_ADDRESS    Deployed MockRouter address
  *    MOCK_TOKEN_OUT_ADDRESS Deployed MockUSDC address
@@ -141,7 +141,7 @@ function saveManifest(data: Record<string, unknown>) {
 
 async function cmdFresh() {
   console.log("╔══════════════════════════════════════════════════════════╗");
-  console.log("║   🚀 YieldsPilot — Fresh Full Deploy                     ║");
+  console.log("║   🚀 YieldsPilot - Fresh Full Deploy                     ║");
   console.log("║   MockUSDC + MockRouter + Registry                      ║");
   console.log("╚══════════════════════════════════════════════════════════╝\n");
 
@@ -158,7 +158,7 @@ async function cmdFresh() {
   console.log(`    Daily limit:  ${DEFAULT_MAX_DAILY_BPS} bps (${DEFAULT_MAX_DAILY_BPS / 100}%)`);
   console.log(`    Swap rate:    ${MOCK_ROUTER_RATE} USDC / stETH`);
 
-  // Step 1 — MockUSDC
+  // Step 1 - MockUSDC
   sep("Step 1/4: Deploying MockUSDC");
   const MockUSDC = await ethers.getContractFactory("MockUSDC");
   const usdc = await MockUSDC.deploy();
@@ -167,7 +167,7 @@ async function cmdFresh() {
   console.log(`  ✅ MockUSDC:    ${usdcAddress}`);
   console.log(`     tx: ${usdc.deploymentTransaction()?.hash}`);
 
-  // Step 2 — MockRouter
+  // Step 2 - MockRouter
   sep("Step 2/4: Deploying MockRouter");
   const rate = ethers.parseUnits(MOCK_ROUTER_RATE, 6); // 6 decimals (USDC)
   const MockRouter = await ethers.getContractFactory("MockRouter");
@@ -178,7 +178,7 @@ async function cmdFresh() {
   console.log(`     Rate: ${MOCK_ROUTER_RATE} USDC per stETH`);
   console.log(`     tx: ${router.deploymentTransaction()?.hash}`);
 
-  // Step 3 — Registry
+  // Step 3 - Registry
   sep("Step 3/4: Deploying YieldsPilotRegistry");
   const Registry = await ethers.getContractFactory("YieldsPilotRegistry");
   const registry = await Registry.deploy(STETH, WSTETH, AGENT, DEFAULT_MAX_DAILY_BPS);
@@ -187,7 +187,7 @@ async function cmdFresh() {
   console.log(`  ✅ Registry:    ${registryAddress}`);
   console.log(`     tx: ${registry.deploymentTransaction()?.hash}`);
 
-  // Step 4 — Default targets
+  // Step 4 - Default targets
   sep("Step 4/4: Configuring default targets");
   const tx1 = await registry.addDefaultTarget(UNISWAP_ROUTER);
   await tx1.wait();
@@ -203,7 +203,7 @@ async function cmdFresh() {
 
   // Output
   const envBlock = [
-    `# ═══ YieldsPilot Deploy — ${new Date().toISOString()} ═══`,
+    `# ═══ YieldsPilot Deploy - ${new Date().toISOString()} ═══`,
     `REGISTRY_CONTRACT=${registryAddress}`,
     `MOCK_ROUTER_ADDRESS=${routerAddress}`,
     `MOCK_TOKEN_OUT_ADDRESS=${usdcAddress}`,
@@ -230,7 +230,7 @@ ${envBlock}
   1. Paste the .env block above into your .env
   2. Restart the agent:  bun run agent
   3. Open the frontend, connect wallet, deposit stETH
-  4. Agent uses swapYield() via MockRouter — real atomic swaps on testnet!
+  4. Agent uses swapYield() via MockRouter - real atomic swaps on testnet!
 
   ━━━ How testnet swaps work ━━━
 
@@ -254,7 +254,7 @@ ${envBlock}
 }
 
 // ─── registry ─────────────────────────────────────────────────────────────────
-//  Deploy Registry only — use when mocks already exist or on real stETH network
+//  Deploy Registry only - use when mocks already exist or on real stETH network
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function cmdRegistry() {
@@ -449,7 +449,7 @@ async function cmdMocksAll() {
 
   const { deployer } = await deployerInfo();
 
-  // Step 1 — MockStETH
+  // Step 1 - MockStETH
   sep("Step 1/4: Deploying MockStETH");
   const MockStETH = await ethers.getContractFactory("MockStETH");
   const stETH = await MockStETH.deploy();
@@ -460,7 +460,7 @@ async function cmdMocksAll() {
   console.log(`     Faucet: drip(address) gives 10 stETH per call`);
   console.log(`     Free mint: mint(address, amount)`);
 
-  // Step 2 — MockWstETH
+  // Step 2 - MockWstETH
   sep("Step 2/4: Deploying MockWstETH");
   const MockWstETH = await ethers.getContractFactory("MockWstETH");
   const wstETH = await MockWstETH.deploy(stETHAddress);
@@ -478,7 +478,7 @@ async function cmdMocksAll() {
   await seedTx.wait();
   console.log(`  ✅ Seeded MockWstETH with ${ethers.formatEther(seedAmount)} stETH for wrap/unwrap`);
 
-  // Step 3 — MockUSDC
+  // Step 3 - MockUSDC
   sep("Step 3/4: Deploying MockUSDC");
   const MockUSDC = await ethers.getContractFactory("MockUSDC");
   const usdc = await MockUSDC.deploy();
@@ -487,7 +487,7 @@ async function cmdMocksAll() {
   console.log(`  ✅ MockUSDC:    ${usdcAddress}`);
   console.log(`     tx: ${usdc.deploymentTransaction()?.hash}`);
 
-  // Step 4 — MockRouter
+  // Step 4 - MockRouter
   sep("Step 4/4: Deploying MockRouter");
   const rate = ethers.parseUnits(MOCK_ROUTER_RATE, 6);
   const MockRouter = await ethers.getContractFactory("MockRouter");
@@ -499,7 +499,7 @@ async function cmdMocksAll() {
   console.log(`     tx: ${router.deploymentTransaction()?.hash}`);
 
   const envBlock = [
-    `# ═══ YieldsPilot Mocks-All Deploy — ${new Date().toISOString()} ═══`,
+    `# ═══ YieldsPilot Mocks-All Deploy - ${new Date().toISOString()} ═══`,
     `STETH_ADDRESS=${stETHAddress}`,
     `WSTETH_ADDRESS=${wstETHAddress}`,
     `MOCK_ROUTER_ADDRESS=${routerAddress}`,
@@ -560,7 +560,7 @@ async function cmdStatus() {
   const { deployer } = await deployerInfo();
 
   // Status Network has gasPrice=0, so we deploy a simple Treasury as proof
-  // stETH doesn't exist on Status — use a placeholder address for the bounty
+  // stETH doesn't exist on Status - use a placeholder address for the bounty
   const STETH  = envVal("STETH_ADDRESS",  deployer.address); // placeholder on Status
   const WSTETH = envVal("WSTETH_ADDRESS", deployer.address); // placeholder on Status
   const AGENT  = deployer.address;
@@ -608,12 +608,12 @@ async function cmdStatus() {
 
 // ─── mainnet ─────────────────────────────────────────────────────────────────
 //  Deploy Registry to Ethereum Mainnet with real Lido stETH/wstETH
-//  NO mock contracts — only the Registry + Uniswap Router as default target
+//  NO mock contracts - only the Registry + Uniswap Router as default target
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function cmdMainnet() {
   console.log("╔══════════════════════════════════════════════════════════╗");
-  console.log("║   🚀 YieldsPilot — MAINNET Deploy                        ║");
+  console.log("║   🚀 YieldsPilot - MAINNET Deploy                        ║");
   console.log("║   Registry + Uniswap Router (real Lido stETH/wstETH)    ║");
   console.log("╚══════════════════════════════════════════════════════════╝\n");
 
@@ -638,10 +638,10 @@ async function cmdMainnet() {
   console.log(`    Daily limit:  ${BPS} bps (${BPS / 100}%)`);
   console.log(`    Chain:        Ethereum Mainnet (chainId=1)`);
 
-  console.log("\n  ⚠️  THIS IS A MAINNET DEPLOYMENT — REAL ETH WILL BE SPENT");
+  console.log("\n  ⚠️  THIS IS A MAINNET DEPLOYMENT - REAL ETH WILL BE SPENT");
   console.log("  ⚠️  Double-check all addresses above before proceeding\n");
 
-  // Step 1 — Registry
+  // Step 1 - Registry
   sep("Step 1/2: Deploying YieldsPilotRegistry");
   const Registry = await ethers.getContractFactory("YieldsPilotRegistry");
   const registry = await Registry.deploy(STETH, WSTETH, AGENT, BPS);
@@ -650,7 +650,7 @@ async function cmdMainnet() {
   console.log(`  ✅ Registry:    ${registryAddress}`);
   console.log(`     tx: ${registry.deploymentTransaction()?.hash}`);
 
-  // Step 2 — Default targets (Uniswap Router only, no mocks on mainnet)
+  // Step 2 - Default targets (Uniswap Router only, no mocks on mainnet)
   sep("Step 2/2: Configuring default target (Uniswap Router)");
   const tx1 = await registry.addDefaultTarget(UNISWAP_ROUTER);
   await tx1.wait();
@@ -661,7 +661,7 @@ async function cmdMainnet() {
   for (const t of targets) console.log(`    • ${t}`);
 
   const envBlock = [
-    `# ═══ YieldsPilot MAINNET Deploy — ${new Date().toISOString()} ═══`,
+    `# ═══ YieldsPilot MAINNET Deploy - ${new Date().toISOString()} ═══`,
     `REGISTRY_CONTRACT=${registryAddress}`,
     `STETH_ADDRESS=${STETH}`,
     `WSTETH_ADDRESS=${WSTETH}`,
@@ -708,7 +708,7 @@ ${envBlock}
 }
 
 // ─── verify ───────────────────────────────────────────────────────────────────
-//  Prints the hardhat verify command — actual verification is run by deploy.sh
+//  Prints the hardhat verify command - actual verification is run by deploy.sh
 //  (hardhat verify can't be called programmatically in all setups)
 // ─────────────────────────────────────────────────────────────────────────────
 

@@ -78,7 +78,7 @@ export default function CycleNav({ options, selectedIndex, isLive, onSelect, onG
         <ChevronRight size={12} strokeWidth={2} />
       </button>
 
-      {/* LIVE badge — shown when not on latest, clicking resets to auto-follow */}
+      {/* LIVE badge - shown when not on latest, clicking resets to auto-follow */}
       {!isLive && (
         <button
           onClick={onGoLive}

@@ -30,7 +30,7 @@ export default function TreasuryRing({ principal, yieldAvailable, yieldDeployed 
         </div>
 
         <div className="p-6">
-          {/* SVG Ring — solid colors */}
+          {/* SVG Ring - solid colors */}
           <div className="relative w-[176px] h-[176px] mx-auto mb-6">
             <svg width="176" height="176" viewBox="0 0 176 176" className="-rotate-90">
               <circle cx="88" cy="88" r="72" fill="none" stroke="rgba(99,102,241,0.08)" strokeWidth="11" />

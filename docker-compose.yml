@@ -1,21 +1,21 @@
 # ╔══════════════════════════════════════════════════════════════╗
-# ║              🛫 YieldsPilot — Docker Compose                 ║
+# ║              🛫 YieldsPilot - Docker Compose                 ║
 # ║                                                             ║
 # ║  Services:                                                  ║
-# ║    api       — Express REST API (port 3001, internal only)  ║
-# ║    agent     — Autonomous yield management loop             ║
-# ║    monitor   — Vault position monitor + Telegram alerts     ║
-# ║    dashboard — React frontend served via nginx              ║
-# ║    tunnel    — Cloudflare Tunnel (public HTTPS access)      ║
+# ║    api       - Express REST API (port 3001, internal only)  ║
+# ║    agent     - Autonomous yield management loop             ║
+# ║    monitor   - Vault position monitor + Telegram alerts     ║
+# ║    dashboard - React frontend served via nginx              ║
+# ║    tunnel    - Cloudflare Tunnel (public HTTPS access)      ║
 # ║                                                             ║
 # ║  Usage:                                                     ║
-# ║    ./scripts/prod.sh up    — build & start everything       ║
-# ║    ./scripts/prod.sh logs  — tail logs                     ║
-# ║    ./scripts/prod.sh stop  — shut down                     ║
+# ║    ./scripts/prod.sh up    - build & start everything       ║
+# ║    ./scripts/prod.sh logs  - tail logs                     ║
+# ║    ./scripts/prod.sh stop  - shut down                     ║
 # ║                                                             ║
 # ║  Tunnel modes:                                              ║
-# ║    Named tunnel  — set CLOUDFLARE_TUNNEL_TOKEN in .env      ║
-# ║    Quick tunnel  — omit token for a temporary trycloudflare ║
+# ║    Named tunnel  - set CLOUDFLARE_TUNNEL_TOKEN in .env      ║
+# ║    Quick tunnel  - omit token for a temporary trycloudflare ║
 # ║                    URL (printed in tunnel logs)             ║
 # ╚══════════════════════════════════════════════════════════════╝
 
@@ -114,7 +114,7 @@ services:
 
   # ── Cloudflare Tunnel ────────────────────────────────
   # Named tunnel:  set CLOUDFLARE_TUNNEL_TOKEN in .env
-  # Quick tunnel:  omit CLOUDFLARE_TUNNEL_TOKEN — a temporary
+  # Quick tunnel:  omit CLOUDFLARE_TUNNEL_TOKEN - a temporary
   #                trycloudflare.com URL will appear in the logs
   tunnel:
     image: cloudflare/cloudflared:latest

@@ -166,7 +166,7 @@ contract YieldsPilotRegistry {
 
         // Transfer stETH from user to their treasury directly
         // User must call deposit on their own treasury since they are the owner
-        // We just provide a convenience route — but actually the user is the owner
+        // We just provide a convenience route - but actually the user is the owner
         // so they should deposit directly. This function is here for frontend convenience.
         stETH.transferFrom(msg.sender, address(this), amount);
         stETH.approve(treasuryAddr, amount);

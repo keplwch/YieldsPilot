@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // ╔══════════════════════════════════════════════════════════════╗
-// ║  YieldsPilot — Hardhat Configuration                        ║
+// ║  YieldsPilot - Hardhat Configuration                        ║
 // ║                                                             ║
 // ║  CHAINS:                                                    ║
 // ║    • Ethereum Sepolia  → Treasury + Lido + Uniswap          ║
@@ -40,13 +40,13 @@ const config: HardhatUserConfig = {
         ? {
             forking: {
               url: process.env.FORK_RPC,
-              // No pinned block — forks at latest for up-to-date pool state
+              // No pinned block - forks at latest for up-to-date pool state
             },
           }
         : {}),
     },
 
-    // ── Ethereum Sepolia (PRIMARY — Lido + Uniswap bounties) ──
+    // ── Ethereum Sepolia (PRIMARY - Lido + Uniswap bounties) ──
     sepolia: {
       url: process.env.RPC_URL || "https://eth-sepolia.g.alchemy.com/v2/demo",
       chainId: 11155111,
@@ -55,7 +55,7 @@ const config: HardhatUserConfig = {
     },
 
     // ── Ethereum Mainnet (production) ────────────────────
-    // Uses the same RPC_URL as Sepolia — just point it at a mainnet
+    // Uses the same RPC_URL as Sepolia - just point it at a mainnet
     // endpoint when deploying to mainnet (e.g. Alchemy mainnet URL)
     mainnet: {
       url: process.env.RPC_URL || "",
