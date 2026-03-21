@@ -114,12 +114,19 @@ Respond with valid JSON only:
 interface MarketInput {
   protocolStats: ProtocolStats;
   currentYield: string;
+  marketSnapshot?: string; // formatted market + liquidity data
 }
 
 export async function analyzeMarket(marketData: MarketInput): Promise<MarketAnalysis> {
+  const marketDataContext = marketData.marketSnapshot
+    ? `\n\nLIVE MARKET & LIQUIDITY DATA:\n${marketData.marketSnapshot}`
+    : "";
+
   const raw = await askBankr<Omit<MarketAnalysis, "model" | "provider" | "task">>(
     config.bankr.models.market,
-    `You are a DeFi market analyst. Analyze current conditions and recommend swap timing and the best output token.
+    `You are a DeFi market analyst for YieldsPilot. Analyze current conditions and recommend swap timing and the best output token.
+
+You receive LIVE market data including ETH prices, gas costs, and Uniswap V3 pool liquidity (TVL, 24h volume, fee tiers). Use this data to make informed recommendations.
 
 AVAILABLE OUTPUT TOKENS (from stETH):
 - USDC   — stablecoin, best for capital preservation when bearish or uncertain
@@ -127,16 +134,30 @@ AVAILABLE OUTPUT TOKENS (from stETH):
 - WETH   — ETH exposure, best when bullish on ETH price trend
 - wstETH — wrapped stETH, best when yield compounding > diversification (bullish on staking APR)
 
-Recommend the optimal_pairs based on market conditions. Respond in JSON:
+LIQUIDITY-AWARE ANALYSIS:
+- Check pool TVL and 24h volume for each potential swap route
+- The wstETH/WETH 0.01% pool is typically the deepest for stETH-related swaps (stETH → wstETH → WETH via that pool)
+- If the proposed swap value is > 1% of a pool's TVL, flag this in your analysis and recommend splitting
+- Prefer routes through pools with high volume-to-TVL ratio (indicates active, healthy liquidity)
+- Factor in fee tiers: 0.01% for correlated pairs (wstETH/WETH), 0.05% for stable pairs, 0.3% for volatile pairs
+
+GAS-AWARE TIMING:
+- If gas is high (>50 gwei / swap cost >$20), recommend "wait" unless yield amount justifies the cost
+- If gas is low (<20 gwei), favor "swap_now" to capture good execution conditions
+
+Recommend the optimal_pairs based on ALL available data. Respond in JSON:
 {
   "market_sentiment": "bullish" | "neutral" | "bearish",
   "eth_trend": "up" | "stable" | "down",
   "steth_discount": "percentage vs ETH",
   "swap_recommendation": "swap_now" | "wait" | "urgent_swap",
   "optimal_pairs": [{"from": "stETH", "to": "USDC" | "DAI" | "WETH" | "wstETH", "reason": "why"}],
-  "reasoning": "brief explanation"
+  "gas_assessment": "cheap" | "moderate" | "expensive",
+  "liquidity_assessment": "deep" | "adequate" | "thin",
+  "recommended_max_swap": "max stETH to swap in one cycle without >0.5% price impact",
+  "reasoning": "brief explanation referencing price, gas, and liquidity data"
 }`,
-    marketData
+    { ...marketData, _liveData: marketDataContext }
   );
 
   return {
@@ -152,11 +173,16 @@ Recommend the optimal_pairs based on market conditions. Respond in JSON:
 export async function synthesizeStrategy(
   riskAssessment: RiskAssessment,
   marketAnalysis: MarketAnalysis,
-  treasuryState: TreasuryState | BalancesResult
+  treasuryState: TreasuryState | BalancesResult,
+  liquidityGuidance?: string
 ): Promise<StrategyResult> {
+  const liquidityContext = liquidityGuidance
+    ? `\n\nLIQUIDITY GUIDANCE:\n${liquidityGuidance}`
+    : "";
+
   const raw = await askBankr<Omit<StrategyResult, "model" | "provider" | "task">>(
     config.bankr.models.strategy,
-    `You are a DeFi yield management strategy engine for YieldsPilot. You receive risk assessment, market analysis, and treasury state. Synthesize the final action for this cycle.
+    `You are a DeFi yield management strategy engine for YieldsPilot. You receive risk assessment, market analysis, treasury state, and pool liquidity guidance. Synthesize the final action for this cycle.
 
 OUTPUT — EXACTLY ONE of two actions:
 1. "swap_yield" — deploy some yield by swapping stETH into the best output token
@@ -182,6 +208,13 @@ ${IS_MAINNET
     : "- Protocol stats are from a testnet mock and may be zero — treat zero/null protocol stats as unavailable data, not a real risk signal."
   }
 
+LIQUIDITY-AWARE SIZING:
+- If the liquidity guidance says your swap is >1% of pool TVL, REDUCE swap_amount to stay under 1% of pool TVL.
+- If the market analysis provides a recommended_max_swap, respect it.
+- When yield is large relative to pool liquidity, split across cycles. Set swap_amount to the safe per-cycle amount and set urgency to "next_cycle" (the remaining yield will be swapped in future cycles).
+- This is critical: a swap that moves price >0.5% is a bad swap. Smaller, frequent swaps preserve value.
+${liquidityContext}
+
 Respond with valid JSON only:
 {
   "action": "swap_yield" | "hold",
@@ -189,7 +222,7 @@ Respond with valid JSON only:
   "swap_amount": "0.01",
   "swap_path": ["stETH", "USDC"],
   "slippage_tolerance": 0.005,
-  "reasoning": "brief explanation of why this action was chosen",
+  "reasoning": "brief explanation referencing market data, gas, and liquidity conditions",
   "expected_outcome": "what this achieves"
 }`,
     { riskAssessment, marketAnalysis, treasuryState }

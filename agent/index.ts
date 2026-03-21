@@ -25,6 +25,7 @@ import * as venice from "./services/venice";
 import * as bankr from "./services/bankr";
 import * as uniswap from "./services/uniswap";
 import * as lido from "./services/lido";
+import * as marketData from "./services/marketData";
 import * as logger from "./utils/logger";
 import { recordActivity, initActivityStore, type ActivityRecord } from "./utils/activityStore";
 import type {
@@ -109,7 +110,25 @@ async function runCycleForTreasury(
   console.log(`       Daily limit:   ${treasuryInfo.dailySpendRemaining} stETH remaining`);
   console.log(`       Paused:        ${treasuryInfo.paused}`);
 
-  const protocolStats = await lido.getProtocolStats();
+  const [protocolStats, market] = await Promise.all([
+    lido.getProtocolStats(),
+    marketData.getMarketSnapshot(config.chain.rpcUrl).catch((e) => {
+      console.log(`    ⚠ Market data fetch failed (non-fatal): ${(e as Error).message}`);
+      return null;
+    }),
+  ]);
+
+  if (market) {
+    const { prices, gas, pools } = market;
+    console.log(`    📈 Market: ETH $${prices.ethPriceUsd.toLocaleString()} (${prices.ethChange24h >= 0 ? "+" : ""}${prices.ethChange24h.toFixed(1)}% 24h)`);
+    console.log(`       stETH/ETH: ${prices.stEthToEthRatio.toFixed(6)} | Gas: ${gas.standardGwei} gwei (~$${gas.estimatedSwapCostUsd} per swap)`);
+    if (pools.length > 0) {
+      console.log(`       Top pool: ${pools[0].pair} (${pools[0].feeTier}) TVL $${(pools[0].tvlUsd / 1e6).toFixed(1)}M`);
+    }
+    if (market.errors.length > 0) {
+      console.log(`       ⚠ Data warnings: ${market.errors.join("; ")}`);
+    }
+  }
 
   // Use the treasury info we already fetched from the registry
   const balancesForTreasury = {
@@ -180,15 +199,53 @@ async function runCycleForTreasury(
   // ── Phase 2: PLAN (Private Reasoning) ──────────────────────
   console.log("    🧠 Phase 2: Private reasoning via Venice...");
 
-  const veniceDecision = await venice.reason({
-    ...discoveryContext,
-    agentConfig: {
-      maxDailySpendBps: parseInt(treasuryInfo.maxDailySpendBps),
-      computeBudgetRemaining: config.loop.computeBudgetUsd - state.computeSpentUsd,
+  // Build market context string for LLM prompts
+  const marketPromptContext = market ? marketData.formatForPrompt(market) : undefined;
+  const liquidityGuidance = market && market.pools.length > 0
+    ? marketData.getLiquidityGuidance(
+        availableYield,
+        market.prices.ethPriceUsd,
+        market.pools
+      )
+    : undefined;
+
+  if (marketPromptContext) {
+    console.log(`    📊 Market data injected into Venice prompt (${marketPromptContext.split("\n").length} lines)`);
+  } else {
+    console.log("    ⚠ No market data available — Venice will reason on treasury state only");
+  }
+
+  if (liquidityGuidance) {
+    console.log(`    💧 Liquidity guidance generated for ${market!.pools.length} pools`);
+    // Log the verdict for each pool
+    for (const pool of market!.pools) {
+      const swapValueUsd = availableYield * market!.prices.ethPriceUsd;
+      const pctOfTvl = pool.tvlUsd > 0 ? ((swapValueUsd / pool.tvlUsd) * 100).toFixed(4) : "∞";
+      console.log(`       ${pool.pair} (${pool.feeTier}): TVL $${(pool.tvlUsd / 1e6).toFixed(1)}M | Vol $${(pool.volume24hUsd / 1e6).toFixed(1)}M | swap = ${pctOfTvl}% of TVL`);
+    }
+  } else {
+    console.log("    ⚠ No pool liquidity data — skipping liquidity-aware sizing");
+  }
+
+  console.log("    🔒 Sending to Venice (private, no-data-retention)...");
+  const veniceDecision = await venice.reason(
+    {
+      ...discoveryContext,
+      agentConfig: {
+        maxDailySpendBps: parseInt(treasuryInfo.maxDailySpendBps),
+        computeBudgetRemaining: config.loop.computeBudgetUsd - state.computeSpentUsd,
+      },
     },
-  });
+    marketPromptContext
+      ? `${marketPromptContext}${liquidityGuidance ? "\n\n" + liquidityGuidance : ""}`
+      : undefined
+  );
+  console.log(`    ✅ Venice responded: action=${veniceDecision.action} confidence=${veniceDecision.confidence}`);
 
   console.log("    📊 Phase 2b: Multi-model analysis via Bankr...");
+  console.log(`       Risk model:     ${config.bankr.models.risk}`);
+  console.log(`       Market model:   ${config.bankr.models.market}`);
+  console.log(`       Strategy model: ${config.bankr.models.strategy}`);
 
   const [riskAssessment, marketAnalysis] = await Promise.all([
     bankr.assessRisk({
@@ -199,13 +256,17 @@ async function runCycleForTreasury(
     bankr.analyzeMarket({
       protocolStats,
       currentYield: treasuryInfo.availableYield,
+      marketSnapshot: marketPromptContext,
     }),
   ]);
+  console.log(`    ✅ Bankr risk: ${riskAssessment.risk_level} (${riskAssessment.recommendation}) | market: ${marketAnalysis.market_sentiment}`);
 
+  console.log(`    🧩 Synthesizing final strategy (with${liquidityGuidance ? "" : "out"} liquidity guidance)...`);
   const strategy = await bankr.synthesizeStrategy(
     riskAssessment,
     marketAnalysis,
-    balancesForTreasury.treasury
+    balancesForTreasury.treasury,
+    liquidityGuidance
   );
 
   console.log(`    📋 Strategy result:`);
@@ -643,6 +704,8 @@ async function main(): Promise<void> {
     console.log(`MockTokenOut:   ${process.env.MOCK_TOKEN_OUT_ADDRESS || "NOT SET"}`);
   }
   console.log(`Venice Model:   ${config.venice.model}`);
+  console.log(`Bankr Models:   risk=${config.bankr.models.risk} market=${config.bankr.models.market} strategy=${config.bankr.models.strategy}`);
+  console.log(`Market Data:    CoinGecko + Uniswap V3 Subgraph (2min cache)`);
   console.log(`Compute Budget: $${config.loop.computeBudgetUsd}/day`);
   console.log(`Cycle Interval: ${config.loop.intervalMs / 1000}s\n`);
 

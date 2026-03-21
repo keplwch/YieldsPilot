@@ -1,4 +1,7 @@
-# YieldsPilot — Autonomous DeFi Agent with Privacy-Preserving Yield Management
+![YieldsPilot](./banner.png)
+
+# YieldsPilot 
+**Autonomous DeFi Agent with Privacy-Preserving Yield Management**
 
 > **Private cognition. Trusted onchain action.**
 
@@ -351,19 +354,93 @@ yield-pilot/
 ---
 
 
-## Hackathon Tracks
+## Sponsor Integrations
 
-| Sponsor | Track | How We Qualify |
-|---------|-------|----------------|
-| **Venice** | Private Agents, Trusted Actions | All agent reasoning runs through Venice's no-data-retention API — the agent thinks privately but every resulting action is executed and verified onchain. Private cognition, public execution. |
-| **Protocol Labs** | Let the Agent Cook | Full autonomous discover → plan → execute → verify loop running on a configurable interval. The agent monitors treasuries, evaluates yield opportunities across multiple LLMs, executes swaps, and verifies outcomes — all without human intervention after initial deposit. |
-| **Protocol Labs** | Agents With Receipts (ERC-8004) | Complete `agent.json` manifest + structured `agent_log.json` with every cycle logged. Onchain agent identity registered via synthesis.devfolio.co. Every decision has a receipt. |
-| **Lido** | stETH Agent Treasury | Yield-separated smart contract where principal is mathematically inaccessible to the agent. Configurable daily spend limits (BPS), allowed target whitelist, pause mechanism, emergency withdraw. Supports both stETH and wstETH deposits. |
-| **Lido** | Vault Position Monitor | Real-time vault monitoring service that tracks yield accrual, balance changes, and agent actions. Sends instant Telegram alerts on significant events. |
-| **Lido** | Lido MCP | Standalone MCP server with 9 tools (stake, unstake, wrap, unwrap, balances, rewards, withdrawal status, governance delegation, position summary). Works with Claude Desktop, Cursor, or any MCP client. Includes `lido.skill.md` as an embedded resource for agent context. |
-| **Uniswap** | Agentic Finance | Agent executes real swaps with Uniswap API via Uniswap V3 with verified TxIDs. Fork test proves end-to-end swap pipeline against production contracts (0.5 stETH → 0.4999 WETH via wstETH/WETH pool). |
-| **Bankr** | Best LLM Gateway Use | Three specialized models via Bankr: GPT-4o for risk assessment, Claude for market analysis, Llama for strategy formulation. Each model gets a focused prompt and the results are synthesized into a unified action plan. |
-| **Synthesis** | Open Track | Cross-sponsor coherent build — not a collection of bounty submissions stitched together, but a single product where Venice, Lido, Uniswap, Bankr, Protocol Labs, and ERC-8004 all serve one purpose: autonomous, privacy-preserving yield management. |
+YieldsPilot's design is built around the deep integration of six sponsor technologies. A single yield management cycle flows through all of them in sequence: Lido generates the yield, Venice reasons about it privately, Bankr validates across multiple models, Uniswap executes the swap, Protocol Labs records the receipt, and the vault monitor alerts the user.
+
+### Venice AI — "Private Agents, Trusted Actions"
+
+Venice provides the agent's intelligence layer with a critical guarantee: **no data retention**. Every LLM call is stateless — no session aggregation, no cross-request correlation, no training on queries.
+
+This matters because DeFi agent reasoning is uniquely sensitive. Over weeks of operation, the agent makes thousands of LLM calls analyzing treasury balances, yield rates, swap timing, and market conditions. Each individually is benign; together they paint a complete picture of a user's risk tolerance, reaction patterns, and portfolio value. Venice ensures these reasoning traces exist only in the agent's local logs.
+
+How YieldsPilot uses Venice:
+
+| Capability | Integration | Details |
+|---|---|---|
+| Private reasoning | No-data-retention inference | `venice.chat.completions.create()` via OpenAI-compatible SDK — every call stateless |
+| Market-aware decisions | Live data in prompts | ETH price, stETH/ETH peg, gas costs, and pool liquidity injected into every reasoning call via `marketContext` parameter |
+| Liquidity-aware sizing | TVL-relative swap limits | System prompt encodes hard rules: >1% of pool TVL → split across cycles, >5% → reduce to 1% max per cycle |
+| Structured output | JSON-only responses | Venice returns `{ action, params, confidence, risk_assessment }` — parsed and validated before execution |
+| Model selection | `llama-3.3-70b` | Chosen for strong structured output compliance and reasoning depth at low latency |
+
+The system prompt in [`agent/services/venice.ts`](agent/services/venice.ts) encodes the full decision framework: yield thresholds, daily spend caps, gas-cost-vs-yield evaluation, stETH peg monitoring, and pool liquidity constraints. Venice sees everything the agent knows, reasons privately, and outputs a single action — `swap_yield` or `hold`.
+
+### Lido — "stETH Agent Treasury" + "Vault Monitor" + "Lido MCP"
+
+Lido is the yield engine. Users deposit stETH (or wstETH) into a yield-separated treasury smart contract. The stETH rebases daily via Lido's liquid staking mechanism, generating yield above the locked principal. The agent can only touch the yield — never the principal.
+
+**Three distinct Lido integrations:**
+
+| Integration | Track | What It Does | Code |
+|---|---|---|---|
+| Treasury contract | stETH Agent Treasury | Yield-separated vault — principal locked, yield spendable. Daily spend caps (BPS), allowed target whitelist, pause, emergency withdraw. Supports stETH and wstETH deposits. | [`contracts/YieldsPilotTreasury.sol`](contracts/YieldsPilotTreasury.sol) |
+| Vault monitor | Vault Position Monitor | Real-time monitoring of yield accrual, balance changes, and agent actions. Change detection with instant Telegram alerts on significant events. | [`agent/services/vaultMonitor.ts`](agent/services/vaultMonitor.ts) |
+| MCP server | Lido MCP | Standalone MCP server with 9 tools — stake, unstake, wrap, unwrap, balances, rewards, withdrawal status, governance delegation, position summary. Works with Claude Desktop, Cursor, or any MCP client. | [`mcp/lido-mcp-server.ts`](mcp/lido-mcp-server.ts) |
+
+The treasury contract is the security foundation. The agent calls `treasury.swapYield(router, amountIn, calldata, tokenOut, minAmountOut)` which atomically: approves the router for stETH → calls the router with swap calldata → verifies `minAmountOut` received → resets approval to zero. Funds never leave the contract during a swap — the contract IS the swapper.
+
+The Lido service in [`agent/services/lido.ts`](agent/services/lido.ts) handles all protocol interactions: `stETH.submit()` for staking, `wstETH.wrap()`/`unwrap()` for conversions, balance queries across ETH/stETH/wstETH/shares, and exchange rate lookups for yield calculation.
+
+**[Read the full MCP documentation →](./mcp/README.md)** — setup guides, example conversations, architecture diagram, and what you can build with it.
+
+### Uniswap — "Agentic Finance"
+
+Uniswap serves as the execution layer. The agent uses the **Trading API** for optimal routing and price discovery, with real transaction IDs on every swap.
+
+| Component | What It Does | Code |
+|---|---|---|
+| Trading API (`/quote`) | Fetches optimal swap routes across V2, V3, and mixed protocols with configurable slippage | `getQuote()` in [`agent/services/uniswap.ts`](agent/services/uniswap.ts) |
+| Trading API (`/swap`) | Creates executable swap transactions from quotes | `executeSwap()` in [`agent/services/uniswap.ts`](agent/services/uniswap.ts) |
+| Treasury-based execution | Swaps execute through the treasury contract's `swapYield()` — atomic approve→call→verify→reset pattern | `buildContractSwap()` in [`agent/services/uniswap.ts`](agent/services/uniswap.ts) |
+| Uniswap V3 Subgraph | Fetches top 5 pools (wstETH/WETH, WETH/USDC) with TVL, 24h volume, and fee tiers — fed into LLM reasoning | `fetchPoolLiquidity()` in [`agent/services/marketData.ts`](agent/services/marketData.ts) |
+| Dry run support | Quote-only mode for agent planning and risk assessment without execution | `dryRun()` in [`agent/services/uniswap.ts`](agent/services/uniswap.ts) |
+
+The agent uses Uniswap V3 Subgraph pool data to make **liquidity-aware decisions**. When the reasoning LLM considers a swap, it sees TVL, 24h volume, and fee tiers for the top pools, with explicit guidance about when swap size relative to pool TVL suggests splitting across cycles. This prevents large swaps from causing excessive price impact.
+
+**Why a treasury-based swap instead of Permit2?** Our architecture has the treasury contract (not an EOA wallet) executing swaps. The contract atomically approves the router, calls it, verifies the output, and resets approval — all in one transaction. This is architecturally equivalent to Permit2's gasless approval flow but enforced at the smart contract level, with the added benefit that funds never leave the contract during execution.
+
+**Fork test proof:** 4 mainnet fork tests verify the full swap pipeline against production Uniswap V3 contracts — real bytecode, real liquidity, real AMM math. Tests cover: swap execution (0.5 stETH → WETH), daily limit enforcement, non-agent rejection, and disallowed router rejection.
+
+### Bankr — "Best LLM Gateway Use"
+
+Bankr provides multi-model reasoning through a single gateway. Instead of one LLM making all decisions, three specialized models each handle a focused task, and their outputs are synthesized into a unified action plan.
+
+| Model | Task | What It Evaluates | Code |
+|---|---|---|---|
+| `gpt-4o` | Risk Assessment | Is it safe to swap this cycle? Checks yield sufficiency, daily spend limits, swap-to-yield ratio | `assessRisk()` in [`agent/services/bankr.ts`](agent/services/bankr.ts) |
+| `claude-sonnet-4-20250514` | Market Analysis | What are market conditions? ETH trend, stETH peg, gas costs, pool liquidity depth, optimal output token | `analyzeMarket()` in [`agent/services/bankr.ts`](agent/services/bankr.ts) |
+| `llama-3.3-70b` | Strategy Synthesis | Given risk + market analysis, what's the final action? Reconciles conflicting signals into a single decision | `synthesizeStrategy()` in [`agent/services/bankr.ts`](agent/services/bankr.ts) |
+
+All three models receive **live market data** — ETH prices from CoinGecko, gas costs from RPC, and Uniswap V3 pool liquidity from The Graph. The market analyst model gets liquidity-aware analysis instructions (pool TVL thresholds, fee tier preferences, volume-to-TVL ratios). The strategy synthesizer receives explicit liquidity guidance about maximum safe swap sizes.
+
+The multi-model approach provides natural redundancy: if the risk model says "abort" but the market model says "swap_now", the strategy synthesizer must reconcile the conflict and explain its reasoning. This produces more robust decisions than any single model alone.
+
+### Protocol Labs — "Let the Agent Cook" + "Agents With Receipts"
+
+Protocol Labs' ERC-8004 gives YieldsPilot a verifiable onchain identity and a structured audit trail where every cycle is logged.
+
+| Component | Purpose | Details |
+|---|---|---|
+| `agent.json` | ERC-8004 manifest | Declares capabilities, tools, safety policies, inference providers, chain support, MCP config, and autonomy parameters. Identity: `did:synthesis:34520` |
+| `agent_log.json` | Structured cycle log | Every discover→plan→execute→verify cycle logged with DID stamp, operator wallet, timestamps, actions, and outcomes |
+| Autonomous loop | "Let the Agent Cook" | Full autonomy after deposit — configurable interval (default 5min via `AGENT_INTERVAL_MS`), no human intervention required |
+
+The agent loop in [`agent/index.ts`](agent/index.ts) runs the complete cycle autonomously: fetch treasury state + market data in parallel → Venice private reasoning → Bankr multi-model validation → Uniswap swap execution → onchain verification → ERC-8004 log entry. Every decision has a receipt, every action is auditable, and the agent's DID (`did:synthesis:34520`) is stamped on every log entry — making identity load-bearing in the audit trail, not decorative.
+
+### Synthesis — Open Track
+
+YieldsPilot is a **cross-sponsor coherent build** — not a collection of bounty submissions stitched together, but a single product where Venice, Lido, Uniswap, Bankr, and Protocol Labs all serve one purpose: autonomous, privacy-preserving yield management. A user deposits stETH once and walks away. The agent handles everything else — privately, autonomously, and verifiably.
 
 ---
 
