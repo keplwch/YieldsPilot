@@ -39,6 +39,7 @@ export default function App() {
   const activityApi = useActivity(100);
 
   const apiConnected = treasury.connected || status.connected;
+  const initialLoading = treasury.loading && status.loading;
 
   // ── Multi-user state ──────────────────────────────────────────
   const registryMode = (status.data as any)?.registryMode ?? false;
@@ -196,7 +197,9 @@ export default function App() {
         running={status.data?.running ?? false}
       />
 
-      <ConnectionBanner connected={apiConnected} network={(treasury.data as any)?.network} />
+      {!initialLoading && (
+        <ConnectionBanner connected={apiConnected} network={(treasury.data as any)?.network} />
+      )}
 
       {/* Hero Stats */}
       <section className="max-w-[1360px] mx-auto px-8 pt-10 pb-8">
