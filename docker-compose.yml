@@ -37,9 +37,10 @@ services:
       # Shared SQLite DB (agent writes, api reads)
       - ./data/yieldpilot.db:/app/yieldpilot.db
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3001/api/status"]
-      interval: 15s
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/api/health"]
+      interval: 10s
       timeout: 5s
+      start_period: 15s
       retries: 3
     logging:
       driver: json-file

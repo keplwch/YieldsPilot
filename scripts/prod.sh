@@ -62,6 +62,16 @@ else
   ok ".env found"
 fi
 
+# ── Ensure data volume files exist (prevents Docker creating them as dirs) ──
+mkdir -p data
+for f in data/agent_log.json data/agent_state.json data/yieldpilot.db; do
+  if [ ! -f "$f" ]; then
+    [ -d "$f" ] && rm -rf "$f"
+    touch "$f"
+  fi
+done
+ok "Data files ready"
+
 # ── Parse command ──────────────────────────────────────────────
 CMD="${1:-up}"
 

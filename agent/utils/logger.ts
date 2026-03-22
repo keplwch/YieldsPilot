@@ -30,11 +30,18 @@ try {
 
 function loadLog(): AgentLog {
   if (existsSync(LOG_PATH)) {
-    const log = JSON.parse(readFileSync(LOG_PATH, "utf-8")) as AgentLog;
-    // Ensure DID is always present (backfill older logs)
-    if (!log.did) log.did = agentDid;
-    if (!log.operator) log.operator = agentOperator;
-    return log;
+    const raw = readFileSync(LOG_PATH, "utf-8").trim();
+    if (raw) {
+      try {
+        const log = JSON.parse(raw) as AgentLog;
+        // Ensure DID is always present (backfill older logs)
+        if (!log.did) log.did = agentDid;
+        if (!log.operator) log.operator = agentOperator;
+        return log;
+      } catch {
+        // Corrupt JSON — start fresh
+      }
+    }
   }
   return { agent: "YieldsPilot", version: "1.0.0", did: agentDid, operator: agentOperator, cycles: [] };
 }
