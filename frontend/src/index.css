@@ -85,12 +85,12 @@ body::before {
 .card-wrap {
   position: relative;
   clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
-  background: rgba(99,102,241,0.18);
+  background: rgba(99,102,241,0.14);
   padding: 1px;
-  transition: background 0.2s ease;
+  transition: background 0.18s ease;
 }
 .card-wrap:hover {
-  background: rgba(99,102,241,0.38);
+  background: rgba(99,102,241,0.32);
 }
 
 .card-body {
@@ -98,7 +98,7 @@ body::before {
   /* Inner notch = 13.5px so the 45° diagonal border renders at true 1px perpendicular width.
      Formula: inner = N - 2p + √2 = 14 - 2 + 1.41 ≈ 13.4 → 13.5px */
   clip-path: polygon(0 0, calc(100% - 13.5px) 0, 100% 13.5px, 100% 100%, 0 100%);
-  background: rgba(9, 9, 22, 0.94);
+  background: #09091a;
 }
 
 /* Hover top accent line on card-body */
@@ -108,26 +108,26 @@ body::before {
   top: 0;
   left: 0;
   right: 13.5px; /* match the notch size */
-  height: 1.5px;
+  height: 1px;
   background: transparent;
-  transition: background 0.25s ease;
+  transition: background 0.22s ease;
   z-index: 1;
   pointer-events: none;
 }
 .card-wrap:hover .card-body::before {
-  background: rgba(99,102,241,0.65);
+  background: rgba(99,102,241,0.55);
 }
 
 /* ── Stat card (dual corner: top-left + bottom-right notch) ── */
 .stat-wrap {
   position: relative;
   clip-path: polygon(13px 0, 100% 0, 100% calc(100% - 13px), calc(100% - 13px) 100%, 0 100%, 0 13px);
-  background: rgba(99,102,241,0.18);
+  background: rgba(99,102,241,0.14);
   padding: 1px;
-  transition: background 0.2s ease;
+  transition: background 0.18s ease;
 }
 .stat-wrap:hover {
-  background: rgba(99,102,241,0.38);
+  background: rgba(99,102,241,0.32);
 }
 
 .stat-body {
@@ -135,7 +135,7 @@ body::before {
   /* Inner notch = 12.5px for 1px perpendicular diagonal border on both corners.
      Formula: inner = N - 2p + √2 = 13 - 2 + 1.41 ≈ 12.4 → 12.5px */
   clip-path: polygon(12.5px 0, 100% 0, 100% calc(100% - 12.5px), calc(100% - 12.5px) 100%, 0 100%, 0 12.5px);
-  background: rgba(9, 9, 22, 0.94);
+  background: #09091a;
 }
 
 /* ── Panel header border ── */
@@ -143,8 +143,8 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 24px;
-  border-bottom: 1px solid rgba(99,102,241,0.10);
+  padding: 13px 22px;
+  border-bottom: 1px solid rgba(99,102,241,0.08);
 }
 
 /* ── Tabular numbers ── */
