@@ -239,7 +239,7 @@ export default function App() {
           />
           <StatCard
             label="Locked Principal"
-            value={aggregateStats.principal.toFixed(6)}
+            value={aggregateStats.principal.toFixed(8)}
             sub={registryMode ? `stETH - across ${totalUsers} treasuries` : "stETH - untouchable by agent"}
             delay={0.1}
           />
@@ -258,7 +258,7 @@ export default function App() {
           />
           <StatCard
             label="Yield Deployed"
-            value={aggregateStats.yieldWithdrawn.toFixed(6)}
+            value={aggregateStats.yieldWithdrawn.toFixed(8)}
             sub="stETH swapped via Uniswap"
             change={
               cycleCount > 0

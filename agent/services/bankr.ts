@@ -78,15 +78,16 @@ Your job is to assess whether it is safe to swap staking yield this cycle.
 
 WHAT TO EVALUATE (these are the ONLY relevant risk factors):
 - Is availableYield sufficient (> ${config.loop.minYieldThreshold} stETH)? If zero or near-zero → risk is low, just hold
-- Does swap_amount stay within dailySpendRemaining? If it exceeds it → high risk
-- Is the proposed swap_amount a reasonable fraction of availableYield (not 100% in one shot)?
+- Does swap_amount stay within dailySpendRemaining? This is the only spending cap that matters. If it exceeds it → recommend "caution" with max_safe_amount = dailySpendRemaining (do NOT abort)
+- availableYield will typically be larger than dailySpendRemaining — that is normal and expected, not a risk factor
 ${protocolStatsNote}
 
 EXPLICITLY IGNORE - these are NOT risk factors in this system:
 - ETH balance in the agent wallet (gas is paid externally by the protocol operator, always available)
+- availableYield being larger than dailySpendRemaining — this is normal; the strategy model will cap swap_amount at dailySpendRemaining
 
-"abort" recommendation should be RARE - only use it when swap_amount would clearly exceed available yield or daily limits.
-"caution" when the swap is large relative to available yield.
+CRITICAL: "abort" should be EXTREMELY RARE — only when something is fundamentally broken (e.g. stETH de-peg, zero yield, contract paused). If swap_amount just needs to be reduced, use "caution" with a max_safe_amount instead.
+"caution" when the swap_amount should be reduced (set max_safe_amount to the safe value).
 "proceed" when yield is available, daily limit has room, and amount is reasonable.
 
 Respond with valid JSON only:
@@ -199,9 +200,11 @@ Use the market analysis "optimal_pairs" as your primary signal for which token t
 RULES:
 - ONLY valid actions: "swap_yield" or "hold". Do NOT output "rebalance", "compound", "abort", or anything else.
 - If action is "swap_yield": provide swap_amount (string, stETH units) and swap_path (two token names, e.g. ["stETH", "USDC"]).
-- swap_amount MUST be ≤ dailySpendRemaining AND ≤ availableYield. Use at most 50% of available yield per cycle.
+- swap_amount MUST be ≤ dailySpendRemaining. This is the only spending cap — available yield will typically exceed it.
+- Use at most 50% of dailySpendRemaining per cycle to spread execution across the window.
 - Gas is paid externally. NEVER swap to WETH/ETH for gas purposes.
 - If risk recommendation is "abort", output "hold".
+- If risk recommendation is "caution" and a max_safe_amount is provided, cap swap_amount at max_safe_amount — do NOT hold unless max_safe_amount is 0.
 - If availableYield is 0 or below ${config.loop.minYieldThreshold}, output "hold".
 ${IS_MAINNET
     ? "- Protocol stats are live mainnet data. Use them to inform swap timing (e.g. avoid swapping during high slippage or stETH de-peg)."

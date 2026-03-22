@@ -131,8 +131,8 @@ export default function WstETHDepositPanel({ registryAddress }: WstETHDepositPan
 
   const handleReset = () => { setStep("input"); setAmount(""); resetApprove(); resetDeposit(); };
 
-  const balanceFormatted = wstethBalance ? parseFloat(formatEther(wstethBalance)).toFixed(6) : "0";
-  const stethEquivFormatted = stethEquiv ? parseFloat(formatEther(stethEquiv)).toFixed(4) : null;
+  const balanceFormatted = wstethBalance ? parseFloat(formatEther(wstethBalance)).toFixed(8) : "0";
+  const stethEquivFormatted = stethEquiv ? parseFloat(formatEther(stethEquiv)).toFixed(8) : null;
   const hasError = approveError || depositError;
   const errorMessage = (approveError || depositError)?.message?.split("\n")[0] ?? "";
 

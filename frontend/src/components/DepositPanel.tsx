@@ -178,7 +178,7 @@ export default function DepositPanel({ registryAddress, registryMode }: DepositP
     );
   }
 
-  const balanceFormatted = stethBalance ? parseFloat(formatEther(stethBalance)).toFixed(6) : "0";
+  const balanceFormatted = stethBalance ? parseFloat(formatEther(stethBalance)).toFixed(8) : "0";
   const hasError = approveError || depositError || approveExistingError || depositExistingError;
   const errorMessage = (approveError || depositError || approveExistingError || depositExistingError)?.message?.split("\n")[0] ?? "";
 

@@ -8,7 +8,7 @@
  * Data sources:
  *   - CoinGecko API (ETH price, 24h change, market cap)
  *   - Etherscan Gas Tracker (current gas prices)
- *   - Uniswap V3 Subgraph (top pool TVL, volume, fee tiers)
+ *   - DeFiLlama Yields API (Uniswap V3 pool TVL + 24h volume)
  */
 
 // ════════════════════════════════════════════════════════════════
@@ -111,118 +111,55 @@ async function fetchGas(rpcUrl: string, ethPriceUsd: number): Promise<GasData> {
 }
 
 // ════════════════════════════════════════════════════════════════
-//              UNISWAP V3 SUBGRAPH - POOL LIQUIDITY
+//              DEFILLAMA - UNISWAP V3 POOL LIQUIDITY
 // ════════════════════════════════════════════════════════════════
 
-// The Graph hosted service for Uniswap V3 on Ethereum mainnet
-const UNISWAP_SUBGRAPH =
-  "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
+// DeFiLlama yields API — free, no API key required
+const DEFILLAMA_POOLS_URL = "https://yields.llama.fi/pools";
 
-// Relevant token addresses (mainnet)
-const TOKENS: Record<string, string> = {
-  WETH: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-  wstETH: "0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0",
-  stETH: "0xae7ab96520de3a18e5e111b5eaab095312d7fe84",
-  USDC: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-  DAI: "0x6b175474e89094c44da98b954eedeac495271d0f",
-};
+// Tokens we care about for liquidity-aware sizing
+const RELEVANT_TOKENS = ["WSTETH", "STETH", "WETH", "ETH"];
 
-// Query top pools involving wstETH, stETH, WETH
-const POOL_QUERY = `{
-  wstethPools: pools(
-    first: 3,
-    where: {
-      or: [
-        { token0: "${TOKENS.wstETH}" },
-        { token1: "${TOKENS.wstETH}" }
-      ]
-    },
-    orderBy: totalValueLockedUSD,
-    orderDirection: desc
-  ) {
-    id
-    token0 { symbol }
-    token1 { symbol }
-    feeTier
-    totalValueLockedUSD
-    volumeUSD
-  }
-  wethUsdcPools: pools(
-    first: 2,
-    where: {
-      token0_in: ["${TOKENS.WETH}", "${TOKENS.USDC}"],
-      token1_in: ["${TOKENS.WETH}", "${TOKENS.USDC}"]
-    },
-    orderBy: totalValueLockedUSD,
-    orderDirection: desc
-  ) {
-    id
-    token0 { symbol }
-    token1 { symbol }
-    feeTier
-    totalValueLockedUSD
-    volumeUSD
-  }
-}`;
-
-interface SubgraphPool {
-  id: string;
-  token0: { symbol: string };
-  token1: { symbol: string };
-  feeTier: string;
-  totalValueLockedUSD: string;
-  volumeUSD: string;
-}
-
-function feeTierToPercent(feeTier: string): string {
-  const bps = parseInt(feeTier);
-  return `${(bps / 10000).toFixed(2)}%`;
+interface DefiLlamaPool {
+  pool: string;
+  symbol: string;
+  tvlUsd: number;
+  volumeUsd1d: number | null;
+  chain: string;
+  project: string;
 }
 
 async function fetchPoolLiquidity(): Promise<PoolLiquidity[]> {
-  const res = await fetch(UNISWAP_SUBGRAPH, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query: POOL_QUERY }),
-    signal: AbortSignal.timeout(10_000),
+  const res = await fetch(DEFILLAMA_POOLS_URL, {
+    signal: AbortSignal.timeout(15_000),
   });
 
-  if (!res.ok) throw new Error(`Subgraph ${res.status}: ${res.statusText}`);
+  if (!res.ok) throw new Error(`DeFiLlama ${res.status}: ${res.statusText}`);
 
-  const json = await res.json() as {
-    data?: {
-      wstethPools?: SubgraphPool[];
-      wethUsdcPools?: SubgraphPool[];
+  const json = await res.json() as { data: DefiLlamaPool[] };
+
+  // Filter to Uniswap V3 pools on Ethereum that involve stETH/wstETH/WETH
+  const relevant = (json.data ?? []).filter((p) =>
+    p.project === "uniswap-v3" &&
+    p.chain === "Ethereum" &&
+    RELEVANT_TOKENS.some((t) => (p.symbol ?? "").toUpperCase().includes(t))
+  );
+
+  // Sort by TVL descending and take top 5
+  relevant.sort((a, b) => (b.tvlUsd ?? 0) - (a.tvlUsd ?? 0));
+
+  return relevant.slice(0, 5).map((p) => {
+    const tokens = p.symbol.split("-");
+    return {
+      pair: tokens.join("/"),
+      feeTier: "—",  // DeFiLlama aggregates across fee tiers
+      tvlUsd: Math.round(p.tvlUsd ?? 0),
+      volume24hUsd: Math.round(p.volumeUsd1d ?? 0),
+      token0: tokens[0] ?? "",
+      token1: tokens[1] ?? "",
+      poolAddress: p.pool, // DeFiLlama UUID, not on-chain address
     };
-  };
-
-  const raw = [
-    ...(json.data?.wstethPools ?? []),
-    ...(json.data?.wethUsdcPools ?? []),
-  ];
-
-  // Deduplicate by pool address
-  const seen = new Set<string>();
-  const pools: PoolLiquidity[] = [];
-
-  for (const p of raw) {
-    if (seen.has(p.id)) continue;
-    seen.add(p.id);
-    pools.push({
-      pair: `${p.token0.symbol}/${p.token1.symbol}`,
-      feeTier: feeTierToPercent(p.feeTier),
-      tvlUsd: Math.round(parseFloat(p.totalValueLockedUSD)),
-      volume24hUsd: Math.round(parseFloat(p.volumeUSD)),
-      token0: p.token0.symbol,
-      token1: p.token1.symbol,
-      poolAddress: p.id,
-    });
-  }
-
-  // Sort by TVL descending
-  pools.sort((a, b) => b.tvlUsd - a.tvlUsd);
-
-  return pools.slice(0, 5); // top 5 relevant pools
+  });
 }
 
 // ════════════════════════════════════════════════════════════════

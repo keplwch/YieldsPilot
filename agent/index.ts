@@ -196,6 +196,22 @@ async function runCycleForTreasury(
     return { loopId, action: "skip_no_yield", duration: Date.now() - cycleStart, user, treasuryAddress };
   }
 
+  // Skip if daily spend limit is exhausted — no point running LLM reasoning
+  const dailyRemaining = parseFloat(treasuryInfo.dailySpendRemaining);
+  if (dailyRemaining < config.loop.minYieldThreshold) {
+    console.log(`    🚫 Daily spend limit exhausted (${treasuryInfo.dailySpendRemaining} stETH remaining), skipping.`);
+    recordActivity({
+      id: loopId, cycle: state.cycleCount + 1, timestamp: new Date().toISOString(),
+      user, treasuryAddress, action: "hold", status: "skipped",
+      treasuryBalance: treasuryInfo.totalBalance, principal: treasuryInfo.principal,
+      availableYield: treasuryInfo.availableYield, dailySpendRemaining: treasuryInfo.dailySpendRemaining,
+      veniceAction: "", veniceReasoning: "Daily spend limit exhausted", riskLevel: "", riskScore: 0,
+      marketSentiment: "", finalAction: "hold", strategyReasoning: `Daily spend limit exhausted — yield deployed today has reached the cap. Remaining: ${treasuryInfo.dailySpendRemaining} stETH`,
+      durationMs: Date.now() - cycleStart,
+    });
+    return { loopId, action: "hold", duration: Date.now() - cycleStart, user, treasuryAddress };
+  }
+
   // ── Phase 2: PLAN (Private Reasoning) ──────────────────────
   console.log("    🧠 Phase 2: Private reasoning via Venice...");
 
@@ -323,7 +339,13 @@ async function runCycleForTreasury(
 
   if (isSwapAction && strategy.swap_amount) {
     if (riskAssessment.recommendation !== "abort") {
-      const swapAmount = strategy.swap_amount;
+      // Hard cap: swap_amount must not exceed dailySpendRemaining
+      const dailyRemaining = parseFloat(treasuryInfo.dailySpendRemaining);
+      let swapAmount = strategy.swap_amount;
+      if (parseFloat(swapAmount) > dailyRemaining) {
+        console.log(`      ⚠ Capping swap_amount from ${swapAmount} to ${dailyRemaining} (daily limit)`);
+        swapAmount = dailyRemaining.toString();
+      }
       const tokenIn = strategy.swap_path?.[0] ?? "stETH";
       const tokenOut = strategy.swap_path?.[1] ?? "USDC";
       const isMainnet = config.chain.chainId === 1;
@@ -562,7 +584,7 @@ async function runCycleForTreasury(
     marketSentiment: marketAnalysis.market_sentiment,
     finalAction: strategy.action,
     strategyReasoning: strategy.reasoning ?? "",
-    swapAmount: strategy.swap_amount ?? undefined,
+    swapAmount: executeResult.status === "failed" ? undefined : (strategy.swap_amount ?? undefined),
     tokenIn: strategy.swap_path?.[0] ?? undefined,
     tokenOut: strategy.swap_path?.[1] ?? undefined,
     swapPath: strategy.swap_path ?? undefined,

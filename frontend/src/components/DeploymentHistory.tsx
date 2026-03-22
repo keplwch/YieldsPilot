@@ -100,7 +100,7 @@ function HistoryRow({ record, index }: { record: ActivityRecord; index: number }
         {record.action === "swap_yield" && record.swapAmount && (
           <div className="flex items-center gap-1.5 mb-1.5">
             <span className="text-[13px] font-mono font-semibold text-text-primary tabular-nums">
-              {parseFloat(record.swapAmount).toFixed(4)}
+              {parseFloat(record.swapAmount).toFixed(8)}
             </span>
             <span className="text-[11px] text-text-muted font-mono">{record.tokenIn ?? "stETH"}</span>
             <span className="text-[10px] text-text-muted">→</span>
@@ -191,7 +191,7 @@ export default function DeploymentHistory({ records, total, stats }: DeploymentH
           <div className="flex items-center justify-between px-6 py-3 border-b" style={{ borderColor: "rgba(99,102,241,0.07)" }}>
             <div className="flex items-center gap-4">
               <div className="text-[10px] font-mono text-text-muted">
-                Volume: <span className="text-accent-green font-semibold">{stats.totalVolumeStETH.toFixed(4)} stETH</span>
+                Volume: <span className="text-accent-green font-semibold">{stats.totalVolumeStETH.toFixed(8)} stETH</span>
               </div>
               <div className="text-[10px] font-mono text-text-muted">
                 Success rate: <span className="text-text-primary font-semibold">

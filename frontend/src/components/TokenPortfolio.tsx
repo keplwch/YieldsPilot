@@ -87,7 +87,7 @@ export default function TokenPortfolio({ tokens, ethBalance, treasuryAddress }: 
                           backgroundColor: getTokenColor(t.symbol),
                           minWidth: "4px",
                         }}
-                        title={`${t.symbol}: ${parseFloat(t.balance).toFixed(4)}`}
+                        title={`${t.symbol}: ${parseFloat(t.balance).toFixed(8)}`}
                       />
                     );
                   })}
@@ -109,7 +109,7 @@ export default function TokenPortfolio({ tokens, ethBalance, treasuryAddress }: 
                       <span className="text-[13px] font-mono font-semibold text-text-primary tabular-nums">
                         {parseFloat(t.balance) < 0.0001
                           ? parseFloat(t.balance).toExponential(2)
-                          : parseFloat(t.balance).toFixed(4)}
+                          : parseFloat(t.balance).toFixed(8)}
                       </span>
                       {t.symbol === "USDC" && parseFloat(t.balance) > 0 && (
                         <span className="text-[9px] font-mono px-1.5 py-0.5"
@@ -127,7 +127,7 @@ export default function TokenPortfolio({ tokens, ethBalance, treasuryAddress }: 
                       <span className="text-[12px] font-display font-medium text-text-secondary">ETH (gas)</span>
                     </div>
                     <span className="text-[13px] font-mono text-text-muted tabular-nums">
-                      {parseFloat(ethBalance).toFixed(4)}
+                      {parseFloat(ethBalance).toFixed(8)}
                     </span>
                   </div>
                 )}

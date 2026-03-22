@@ -6,6 +6,15 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
+ * @title IPermit2
+ * @notice Minimal interface for Uniswap's Permit2 allowance-based approvals.
+ *         The Universal Router pulls tokens via Permit2, not direct ERC20 approve.
+ */
+interface IPermit2 {
+    function approve(address token, address spender, uint160 amount, uint48 expiration) external;
+}
+
+/**
  * @title IWstETH
  * @notice Minimal interface for Lido's wstETH wrapper contract
  */
@@ -46,6 +55,9 @@ contract YieldsPilotTreasury is ReentrancyGuard {
 
     IERC20 public immutable stETH;
     IWstETH public immutable wstETH;
+
+    /// @notice Uniswap Permit2 contract (same address on all EVM chains)
+    address public constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
 
     address public owner;          // human depositor
     address public agent;          // AI agent address
@@ -286,17 +298,32 @@ contract YieldsPilotTreasury is ReentrancyGuard {
         // Snapshot output token balance before swap
         uint256 outBefore = IERC20(tokenOut).balanceOf(address(this));
 
-        // Approve router for exact amount (no lingering approvals)
+        // Approve router directly (works for routers using standard transferFrom, e.g. MockRouter)
         stETH.safeIncreaseAllowance(router, amountIn);
 
-        // Execute the swap - router pulls stETH and sends tokenOut back here
+        // If Permit2 is deployed, also set Permit2 approvals (Uniswap Universal Router uses Permit2)
+        if (PERMIT2.code.length > 0) {
+            stETH.safeIncreaseAllowance(PERMIT2, amountIn);
+            IPermit2(PERMIT2).approve(address(stETH), router, uint160(amountIn), uint48(block.timestamp + 1800));
+        }
+
+        // Execute the swap - router pulls stETH (via Permit2 or direct) and sends tokenOut back
         (bool success, ) = router.call(swapCalldata);
         require(success, "YP: swap call failed");
 
-        // Reset approval to zero (defense in depth)
+        // Reset direct router approval (defense in depth)
         uint256 remaining = stETH.allowance(address(this), router);
         if (remaining > 0) {
             stETH.safeDecreaseAllowance(router, remaining);
+        }
+
+        // Reset Permit2 approvals if deployed
+        if (PERMIT2.code.length > 0) {
+            IPermit2(PERMIT2).approve(address(stETH), router, 0, 0);
+            uint256 p2remaining = stETH.allowance(address(this), PERMIT2);
+            if (p2remaining > 0) {
+                stETH.safeDecreaseAllowance(PERMIT2, p2remaining);
+            }
         }
 
         // Verify we received output tokens

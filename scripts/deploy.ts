@@ -96,8 +96,8 @@ const WSTETH_SEPOLIA_DEFAULT = "0xB82381A3fBD3FaFA77B3a7bE693342AA3d14232a";
 const STETH_MAINNET  = "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84";
 const WSTETH_MAINNET = "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0";
 
-// Uniswap Universal Router (same address on both Sepolia and Mainnet)
-const UNISWAP_ROUTER         = "0x3fC91A3afd70395Cd496C647d5a6CC9D4B2b7FAD";
+// Uniswap Universal Router v2 (same address on both Sepolia and Mainnet)
+const UNISWAP_ROUTER         = "0x66a9893cC07D91D95644AEDD05D03f95e1dBA8Af";
 
 const DEFAULT_MAX_DAILY_BPS  = 5000; // 50% of available yield per day
 const MOCK_ROUTER_RATE       = "2000"; // USDC per stETH

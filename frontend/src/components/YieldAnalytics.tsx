@@ -123,7 +123,7 @@ export default function YieldAnalytics({ records, stats }: YieldAnalyticsProps) 
                 })()}
                 {/* Value label */}
                 <text x={W - PAD} y={12} textAnchor="end" fill="#00e5a0" fontSize="10" fontFamily="monospace">
-                  {cumulative.toFixed(4)} stETH
+                  {cumulative.toFixed(8)} stETH
                 </text>
               </svg>
             </div>
@@ -167,7 +167,7 @@ export default function YieldAnalytics({ records, stats }: YieldAnalyticsProps) 
                   <div key={token}>
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-[11px] font-mono text-text-primary">→ {token}</span>
-                      <span className="text-[11px] font-mono text-text-secondary tabular-nums">{vol.toFixed(4)} stETH</span>
+                      <span className="text-[11px] font-mono text-text-secondary tabular-nums">{vol.toFixed(8)} stETH</span>
                     </div>
                     <div className="h-1.5 rounded-sm overflow-hidden" style={{ background: "rgba(99,102,241,0.06)" }}>
                       <div

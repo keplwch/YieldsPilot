@@ -26,13 +26,23 @@ export default function YieldChart({ data }: YieldChartProps) {
     return Array.from(seen);
   }, [bars]);
 
-  const maxTotal = useMemo(() => Math.max(...bars.map((b) => b.total), 0.0001), [bars]);
+  // Scale bars relative to actual max — no artificial floor
+  const maxTotal = useMemo(() => Math.max(...bars.map((b) => b.total), Number.MIN_VALUE), [bars]);
   const latestTotal = bars[bars.length - 1]?.total;
   const totalCycles = bars.length;
   const multiUser = users.length > 1;
 
   const fmt = (addr: string) =>
     addr === "unknown" ? "unknown" : `${addr.slice(0, 6)}…${addr.slice(-4)}`;
+
+  // Smart formatter: shows enough decimals to display meaningful digits for tiny values
+  const fmtYield = (v: number) => {
+    if (v === 0) return "0.00000000";
+    if (v >= 0.0001) return v.toFixed(8);
+    // For very small values, show first 2 significant digits
+    const digits = Math.max(8, -Math.floor(Math.log10(Math.abs(v))) + 1);
+    return v.toFixed(Math.min(digits, 10));
+  };
 
   return (
     <div className="card-wrap h-full">
@@ -52,7 +62,7 @@ export default function YieldChart({ data }: YieldChartProps) {
           </div>
           {latestTotal !== undefined && (
             <span className="text-[11px] font-mono text-accent-green tabular-nums">
-              +{latestTotal.toFixed(4)} stETH
+              +{fmtYield(latestTotal)} stETH
             </span>
           )}
         </div>
@@ -74,7 +84,7 @@ export default function YieldChart({ data }: YieldChartProps) {
                     <div
                       key={bar.cycle}
                       className="flex-1 flex flex-col-reverse relative group cursor-default"
-                      style={{ height: `${Math.max(heightPct, 2)}%` }}
+                      style={{ height: `${Math.max(heightPct, 8)}%` }}
                     >
                       {/* Stacked segments, bottom to top */}
                       {bar.segments.map((seg, si) => {
@@ -114,13 +124,13 @@ export default function YieldChart({ data }: YieldChartProps) {
                             <div key={seg.user} className="flex items-center gap-1.5">
                               <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: color.fill }} />
                               <span className="text-[9px] font-mono text-text-secondary">
-                                {fmt(seg.user)}: {seg.yield.toFixed(4)}
+                                {fmt(seg.user)}: {fmtYield(seg.yield)}
                               </span>
                             </div>
                           );
                         })}
                         <div className="mt-0.5 pt-0.5 border-t border-white/5 text-[9px] font-mono text-text-primary tabular-nums">
-                          Total: {bar.total.toFixed(4)} stETH
+                          Total: {fmtYield(bar.total)} stETH
                         </div>
                       </div>
                     </div>

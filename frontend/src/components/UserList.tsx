@@ -146,10 +146,10 @@ function UserRow({ user: u, index }: { user: RegistryUser; index: number }) {
           <div className="flex items-center gap-4">
             {/* Stats row */}
             <div className="grid grid-cols-4 gap-3">
-              <MiniStat label="Balance"   value={totalBalance.toFixed(4)}   color="text-text-primary" />
-              <MiniStat label="Principal" value={principal.toFixed(4)}      color="text-accent-purple" />
-              <MiniStat label="Yield"     value={availableYield.toFixed(4)} color="text-accent-green" />
-              <MiniStat label="Deployed"  value={yieldDeployed.toFixed(4)}  color="text-accent-orange" />
+              <MiniStat label="Balance"   value={totalBalance.toFixed(8)}   color="text-text-primary" />
+              <MiniStat label="Principal" value={principal.toFixed(8)}      color="text-accent-purple" />
+              <MiniStat label="Yield"     value={availableYield.toFixed(8)} color="text-accent-green" />
+              <MiniStat label="Deployed"  value={yieldDeployed.toFixed(8)}  color="text-accent-orange" />
             </div>
 
             {/* Status badge - matches ActivityFeed phase badge */}

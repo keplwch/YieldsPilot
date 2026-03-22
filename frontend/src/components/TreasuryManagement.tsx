@@ -191,9 +191,9 @@ export default function TreasuryManagement({ treasuryAddress, registryAddress }:
     query: { enabled: !!treasuryAddr } });
 
   const isOwner = address && owner && address.toLowerCase() === (owner as string).toLowerCase();
-  const principalFormatted = principalRaw ? parseFloat(formatEther(principalRaw)).toFixed(6) : "0";
-  const yieldFormatted = yieldRaw ? parseFloat(formatEther(yieldRaw)).toFixed(6) : "0";
-  const dailyRemainingFormatted = dailyRemaining ? parseFloat(formatEther(dailyRemaining)).toFixed(6) : "0";
+  const principalFormatted = principalRaw ? parseFloat(formatEther(principalRaw)).toFixed(8) : "0";
+  const yieldFormatted = yieldRaw ? parseFloat(formatEther(yieldRaw)).toFixed(8) : "0";
+  const dailyRemainingFormatted = dailyRemaining ? parseFloat(formatEther(dailyRemaining)).toFixed(8) : "0";
   const currentBps = maxBps ? Number(maxBps) : 0;
 
   // ── Write hooks ──

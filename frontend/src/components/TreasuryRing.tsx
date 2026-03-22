@@ -61,9 +61,9 @@ export default function TreasuryRing({ principal, yieldAvailable, yieldDeployed 
 
           {/* Legend */}
           <div className="flex flex-col gap-2.5">
-            <LegendRow color="#6366f1" label="Principal (locked)" value={`${principal.toFixed(3)} stETH`} />
-            <LegendRow color="#00e5a0" label="Yield (spendable)" value={`${yieldAvailable.toFixed(3)} stETH`} valueColor="#00e5a0" />
-            <LegendRow color="#f59e0b" label="Yield deployed" value={`${yieldDeployed.toFixed(3)} stETH`} valueColor="#f59e0b" />
+            <LegendRow color="#6366f1" label="Principal (locked)" value={`${principal.toFixed(8)} stETH`} />
+            <LegendRow color="#00e5a0" label="Yield (spendable)" value={`${yieldAvailable.toFixed(8)} stETH`} valueColor="#00e5a0" />
+            <LegendRow color="#f59e0b" label="Yield deployed" value={`${yieldDeployed.toFixed(8)} stETH`} valueColor="#f59e0b" />
           </div>
         </div>
       </div>

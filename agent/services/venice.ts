@@ -29,7 +29,7 @@ CONTEXT:
 
 HARD CONSTRAINTS - NEVER VIOLATE:
 - Principal is mathematically locked in the contract. You can ONLY spend yield (availableYield).
-- swap_amount MUST be ≤ availableYield AND ≤ dailySpendRemaining
+- swap_amount MUST be ≤ dailySpendRemaining. This is the only cap that matters — available yield will typically exceed it.
 - Gas fees are paid externally by the protocol operator. NEVER factor in ETH balance for gas. NEVER recommend swapping to WETH/ETH for a "gas buffer" - that is not your concern.
 - Protocol stats (exchange rates, liquidity) may show zeros on testnet - treat any zero or missing protocol stat as "data unavailable, proceed based on yield and treasury state only"
 

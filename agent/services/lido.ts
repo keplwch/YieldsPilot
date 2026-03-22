@@ -60,6 +60,7 @@ const TREASURY_ABI = [
   "function paused() view returns (bool)",
   "function owner() view returns (address)",
   "function agent() view returns (address)",
+  "function isAllowedTarget(address) view returns (bool)",
 ] as const;
 
 const REGISTRY_ABI = [
@@ -506,6 +507,15 @@ export async function swapYieldFromTreasury(
 ): Promise<LidoOperationResult> {
   const t = new ethers.Contract(params.treasuryAddress, TREASURY_ABI, wallet);
   const amountIn = ethers.parseEther(params.amountIn);
+
+  // Pre-check: ensure the router is whitelisted before attempting the swap
+  const routerAllowed: boolean = await t.isAllowedTarget(params.routerAddress);
+  if (!routerAllowed) {
+    throw new Error(
+      `Router ${params.routerAddress} is not in the treasury's allowedTargets. ` +
+      `The treasury owner must call addTarget("${params.routerAddress}") first.`
+    );
+  }
 
   if (dryRun) {
     const available: bigint = await t.availableYield();
