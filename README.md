@@ -75,7 +75,7 @@ YieldsPilot is an autonomous AI agent that manages staking yield on behalf of us
 |-------|-----------|---------|
 | **Treasury** | Solidity 0.8.24 + OpenZeppelin | Yield-separated vault (principal locked, yield spendable) |
 | **Private Reasoning** | Venice AI (no-data-retention) | Agent thinks privately, acts publicly |
-| **Multi-Model Analysis** | Bankr LLM Gateway | Risk (GPT-4o) + Market (Claude) + Strategy (Llama) |
+| **Multi-Model Analysis** | Bankr LLM Gateway | Risk (GPT-5-mini) + Market (Claude Haiku 4.5) + Strategy (Gemini 3 Flash) |
 | **Swap Execution** | Uniswap V2/V3 + Permit2 | Real token swaps via Trading API v1 with Permit2 approval flow |
 | **Staking Ops** | Lido SDK + MCP | Stake, unstake, wrap, unwrap, balance queries |
 | **Monitoring** | Vault Monitor + Telegram | Real-time alerts on yield changes |
@@ -203,9 +203,9 @@ Bankr provides multi-model reasoning through a single gateway. Instead of one LL
 
 | Model | Task | What It Evaluates | Code |
 |---|---|---|---|
-| `gpt-4o` | Risk Assessment | Is it safe to swap this cycle? Checks yield sufficiency, daily spend limits, swap-to-yield ratio | `assessRisk()` in [`agent/services/bankr.ts`](agent/services/bankr.ts) |
-| `claude-sonnet-4-20250514` | Market Analysis | What are market conditions? ETH trend, stETH peg, gas costs, pool liquidity depth, optimal output token | `analyzeMarket()` in [`agent/services/bankr.ts`](agent/services/bankr.ts) |
-| `llama-3.3-70b` | Strategy Synthesis | Given risk + market analysis, what's the final action? Reconciles conflicting signals into a single decision | `synthesizeStrategy()` in [`agent/services/bankr.ts`](agent/services/bankr.ts) |
+| `gpt-5-mini` | Risk Assessment | Is it safe to swap this cycle? Checks yield sufficiency, daily spend limits, swap-to-yield ratio | `assessRisk()` in [`agent/services/bankr.ts`](agent/services/bankr.ts) |
+| `claude-haiku-4.5` | Market Analysis | What are market conditions? ETH trend, stETH peg, gas costs, pool liquidity depth, optimal output token | `analyzeMarket()` in [`agent/services/bankr.ts`](agent/services/bankr.ts) |
+| `gemini-3-flash` | Strategy Synthesis | Given risk + market analysis, what's the final action? Reconciles conflicting signals into a single decision | `synthesizeStrategy()` in [`agent/services/bankr.ts`](agent/services/bankr.ts) |
 
 All three models receive **live market data**: ETH prices from CoinGecko, gas costs from RPC, and Uniswap pool liquidity from DeFiLlama. The market analyst model gets liquidity-aware analysis instructions (pool TVL thresholds, fee tier preferences, volume-to-TVL ratios). The strategy synthesizer receives explicit liquidity guidance about maximum safe swap sizes.
 
@@ -429,7 +429,7 @@ yield-pilot/
 │   ├── index.ts                     # Main autonomous loop (discover → plan → execute → verify)
 │   ├── services/
 │   │   ├── venice.ts                # Private reasoning via Venice (no data retention)
-│   │   ├── bankr.ts                 # Multi-model analysis (GPT-4o + Claude + Llama)
+│   │   ├── bankr.ts                 # Multi-model analysis (GPT-5-mini + Claude Haiku 4.5 + Gemini 3 Flash)
 │   │   ├── uniswap.ts              # Swap execution via Uniswap Trading API v1 + Permit2
 │   │   ├── lido.ts                  # Lido staking operations
 │   │   └── vaultMonitor.ts          # Vault monitor + Telegram alerts
