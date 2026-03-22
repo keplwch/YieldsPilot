@@ -24,7 +24,7 @@ YieldsPilot is an autonomous AI agent that manages staking yield on behalf of us
 
 🌐 Live on **[yieldspilot.com](https://yieldspilot.com)**
 
-**Mainnet Registry Contract**: [`0xe916C0519fE874dCa9D4051f16ddCd35a45b7917`](https://etherscan.io/address/0xe916C0519fE874dCa9D4051f16ddCd35a45b7917)
+**Mainnet Registry Contract**: [`0x6df25A1734E181AFbBD9c8A50b1D00e39D482704`](https://etherscan.io/address/0x6df25A1734E181AFbBD9c8A50b1D00e39D482704)
 
 ---
 
@@ -40,12 +40,10 @@ YieldsPilot is an autonomous AI agent that manages staking yield on behalf of us
 >
 > Standalone Lido MCP server in action: Claude Desktop integration → query staking positions → check balances → stake ETH → wrap/unwrap stETH ↔ wstETH → governance delegation, all via natural language
 
-### Uniswap Swap Simulation (Mainnet Fork)
-> 📹 **[Watch Uniswap Sim on YouTube](https://youtu.be/2CdfMGWShxc)**
+### Uniswap Real Swap Demo (Mainnet)
+> 📹 **[Watch Uniswap Swap on YouTube](https://youtu.be/hAdwFMVWJd4)**
 >
-> Live recording of the mainnet fork test proving real Uniswap V3 swaps work against production contracts
-
-**Why a fork test instead of a live mainnet swap?** Lido staking rewards accrue slowly. On a fresh deposit, daily yield is fractions of a cent. Waiting days for enough yield to execute a meaningful swap isn't practical for a hackathon demo. Instead, we fork Ethereum mainnet locally using Hardhat, deploy our contracts against real Lido and Uniswap V3 pools, inject simulated yield, and execute a real swap (0.5 stETH → 0.4999 WETH via the wstETH/WETH 0.01% fee pool). This proves the entire swap pipeline works end-to-end against production contracts, using the same bytecode, same liquidity, same AMM math, with zero gas cost and instant results. All 4 fork tests pass: swap execution, daily limit enforcement, non-agent rejection, and disallowed router rejection.
+> Live recording of the agent executing a real swap on Ethereum mainnet via the Uniswap Trading API v1, routed through the Treasury contract with Permit2 approval flow and verified onchain TxID
 
 ---
 
@@ -78,7 +76,7 @@ YieldsPilot is an autonomous AI agent that manages staking yield on behalf of us
 | **Treasury** | Solidity 0.8.24 + OpenZeppelin | Yield-separated vault (principal locked, yield spendable) |
 | **Private Reasoning** | Venice AI (no-data-retention) | Agent thinks privately, acts publicly |
 | **Multi-Model Analysis** | Bankr LLM Gateway | Risk (GPT-4o) + Market (Claude) + Strategy (Llama) |
-| **Swap Execution** | Uniswap V3 | Real token swaps with real TxIDs |
+| **Swap Execution** | Uniswap V2/V3 + Permit2 | Real token swaps via Trading API v1 with Permit2 approval flow |
 | **Staking Ops** | Lido SDK + MCP | Stake, unstake, wrap, unwrap, balance queries |
 | **Monitoring** | Vault Monitor + Telegram | Real-time alerts on yield changes |
 | **Identity** | ERC-8004 | Onchain agent identity with structured logs |
@@ -176,25 +174,28 @@ The treasury contract is the security foundation. The agent calls `treasury.swap
 
 The Lido service in [`agent/services/lido.ts`](agent/services/lido.ts) handles all protocol interactions: `stETH.submit()` for staking, `wstETH.wrap()`/`unwrap()` for conversions, balance queries across ETH/stETH/wstETH/shares, and exchange rate lookups for yield calculation.
 
+Watch the [Lido MCP demo on YouTube](https://youtu.be/4Mxcwr_oTcI) to see all 9 tools in action via Claude Desktop: querying positions, staking ETH, wrapping/unwrapping stETH, etc all through natural language.
+
 **[Read the full MCP documentation →](./mcp/README.md)**: setup guides, example conversations, architecture diagram, and what you can build with it.
 
 ### Uniswap: "Agentic Finance"
 
-Uniswap serves as the execution layer. The agent uses the **Trading API** for optimal routing and price discovery, with real transaction IDs on every swap.
+Uniswap serves as the execution layer. The agent uses the **Trading API v1** for optimal routing across V2 and V3 pools, with **Permit2** approval flow for Universal Router compatibility and real transaction IDs on every swap.
 
 | Component | What It Does | Code |
 |---|---|---|
-| Trading API (`/quote`) | Fetches optimal swap routes across V2, V3, and mixed protocols with configurable slippage | `getQuote()` in [`agent/services/uniswap.ts`](agent/services/uniswap.ts) |
-| Trading API (`/swap`) | Creates executable swap transactions from quotes | `executeSwap()` in [`agent/services/uniswap.ts`](agent/services/uniswap.ts) |
-| Treasury-based execution | Swaps execute through the treasury contract's `swapYield()`, atomic approve→call→verify→reset pattern | `buildContractSwap()` in [`agent/services/uniswap.ts`](agent/services/uniswap.ts) |
-| Uniswap V3 Subgraph | Fetches top 5 pools (wstETH/WETH, WETH/USDC) with TVL, 24h volume, and fee tiers, fed into LLM reasoning | `fetchPoolLiquidity()` in [`agent/services/marketData.ts`](agent/services/marketData.ts) |
+| Trading API v1 (`/quote`) | Fetches optimal swap routes across V2, V3, and mixed protocols with configurable slippage | `getQuote()` in [`agent/services/uniswap.ts`](agent/services/uniswap.ts) |
+| Trading API v1 (`/swap`) | Builds router calldata from quotes for the Treasury contract to execute | `buildContractSwap()` in [`agent/services/uniswap.ts`](agent/services/uniswap.ts) |
+| Permit2 approval flow | Treasury approves Permit2, Permit2 grants allowance to Universal Router, all reset after each swap | `swapYield()` in [`contracts/YieldsPilotTreasury.sol`](contracts/YieldsPilotTreasury.sol) |
+| Treasury-based execution | Atomic approve→Permit2→call→verify→reset pattern, funds never leave the contract | `swapYield()` in [`contracts/YieldsPilotTreasury.sol`](contracts/YieldsPilotTreasury.sol) |
+| DeFiLlama Yields API | Fetches Uniswap V3 pool TVL and 24h volume for liquidity-aware swap sizing | `fetchPoolLiquidity()` in [`agent/services/marketData.ts`](agent/services/marketData.ts) |
 | Dry run support | Quote-only mode for agent planning and risk assessment without execution | `dryRun()` in [`agent/services/uniswap.ts`](agent/services/uniswap.ts) |
 
-The agent uses Uniswap V3 Subgraph pool data to make **liquidity-aware decisions**. When the reasoning LLM considers a swap, it sees TVL, 24h volume, and fee tiers for the top pools, with explicit guidance about when swap size relative to pool TVL suggests splitting across cycles. This prevents large swaps from causing excessive price impact.
+The agent uses DeFiLlama pool data to make **liquidity-aware decisions**. When the reasoning LLM considers a swap, it sees TVL, 24h volume, and fee tiers for the top pools, with explicit guidance about when swap size relative to pool TVL suggests splitting across cycles. This prevents large swaps from causing excessive price impact.
 
-**Why a treasury-based swap instead of Permit2?** Our architecture has the treasury contract (not an EOA wallet) executing swaps. The contract atomically approves the router, calls it, verifies the output, and resets approval, all in one transaction. This is architecturally equivalent to Permit2's gasless approval flow but enforced at the smart contract level, with the added benefit that funds never leave the contract during execution.
+**How Permit2 works in our Treasury contract:** The Uniswap Universal Router pulls tokens via Permit2, not via direct ERC-20 `transferFrom`. When `swapYield()` executes, the Treasury: (1) approves Permit2 for the exact stETH amount, (2) calls `IPermit2.approve()` to grant the router a time-limited allowance (30 min expiry), (3) calls the router with swap calldata, (4) verifies `minAmountOut` received, (5) resets both Permit2 and direct approvals to zero. All five steps happen atomically in a single transaction. Funds never leave the contract.
 
-**Fork test proof:** 4 mainnet fork tests verify the full swap pipeline against production Uniswap V3 contracts, using real bytecode, real liquidity, real AMM math. Tests cover: swap execution (0.5 stETH → WETH), daily limit enforcement, non-agent rejection, and disallowed router rejection.
+**Proof of real execution:** Watch the [real swap demo on YouTube](https://youtu.be/hAdwFMVWJd4) for a live recording with verified TxIDs. You can also inspect the [first treasury contract on Etherscan](https://etherscan.io/address/0xf1e329b9a47739BDAb7913661C1475e5919FAfe8) to see actual swap transactions onchain. The app at [yieldspilot.com](https://yieldspilot.com) is fully functional for testing, though note that Lido staking yield accrues slowly, so it may take time before the agent has enough yield to execute a swap.
 
 ### Bankr: "Best LLM Gateway Use"
 
@@ -206,7 +207,7 @@ Bankr provides multi-model reasoning through a single gateway. Instead of one LL
 | `claude-sonnet-4-20250514` | Market Analysis | What are market conditions? ETH trend, stETH peg, gas costs, pool liquidity depth, optimal output token | `analyzeMarket()` in [`agent/services/bankr.ts`](agent/services/bankr.ts) |
 | `llama-3.3-70b` | Strategy Synthesis | Given risk + market analysis, what's the final action? Reconciles conflicting signals into a single decision | `synthesizeStrategy()` in [`agent/services/bankr.ts`](agent/services/bankr.ts) |
 
-All three models receive **live market data**: ETH prices from CoinGecko, gas costs from RPC, and Uniswap V3 pool liquidity from The Graph. The market analyst model gets liquidity-aware analysis instructions (pool TVL thresholds, fee tier preferences, volume-to-TVL ratios). The strategy synthesizer receives explicit liquidity guidance about maximum safe swap sizes.
+All three models receive **live market data**: ETH prices from CoinGecko, gas costs from RPC, and Uniswap pool liquidity from DeFiLlama. The market analyst model gets liquidity-aware analysis instructions (pool TVL thresholds, fee tier preferences, volume-to-TVL ratios). The strategy synthesizer receives explicit liquidity guidance about maximum safe swap sizes.
 
 The multi-model approach provides natural redundancy: if the risk model says "abort" but the market model says "swap_now", the strategy synthesizer must reconcile the conflict and explain its reasoning. This produces more robust decisions than any single model alone.
 
@@ -370,7 +371,7 @@ Non-owners see a read-only view of the treasury state.
 - **Principal protection**: Smart contract makes principal mathematically inaccessible to agent
 - **Daily spend cap**: Configurable basis points limit on yield spending per day
 - **Target whitelist**: Agent can only send yield to pre-approved addresses
-- **Dry-run on all writes**: Every write operation supports simulation before execution
+- **Dry-run on all writes**: Every write operation supports dry run preview before execution
 - **Multi-model risk check**: Dedicated risk model evaluates every action before execution
 - **Compute budget**: USD-denominated daily cap on inference spending
 - **Emergency pause**: Owner can freeze all agent operations instantly
@@ -388,15 +389,15 @@ npx hardhat test
 
 Runs against Hardhat's local network with mock contracts. Covers all treasury operations, registry factory, yield separation, daily limits, access control, wstETH wrap/unwrap, and emergency scenarios.
 
-### Mainnet Fork Tests (4 tests)
+### Mainnet Fork Tests (4 tests) - Initial contract testing
 
 ```bash
 FORK_RPC=$RPC_URL ./scripts/deploy.sh fork:test
 ```
 
-Forks Ethereum mainnet locally and tests against real Lido and Uniswap V3 contracts:
+Forks Ethereum mainnet locally and tests against real Lido and Uniswap contracts with production bytecode, liquidity, and AMM math:
 
-1. **Full swap test**: 0.5 stETH → WETH via ForkSwapHelper (wraps stETH → wstETH, swaps on wstETH/WETH 0.01% pool)
+1. **Full swap test**: stETH to WETH via ForkSwapHelper (wraps stETH to wstETH, swaps on wstETH/WETH pool)
 2. **Daily limit enforcement**: verifies the agent cannot exceed its configured daily spend cap
 3. **Non-agent rejection**: confirms only the authorized agent wallet can execute swaps
 4. **Disallowed router rejection**: verifies swaps fail if the target isn't whitelisted
@@ -429,7 +430,7 @@ yield-pilot/
 │   ├── services/
 │   │   ├── venice.ts                # Private reasoning via Venice (no data retention)
 │   │   ├── bankr.ts                 # Multi-model analysis (GPT-4o + Claude + Llama)
-│   │   ├── uniswap.ts              # Real swap execution (Uniswap V3)
+│   │   ├── uniswap.ts              # Swap execution via Uniswap Trading API v1 + Permit2
 │   │   ├── lido.ts                  # Lido staking operations
 │   │   └── vaultMonitor.ts          # Vault monitor + Telegram alerts
 │   └── utils/
@@ -482,7 +483,7 @@ yield-pilot/
 
 | Chain | Purpose | Contract |
 |-------|---------|----------|
-| **Ethereum Mainnet** | Production treasury + Lido + Uniswap V3 | YieldsPilotRegistry |
+| **Ethereum Mainnet** | Production treasury + Lido + Uniswap V2/V3 + Permit2 | YieldsPilotRegistry |
 | **Ethereum Sepolia** | Testnet development + mock contracts | YieldsPilotRegistry + Mocks |
 | **Base Mainnet** | ERC-8004 agent identity | via synthesis.devfolio.co |
 
