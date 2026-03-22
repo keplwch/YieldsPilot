@@ -296,4 +296,4 @@ The YieldsPilot agent uses the same Lido operations internally (via `agent/servi
 
 ## License
 
-MIT
+Apache 2.0 — see [LICENSE](../LICENSE)

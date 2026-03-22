@@ -7,7 +7,7 @@
 
   <p>
     <a href="https://yieldspilot.com"><img src="https://img.shields.io/badge/website-yieldspilot.com-05B6D4?style=flat-square" alt="Website"></a>
-    <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License">
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square" alt="License"></a>
   </p>
 
 </div>
@@ -491,7 +491,7 @@ yield-pilot/
 
 ## License
 
-MIT
+Apache 2.0 — see [LICENSE](LICENSE)
 
 ---
 

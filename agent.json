@@ -113,5 +113,5 @@
     "human_intervention": "none (fully autonomous after deposit)"
   },
   "repository": "https://github.com/keplwch/yield-pilot",
-  "license": "MIT"
+  "license": "Apache-2.0"
 }
