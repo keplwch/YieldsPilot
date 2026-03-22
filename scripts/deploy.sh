@@ -187,11 +187,11 @@ run_deploy() {
   DEPLOY_CMD="$cmd" npx hardhat run scripts/deploy.ts --network "$network"
 }
 
-cmd_fresh()     { banner; run_deploy "fresh"     "sepolia"; }
-cmd_registry()  { banner; run_deploy "registry"  "sepolia"; }
-cmd_treasury()  { banner; run_deploy "treasury"  "sepolia"; }
-cmd_mocks()     { banner; run_deploy "mocks"     "sepolia"; }
-cmd_mocks_all() { banner; run_deploy "mocks-all" "sepolia"; }
+cmd_fresh()     { banner; run_deploy "fresh"     "${1:-sepolia}"; }
+cmd_registry()  { banner; run_deploy "registry"  "${1:-sepolia}"; }
+cmd_treasury()  { banner; run_deploy "treasury"  "${1:-sepolia}"; }
+cmd_mocks()     { banner; run_deploy "mocks"     "${1:-sepolia}"; }
+cmd_mocks_all() { banner; run_deploy "mocks-all" "${1:-sepolia}"; }
 cmd_mainnet()   { banner; run_deploy "mainnet"   "mainnet"; }
 cmd_status()    { banner; run_deploy "status"    "statusSepolia"; }
 
@@ -452,11 +452,11 @@ CMD="${1:-help}"
 shift 2>/dev/null || true
 
 case "$CMD" in
-  fresh)          cmd_fresh ;;
-  registry)       cmd_registry ;;
-  treasury)       cmd_treasury ;;
-  mocks)          cmd_mocks ;;
-  mocks-all|mocks:all) cmd_mocks_all ;;
+  fresh)          cmd_fresh "$@" ;;
+  registry)       cmd_registry "$@" ;;
+  treasury)       cmd_treasury "$@" ;;
+  mocks)          cmd_mocks "$@" ;;
+  mocks-all|mocks:all) cmd_mocks_all "$@" ;;
   mainnet)        cmd_mainnet ;;
   status)         cmd_status ;;
   verify)         cmd_verify "${1:-}" "${2:-}" "${3:-sepolia}" ;;
