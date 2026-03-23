@@ -50,7 +50,7 @@
     {
       "name": "uniswap_swap",
       "type": "onchain",
-      "description": "Execute token swaps via Uniswap Trading API"
+      "description": "Execute token swaps via Uniswap Trading API v1 with Permit2"
     },
     {
       "name": "venice_reason",
@@ -96,9 +96,9 @@
     "secondary": {
       "provider": "bankr",
       "models": {
-        "risk": "gpt-4o",
-        "market": "claude-sonnet-4-20250514",
-        "strategy": "llama-3.3-70b"
+        "risk": "gpt-5-mini",
+        "market": "claude-haiku-4.5",
+        "strategy": "gemini-3-flash"
       }
     }
   },
@@ -112,6 +112,6 @@
     "interval": "300s (configurable via AGENT_INTERVAL_MS)",
     "human_intervention": "none (fully autonomous after deposit)"
   },
-  "repository": "https://github.com/keplwch/yield-pilot",
+  "repository": "https://github.com/keplwch/YieldsPilot",
   "license": "Apache-2.0"
 }

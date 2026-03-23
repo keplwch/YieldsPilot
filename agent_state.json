@@ -1,10 +1,10 @@
 {
   "running": true,
-  "cycleCount": 230,
+  "cycleCount": 232,
   "totalYieldManaged": 0,
   "lastAction": "skip_no_yield",
-  "computeSpentUsd": 2.4100000000000015,
-  "startedAt": "2026-03-21T13:14:24.758Z",
+  "computeSpentUsd": 0.02,
+  "startedAt": "2026-03-22T05:32:37.495Z",
   "usersProcessed": 2,
   "treasuriesManaged": [
     "0xfb9EE651Fa22F0000C92813E880d0AeC3dddA3B8",
